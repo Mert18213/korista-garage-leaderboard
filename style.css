@@ -12,6 +12,18 @@ body {
     text-align: center;
 }
 
+.bet-btn {
+    display: block;
+    margin: 30px auto;
+    padding: 14px 30px;
+    background: #00c853;
+    color: black;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
 .subtitle {
     color: #ffd400;
     letter-spacing: 2px;
@@ -84,3 +96,4 @@ h1 {
     margin-top: 40px;
     opacity: 0.8;
 }
+
