@@ -1,7 +1,10 @@
+const ADMIN_EMAIL = "mert18213@gmail.com";
+
 // KULLANICI GİRİŞ DURUMUNU TAKİP ET
 auth.onAuthStateChanged(async user => {
     const authBox = document.getElementById("authBox");
     const userBar = document.getElementById("userBar");
+    const adminBtn = document.getElementById("adminUpdateBtn");
 
     if (user) {
         if (authBox) authBox.style.display = "none";
@@ -12,11 +15,23 @@ auth.onAuthStateChanged(async user => {
             document.getElementById("userInfo").innerText =
                 snap.data().username + " | " + snap.data().points + " Puan";
         }
+
+        // 👑 ADMIN KONTROLÜ
+        if (adminBtn) {
+            if (user.email === ADMIN_EMAIL) {
+                adminBtn.style.display = "inline-block";
+            } else {
+                adminBtn.style.display = "none";
+            }
+        }
+
     } else {
         if (authBox) authBox.style.display = "block";
         if (userBar) userBar.style.display = "none";
+        if (adminBtn) adminBtn.style.display = "none";
     }
 });
+
 
 // KAYIT OL (500 PUAN)
 function register() {
@@ -44,6 +59,7 @@ function register() {
         .catch(err => alert(err.message));
 }
 
+
 // GİRİŞ YAP
 function login() {
     const email = document.getElementById("email").value;
@@ -58,10 +74,12 @@ function login() {
         .catch(err => alert(err.message));
 }
 
+
 // ÇIKIŞ YAP
 function logout() {
     auth.signOut();
 }
+
 
 // İDDAA SAYFASINA GİT (LOGIN KONTROLLÜ)
 function goToBet() {
@@ -74,6 +92,5 @@ function goToBet() {
         return;
     }
 
-    // GİRİŞ VARSA
     window.location.href = "bahis.html";
 }
