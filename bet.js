@@ -1,4 +1,6 @@
-// SAYFA AÇILINCA LOGIN KONTROL + PUAN GÖSTER
+let CURRENT_RACE_ID = null;
+
+// SAYFA AÇILINCA LOGIN KONTROL + AKTİF RACE BUL
 auth.onAuthStateChanged(async user => {
     if (!user) {
         alert("Giriş yapmadan iddaa oynayamazsın");
@@ -6,26 +8,48 @@ auth.onAuthStateChanged(async user => {
         return;
     }
 
+    // USER INFO
     const snap = await db.collection("users").doc(user.uid).get();
-    document.getElementById("userInfo").innerText =
-        snap.data().username + " | " + snap.data().points + " Puan";
+    if (snap.exists) {
+        document.getElementById("userInfo").innerText =
+            snap.data().username + " | " + snap.data().points + " Puan";
+    }
 
-    loadMyBets();
+    await loadActiveRace();
+    await loadMyBets();
 });
+
+
+// 🔍 AKTİF RACE BUL (status === open)
+async function loadActiveRace() {
+    const racesSnap = await db
+        .collection("races")
+        .where("status", "==", "open")
+        .limit(1)
+        .get();
+
+    if (racesSnap.empty) {
+        alert("Şu an açık yarış yok");
+        return;
+    }
+
+    CURRENT_RACE_ID = racesSnap.docs[0].id;
+}
+
 
 // GERİ DÖN
 function goBack() {
     window.location.href = "index.html";
 }
 
+
 // BAHİS YAP
 async function placeBet() {
     const user = auth.currentUser;
-    if (!user) return;
+    if (!user || !CURRENT_RACE_ID) return;
 
     const car = document.getElementById("car").value;
     const stake = Number(document.getElementById("stake").value);
-    const raceId = "race1";
 
     if (!car || stake <= 0) {
         alert("Araba ve puan gir");
@@ -33,15 +57,16 @@ async function placeBet() {
     }
 
     const userRef = db.collection("users").doc(user.uid);
-    const raceRef = db.collection("races").doc(raceId);
-    const betRef = db.collection("bets")
-        .doc(raceId)
+    const raceRef = db.collection("races").doc(CURRENT_RACE_ID);
+    const betRef = db
+        .collection("bets")
+        .doc(CURRENT_RACE_ID)
         .collection("players")
         .doc(user.uid);
 
     const raceSnap = await raceRef.get();
     if (!raceSnap.exists || raceSnap.data().status !== "open") {
-        alert("Bu yarışa şu an bahis yapılamaz");
+        alert("Bu yarışa bahis yapılamaz");
         return;
     }
 
@@ -59,20 +84,21 @@ async function placeBet() {
 
     // PUANI DÜŞ
     await userRef.update({
-        points: userSnap.data().points - stake
+        points: firebase.firestore.FieldValue.increment(-stake)
     });
 
     // BAHİS KAYDET
     await betRef.set({
-        car: car,
-        stake: stake,
+        car,
+        stake,
         paid: false,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
     alert("İddaa başarıyla alındı!");
-    loadMyBets(); // iddaa listesini güncelle
+    loadMyBets();
 }
+
 
 // KULLANICININ İDDAALARINI GETİR
 async function loadMyBets() {
@@ -116,6 +142,7 @@ async function loadMyBets() {
         betsDiv.innerHTML = "Henüz iddaa yapmadın.";
     }
 }
+
 
 // ARABA ID → OKUNUR İSİM
 function formatCar(carId) {
