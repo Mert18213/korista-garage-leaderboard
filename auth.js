@@ -1,15 +1,25 @@
 // Kullanıcı giriş durumunu takip et
-auth.onAuthStateChanged(user => {
+auth.onAuthStateChanged(async user => {
     const authBox = document.getElementById("authBox");
+    const userBar = document.getElementById("userBar");
 
     if (user) {
-        // Giriş varsa login kutusunu gizle
-        if (authBox) authBox.style.display = "none";
+        authBox.style.display = "none";
+        userBar.style.display = "flex";
+
+        const snap = await db.collection("users").doc(user.uid).get();
+        document.getElementById("userInfo").innerText =
+            snap.data().username + " | " + snap.data().points + " Puan";
     } else {
-        // Giriş yoksa login kutusu görünsün
-        if (authBox) authBox.style.display = "block";
+        authBox.style.display = "block";
+        userBar.style.display = "none";
     }
 });
+
+function logout() {
+    auth.signOut();
+}
+
 
 // KAYIT OL (500 PUANLA BAŞLAT)
 function register() {
