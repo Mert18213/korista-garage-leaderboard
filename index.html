@@ -1,28 +1,59 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Korista Garage – Leaderboard</title>
+    <title>Korista Garage League</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>🏁 Korista Garage – Race 1 Leaderboard</h1>
+<div class="container">
 
-    <table id="leaderboard">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Car</th>
-                <th>Points</th>
-                <th>Wins</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- JS burayı dolduracak -->
-        </tbody>
-    </table>
+    <h2 class="subtitle">KORISTA GARAGE HYPERCARS</h2>
+    <h1 id="tableTitle">A LEAGUE TABLE</h1>
 
-    <script src="script.js"></script>
+    <div class="slider">
+
+        <!-- BİREYSEL TABLO -->
+        <div class="table active">
+            <div class="table-header">
+                <span>POS</span>
+                <span>CAR</span>
+                <span>PTS</span>
+            </div>
+
+            <div class="row"><span>1</span><span>KOENIGSEGG JESKO ABSOLUT</span><span>25</span></div>
+            <div class="row"><span>2</span><span>MERCEDES-MAYBACH EXELERO</span><span>18</span></div>
+            <div class="row"><span>3</span><span>FERRARI P80/C</span><span>15</span></div>
+            <div class="row"><span>4</span><span>PAGANI ZONDA HP</span><span>12</span></div>
+            <div class="row"><span>5</span><span>MERCEDES 300 SLR</span><span>10</span></div>
+        </div>
+
+        <!-- TAKIM TABLOSU -->
+        <div class="table">
+            <div class="table-header">
+                <span>POS</span>
+                <span>TEAM</span>
+                <span>PTS</span>
+            </div>
+
+            <div class="row"><span>1</span><span>KOENIGSEGG</span><span>29</span></div>
+            <div class="row"><span>2</span><span>MERCEDES</span><span>28</span></div>
+            <div class="row"><span>3</span><span>FERRARI</span><span>21</span></div>
+            <div class="row"><span>4</span><span>PAGANI</span><span>20</span></div>
+        </div>
+
+    </div>
+
+    <div class="controls">
+        <button onclick="prev()">⬅</button>
+        <button onclick="next()">➡</button>
+    </div>
+
+    <div class="footer">koristagarage.online</div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
