@@ -25,7 +25,7 @@ async function placeBet() {
 
     const car = document.getElementById("car").value;
     const stake = Number(document.getElementById("stake").value);
-    const raceId = "race1";
+    const raceId = "race2";
 
     if (!car || stake <= 0) {
         alert("Araba ve puan gir");
