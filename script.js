@@ -1,24 +1,23 @@
-const leaderboardData = [
-    { car: "Red Viper", points: 25, wins: 1 },
-    { car: "Black Phantom", points: 18, wins: 0 },
-    { car: "Blue Storm", points: 15, wins: 0 },
-    { car: "Green Bullet", points: 12, wins: 0 }
-];
+const tables = document.querySelectorAll(".table");
+const title = document.getElementById("tableTitle");
 
-// puana göre sırala
-leaderboardData.sort((a, b) => b.points - a.points);
+let index = 0;
 
-const tbody = document.querySelector("#leaderboard tbody");
+function update() {
+    tables.forEach(t => t.classList.remove("active"));
+    tables[index].classList.add("active");
 
-leaderboardData.forEach((item, index) => {
-    const row = document.createElement("tr");
+    title.innerText = index === 0
+        ? "A LEAGUE TABLE"
+        : "A LEAGUE TEAM TABLE";
+}
 
-    row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${item.car}</td>
-        <td>${item.points}</td>
-        <td>${item.wins}</td>
-    `;
+function next() {
+    index = (index + 1) % tables.length;
+    update();
+}
 
-    tbody.appendChild(row);
-});
+function prev() {
+    index = (index - 1 + tables.length) % tables.length;
+    update();
+}
