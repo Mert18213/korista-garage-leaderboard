@@ -20,7 +20,7 @@ auth.onAuthStateChanged(async user => {
 });
 
 
-// 🔍 AKTİF RACE BUL
+// 🔍 AKTİF RACE BUL (SADECE RACES'TEN)
 async function loadActiveRace() {
     const racesSnap = await db
         .collection("races")
@@ -34,11 +34,11 @@ async function loadActiveRace() {
     }
 
     CURRENT_RACE_ID = racesSnap.docs[0].id;
-
     console.log("AKTİF RACE:", CURRENT_RACE_ID);
 
     // 🔓 BUTONU AÇ
-    document.getElementById("betBtn").disabled = false;
+    const betBtn = document.getElementById("betBtn");
+    if (betBtn) betBtn.disabled = false;
 }
 
 
@@ -68,7 +68,7 @@ async function placeBet() {
     const betRaceRef = db.collection("bets").doc(CURRENT_RACE_ID);
     const betRef = betRaceRef.collection("players").doc(user.uid);
 
-    // 🔑 SADECE BETS KONTROL
+    // 🔑 SADECE BETS DURUMU KONTROL
     const betRaceSnap = await betRaceRef.get();
     if (!betRaceSnap.exists || betRaceSnap.data().status !== "open") {
         alert("Bu yarışa şu an bahis yapılamaz");
@@ -87,10 +87,12 @@ async function placeBet() {
         return;
     }
 
+    // PUAN DÜŞ
     await userRef.update({
         points: firebase.firestore.FieldValue.increment(-stake)
     });
 
+    // BAHİS KAYDET
     await betRef.set({
         car,
         stake,
@@ -103,8 +105,7 @@ async function placeBet() {
 }
 
 
-
-// 📜 İDDAA GEÇMİŞİ
+// 📜 İDDAA GEÇMİŞİ (🔥 DÜZELTİLMİŞ – KİLİTLENME YOK)
 async function loadMyBets() {
     const user = auth.currentUser;
     if (!user) return;
@@ -112,39 +113,33 @@ async function loadMyBets() {
     const betsDiv = document.getElementById("myBets");
     betsDiv.innerHTML = "";
 
-    const racesSnap = await db.collection("bets").get();
-    let found = false;
+    const betsSnap = await db
+        .collectionGroup("players")
+        .where(firebase.firestore.FieldPath.documentId(), "==", user.uid)
+        .get();
 
-    for (const raceDoc of racesSnap.docs) {
-        const betSnap = await db
-            .collection("bets")
-            .doc(raceDoc.id)
-            .collection("players")
-            .doc(user.uid)
-            .get();
-
-        if (betSnap.exists) {
-            found = true;
-            const bet = betSnap.data();
-
-            betsDiv.innerHTML += `
-                <div class="bet-item">
-                    <span>
-                        <b>${raceDoc.id}</b><br>
-                        ${formatCar(bet.car)}
-                    </span>
-                    <span>
-                        ${bet.stake} puan<br>
-                        ${bet.paid ? "✅ Ödendi" : "⏳ Beklemede"}
-                    </span>
-                </div>
-            `;
-        }
-    }
-
-    if (!found) {
+    if (betsSnap.empty) {
         betsDiv.innerHTML = "Henüz iddaa yapmadın.";
+        return;
     }
+
+    betsSnap.forEach(doc => {
+        const bet = doc.data();
+        const raceId = doc.ref.parent.parent.id;
+
+        betsDiv.innerHTML += `
+            <div class="bet-item">
+                <span>
+                    <b>${raceId}</b><br>
+                    ${formatCar(bet.car)}
+                </span>
+                <span>
+                    ${bet.stake} puan<br>
+                    ${bet.paid ? "✅ Ödendi" : "⏳ Beklemede"}
+                </span>
+            </div>
+        `;
+    });
 }
 
 
