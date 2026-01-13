@@ -10,19 +10,30 @@ auth.onAuthStateChanged(async user => {
         if (authBox) authBox.style.display = "none";
         if (userBar) userBar.style.display = "flex";
 
-        const snap = await db.collection("users").doc(user.uid).get();
+        const userRef = db.collection("users").doc(user.uid);
+        const snap = await userRef.get();
+
         if (snap.exists) {
+            const data = snap.data();
+
             document.getElementById("userInfo").innerText =
-                snap.data().username + " | " + snap.data().points + " Puan";
+                data.username + " | " + data.points + " Puan";
+
+            // 🔄 SON GİRİŞİ GÜNCELLE
+            await userRef.update({
+                lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+            });
         }
 
-        // 👑 ADMIN KONTROLÜ
-        if (adminBtn) {
-            if (user.email === ADMIN_EMAIL) {
-                adminBtn.style.display = "inline-block";
-            } else {
-                adminBtn.style.display = "none";
-            }
+        // 👑 ADMIN KONTROLÜ (email + kayıtlı user şartı)
+        if (
+            adminBtn &&
+            user.email === ADMIN_EMAIL &&
+            snap.exists
+        ) {
+            adminBtn.style.display = "inline-block";
+        } else if (adminBtn) {
+            adminBtn.style.display = "none";
         }
 
     } else {
@@ -47,10 +58,10 @@ function register() {
     auth.createUserWithEmailAndPassword(email, password)
         .then(cred => {
             return db.collection("users").doc(cred.user.uid).set({
-                username: username,
+                username,
                 points: 500,
-                lastLogin: null,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                lastLogin: firebase.firestore.FieldValue.serverTimestamp()
             });
         })
         .then(() => {
