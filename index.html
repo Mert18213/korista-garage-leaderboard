@@ -92,8 +92,13 @@ async function calculateRace() {
     if (!raceId) return;
 
     const raceRef = db.collection("races").doc(raceId);
-    const raceSnap = await raceRef.get();
+    const betsRef = db
+        .collection("bets")
+        .doc(raceId)
+        .collection("players");
 
+    // RACE KONTROL
+    const raceSnap = await raceRef.get();
     if (!raceSnap.exists) {
         alert("Böyle bir yarış yok");
         return;
@@ -111,13 +116,55 @@ async function calculateRace() {
         return;
     }
 
+    // BETLERİ ÇEK
+    const betsSnap = await betsRef.get();
+
+    if (betsSnap.empty) {
+        alert("Bu yarışa hiç bahis yapılmamış");
+    }
+
+    let winCount = 0;
+
+    // 🔁 PUAN DAĞIT
+    for (const betDoc of betsSnap.docs) {
+        const bet = betDoc.data();
+
+        if (bet.paid === true) continue;
+
+        if (bet.car === race.winner) {
+            const userRef = db.collection("users").doc(betDoc.id);
+
+            await userRef.update({
+                points: firebase.firestore.FieldValue.increment(bet.stake * 2)
+            });
+
+            winCount++;
+        }
+
+        await betDoc.ref.update({
+            paid: true
+        });
+    }
+
+    // 🔒 BETS KAPAT
+    await db.collection("bets").doc(raceId).update({
+        status: "closed"
+    });
+
+    // ✅ RACE KAPAT
+    await raceRef.update({
+        calculated: true
+    });
+
     alert(
         raceId +
-        " için HESAPLA butonu çalıştı.\n" +
-        "Bir sonraki adımda puan dağıtımı eklenecek."
+        " hesaplandı ✅\n" +
+        "Kazanan sayısı: " + winCount + "\n" +
+        "Hafta kapatıldı."
     );
 }
 </script>
+
 
 </body>
 </html>
