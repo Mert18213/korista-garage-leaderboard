@@ -152,7 +152,17 @@ async function loadMyBets() {
         betsDiv.innerHTML = "Could not load history.";
     }
 }
-
+// 🚪 LOGOUT FUNCTION
+async function logout() {
+    try {
+        await auth.signOut(); // Firebase oturumunu kapatır
+        alert("Logged out successfully!");
+        window.location.href = "index.html"; // Giriş sayfasına yönlendirir
+    } catch (error) {
+        console.error("Logout Error:", error);
+        alert("An error occurred while logging out.");
+    }
+}
 
 // 🚗 FORMAT CAR NAME
 function formatCar(carId) {
