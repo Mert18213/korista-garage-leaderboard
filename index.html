@@ -23,6 +23,17 @@
 <!-- USER BAR -->
 <div id="userBar" class="user-bar" style="display:none;">
     <span id="userInfo"></span>
+
+    <!-- 👑 SADECE ADMİN GÖRÜR -->
+    <button
+        id="adminUpdateBtn"
+        style="display:none;"
+        onclick="openAdminPanel()"
+        class="admin-btn"
+    >
+        🔧 GÜNCELLE
+    </button>
+
     <button onclick="logout()">Çıkış Yap</button>
 </div>
 
@@ -30,14 +41,17 @@
 
     <h2 class="subtitle">KORISTA GARAGE HYPERCARS</h2>
     <h1>A LEAGUE TABLE</h1>
-<div class="season-info">
-    SEASON 1 • 1 RACES PLAYED • CURRENT RACE: 8
-</div>
+
+    <div class="season-info">
+        SEASON 1 • 1 RACES PLAYED • CURRENT RACE: 8
+    </div>
 
     <!-- LEADERBOARD -->
     <div class="table active">
         <div class="table-header">
-            <span>POS</span><span>CAR</span><span>PTS</span>
+            <span>POS</span>
+            <span>CAR</span>
+            <span>PTS</span>
         </div>
 
         <div class="row"><span>1</span><span>KOENIGSEGG JESKO ABSOLUT</span><span>25</span></div>
@@ -50,21 +64,34 @@
         <div class="row"><span>8</span><span>KOENIGSEGG CCXR TREVITA</span><span>4</span></div>
     </div>
 
+    <!-- İDDAA -->
     <button class="bet-btn" onclick="goToBet()">🎰 İDDAA YAP</button>
 
-    <a class="youtube-btn" href="https://www.youtube.com/@KORISTAGARAGE" target="_blank">
+    <!-- YOUTUBE -->
+    <a class="youtube-btn"
+       href="https://www.youtube.com/@KORISTAGARAGE"
+       target="_blank">
         ▶ VISIT OUR YOUTUBE CHANNEL
     </a>
 
     <div class="footer">koristagarage.online</div>
 </div>
 
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <script src="firebase.js"></script>
 <script src="auth.js"></script>
 
+<script>
+    // 👑 ADMIN BUTONUNA BASINCA
+    function openAdminPanel() {
+        alert("Admin paneli yakında 👑");
+        // ileride: window.location.href = "admin.html";
+    }
+</script>
+
 </body>
 </html>
-
