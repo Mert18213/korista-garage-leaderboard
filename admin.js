@@ -9,6 +9,30 @@ async function settleRace(raceId, winnerCar) {
     }
 
     const betsSnap = await playersRef.get();
+async function distributePoints(raceId, winnerCar) {
+    const betsRef = db
+        .collection("bets")
+        .doc(raceId)
+        .collection("players");
+
+    const betsSnap = await betsRef.get();
+
+    for (const betDoc of betsSnap.docs) {
+        const bet = betDoc.data();
+        if (bet.paid) continue;
+
+        if (bet.car === winnerCar) {
+            const userRef = db.collection("users").doc(betDoc.id);
+            await userRef.update({
+                points: firebase.firestore.FieldValue.increment(bet.stake)
+            });
+        }
+
+        await betDoc.ref.update({ paid: true });
+    }
+
+    alert("Puanlar dağıtıldı");
+}
 
     for (const doc of betsSnap.docs) {
         const bet = doc.data();
