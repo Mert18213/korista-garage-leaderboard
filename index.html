@@ -27,11 +27,11 @@
     <!-- 👑 SADECE ADMİN GÖRÜR -->
     <button
         id="adminUpdateBtn"
-        style="display:none;"
-        onclick="openAdminPanel()"
         class="admin-btn"
+        style="display:none; background:#ff4d4d;"
+        onclick="calculateRace()"
     >
-        🔧 GÜNCELLE
+        ⚙️ HESAPLA
     </button>
 
     <button onclick="logout()">Çıkış Yap</button>
@@ -85,22 +85,39 @@
 <script src="firebase.js"></script>
 <script src="auth.js"></script>
 
+<!-- 🔧 ADMIN – HESAPLA FONKSİYONU -->
 <script>
-    // 👑 ADMIN BUTONUNA BASINCA
-function openAdminPanel() {
-    const newPoints = prompt("Yeni puanları güncelle (örnek test)");
+async function calculateRace() {
+    const raceId = prompt("Hangi yarışı hesaplayalım? (örn: race2)");
+    if (!raceId) return;
 
-    if (!newPoints) return;
+    const raceRef = db.collection("races").doc(raceId);
+    const raceSnap = await raceRef.get();
 
-    db.collection("league").doc("current").update({
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    if (!raceSnap.exists) {
+        alert("Böyle bir yarış yok");
+        return;
+    }
 
-    alert("Tablo güncellendi");
+    const race = raceSnap.data();
+
+    if (race.calculated === true) {
+        alert("Bu yarış zaten hesaplandı");
+        return;
+    }
+
+    if (race.status !== "finished") {
+        alert("Yarış bitmeden hesaplama yapılamaz");
+        return;
+    }
+
+    alert(
+        raceId +
+        " için HESAPLA butonu çalıştı.\n" +
+        "Bir sonraki adımda puan dağıtımı eklenecek."
+    );
 }
-
 </script>
 
 </body>
 </html>
-
