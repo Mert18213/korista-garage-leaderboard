@@ -21,7 +21,7 @@ auth.onAuthStateChanged(async (user) => {
 });
 
 
-// 🔍 FIND ACTIVE RACE (ONLY FROM RACES COLLECTION)
+// 🔍 FIND ACTIVE RACE
 async function loadActiveRace() {
     const racesSnapshot = await db
         .collection("races")
@@ -37,7 +37,6 @@ async function loadActiveRace() {
     currentRaceId = racesSnapshot.docs[0].id;
     console.log("ACTIVE RACE:", currentRaceId);
 
-    // 🔓 ENABLE BUTTON
     const betButton = document.getElementById("betBtn");
     if (betButton) betButton.disabled = false;
 }
@@ -69,7 +68,6 @@ async function placeBet() {
     const betRaceRef = db.collection("bets").doc(currentRaceId);
     const betRef = betRaceRef.collection("players").doc(user.uid);
 
-    // 🔑 CHECK BETTING STATUS
     const betRaceSnapshot = await betRaceRef.get();
     if (!betRaceSnapshot.exists || betRaceSnapshot.data().status !== "open") {
         alert("Betting is currently closed for this race.");
@@ -93,10 +91,11 @@ async function placeBet() {
         points: firebase.firestore.FieldValue.increment(-stake)
     });
 
-    // SAVE BET
+    // ✅ SAVE BET (DÜZELTİLDİ: uid alanı eklendi)
     await betRef.set({
-        car,
-        stake,
+        uid: user.uid, // Sorgu için bu alan kritik!
+        car: car,
+        stake: stake,
         paid: false,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
@@ -106,7 +105,7 @@ async function placeBet() {
 }
 
 
-// 📜 BET HISTORY (OPTIMIZED COLLECTION GROUP)
+// 📜 BET HISTORY (DÜZELTİLDİ: uid üzerinden sorgu yapılıyor)
 async function loadMyBets() {
     const user = auth.currentUser;
     if (!user) return;
@@ -117,12 +116,9 @@ async function loadMyBets() {
     betsDiv.innerHTML = "Loading...";
 
     try {
-        /* 🚀 COLLECTION GROUP: 
-           Searches all 'players' subcollections for documents 
-           matching the current User ID.
-        */
+        // ✅ Sorgu döküman ID'si yerine 'uid' alanı ile güncellendi
         const betsSnapshot = await db.collectionGroup("players")
-            .where(firebase.firestore.FieldPath.documentId(), "==", user.uid)
+            .where("uid", "==", user.uid)
             .get();
 
         if (betsSnapshot.empty) {
@@ -130,11 +126,10 @@ async function loadMyBets() {
             return;
         }
 
-        betsDiv.innerHTML = ""; // Clear loader
+        betsDiv.innerHTML = ""; 
         
         betsSnapshot.forEach((doc) => {
             const bet = doc.data();
-            // Get raceId from the grandparent document
             const raceId = doc.ref.parent.parent.id;
 
             betsDiv.innerHTML += `
