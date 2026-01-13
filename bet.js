@@ -1,3 +1,4 @@
+// SAYFA AÇILINCA LOGIN KONTROL + PUAN GÖSTER
 auth.onAuthStateChanged(async user => {
     if (!user) {
         alert("Giriş yapmadan iddaa oynayamazsın");
@@ -8,6 +9,8 @@ auth.onAuthStateChanged(async user => {
     const snap = await db.collection("users").doc(user.uid).get();
     document.getElementById("userInfo").innerText =
         snap.data().username + " | " + snap.data().points + " Puan";
+
+    loadMyBets();
 });
 
 // GERİ DÖN
@@ -68,9 +71,11 @@ async function placeBet() {
     });
 
     alert("İddaa başarıyla alındı!");
-    goBack();
+    loadMyBets(); // iddaa listesini güncelle
+}
 
-    async function loadMyBets() {
+// KULLANICININ İDDAALARINI GETİR
+async function loadMyBets() {
     const user = auth.currentUser;
     if (!user) return;
 
@@ -78,7 +83,6 @@ async function placeBet() {
     betsDiv.innerHTML = "";
 
     const racesSnap = await db.collection("bets").get();
-
     let found = false;
 
     for (const raceDoc of racesSnap.docs) {
@@ -113,4 +117,9 @@ async function placeBet() {
     }
 }
 
+// ARABA ID → OKUNUR İSİM
+function formatCar(carId) {
+    return carId
+        .replaceAll("_", " ")
+        .replace("P80C", "P80/C");
 }
