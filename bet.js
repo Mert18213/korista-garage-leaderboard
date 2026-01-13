@@ -51,9 +51,8 @@ function goBack() {
 // 🎰 BAHİS YAP
 async function placeBet() {
     const user = auth.currentUser;
-
     if (!user || !CURRENT_RACE_ID) {
-        alert("Yarış henüz yüklenmedi");
+        alert("Aktif yarış yok");
         return;
     }
 
@@ -66,15 +65,12 @@ async function placeBet() {
     }
 
     const userRef = db.collection("users").doc(user.uid);
-    const raceRef = db.collection("races").doc(CURRENT_RACE_ID);
-    const betRef = db
-        .collection("bets")
-        .doc(CURRENT_RACE_ID)
-        .collection("players")
-        .doc(user.uid);
+    const betRaceRef = db.collection("bets").doc(CURRENT_RACE_ID);
+    const betRef = betRaceRef.collection("players").doc(user.uid);
 
-    const raceSnap = await raceRef.get();
-    if (!raceSnap.exists || raceSnap.data().status !== "open") {
+    // 🔑 SADECE BETS KONTROL
+    const betRaceSnap = await betRaceRef.get();
+    if (!betRaceSnap.exists || betRaceSnap.data().status !== "open") {
         alert("Bu yarışa şu an bahis yapılamaz");
         return;
     }
@@ -91,12 +87,10 @@ async function placeBet() {
         return;
     }
 
-    // PUANI DÜŞ
     await userRef.update({
         points: firebase.firestore.FieldValue.increment(-stake)
     });
 
-    // BAHİS KAYDET
     await betRef.set({
         car,
         stake,
@@ -107,6 +101,7 @@ async function placeBet() {
     alert("İddaa başarıyla alındı!");
     loadMyBets();
 }
+
 
 
 // 📜 İDDAA GEÇMİŞİ
