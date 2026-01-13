@@ -113,34 +113,41 @@ async function loadMyBets() {
     const betsDiv = document.getElementById("myBets");
     betsDiv.innerHTML = "";
 
-    const betsSnap = await db
-        .collectionGroup("players")
-        .where(firebase.firestore.FieldPath.documentId(), "==", user.uid)
-        .get();
+    const betsSnap = await db.collection("bets").get();
+    let found = false;
 
-    if (betsSnap.empty) {
-        betsDiv.innerHTML = "Henüz iddaa yapmadın.";
-        return;
+    for (const raceDoc of betsSnap.docs) {
+        const betSnap = await db
+            .collection("bets")
+            .doc(raceDoc.id)
+            .collection("players")
+            .doc(user.uid)
+            .get();
+
+        if (betSnap.exists) {
+            found = true;
+            const bet = betSnap.data();
+
+            betsDiv.innerHTML += `
+                <div class="bet-item">
+                    <span>
+                        <b>${raceDoc.id}</b><br>
+                        ${formatCar(bet.car)}
+                    </span>
+                    <span>
+                        ${bet.stake} puan<br>
+                        ${bet.paid ? "✅ Ödendi" : "⏳ Beklemede"}
+                    </span>
+                </div>
+            `;
+        }
     }
 
-    betsSnap.forEach(doc => {
-        const bet = doc.data();
-        const raceId = doc.ref.parent.parent.id;
-
-        betsDiv.innerHTML += `
-            <div class="bet-item">
-                <span>
-                    <b>${raceId}</b><br>
-                    ${formatCar(bet.car)}
-                </span>
-                <span>
-                    ${bet.stake} puan<br>
-                    ${bet.paid ? "✅ Ödendi" : "⏳ Beklemede"}
-                </span>
-            </div>
-        `;
-    });
+    if (!found) {
+        betsDiv.innerHTML = "Henüz iddaa yapmadın.";
+    }
 }
+
 
 
 // 🚗 FORMAT
