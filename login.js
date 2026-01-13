@@ -1,20 +1,21 @@
-function login(email, password) {
-  auth.signInWithEmailAndPassword(email, password)
-    .then(async (cred) => {
-      const ref = db.collection("users").doc(cred.user.uid);
-      const snap = await ref.get();
+// GÜNLÜK GİRİŞ BONUSU (25 PUAN)
+if (snap.exists) {
+    const data = snap.data();
 
-      const today = new Date().toDateString();
-      const lastLogin = snap.data().lastLogin;
+    const lastLogin = data.lastLogin?.toDate?.();
+    const today = new Date();
 
-      if (lastLogin !== today) {
-        await ref.update({
-          points: snap.data().points + 25,
-          lastLogin: today
+    let giveDailyBonus = true;
+
+    if (lastLogin) {
+        giveDailyBonus =
+            lastLogin.toDateString() !== today.toDateString();
+    }
+
+    if (giveDailyBonus) {
+        await userRef.update({
+            points: firebase.firestore.FieldValue.increment(25),
+            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
         });
-      }
-
-      alert("Giriş başarılı!");
-    })
-    .catch(err => alert(err.message));
+    }
 }
