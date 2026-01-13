@@ -1,18 +1,19 @@
-let CURRENT_RACE_ID = null;
+let currentRaceId = null;
 
-// SAYFA AÇILINCA
-auth.onAuthStateChanged(async user => {
+// ON PAGE LOAD
+auth.onAuthStateChanged(async (user) => {
     if (!user) {
-        alert("Giriş yapmadan iddaa oynayamazsın");
+        alert("You cannot place a bet without logging in.");
         window.location.href = "index.html";
         return;
     }
 
     // USER INFO
-    const snap = await db.collection("users").doc(user.uid).get();
-    if (snap.exists) {
+    const userSnapshot = await db.collection("users").doc(user.uid).get();
+    if (userSnapshot.exists) {
+        const userData = userSnapshot.data();
         document.getElementById("userInfo").innerText =
-            snap.data().username + " | " + snap.data().points + " Puan";
+            `${userData.username} | ${userData.points} Points`;
     }
 
     await loadActiveRace();
@@ -20,39 +21,39 @@ auth.onAuthStateChanged(async user => {
 });
 
 
-// 🔍 AKTİF RACE BUL (SADECE RACES'TEN)
+// 🔍 FIND ACTIVE RACE (ONLY FROM RACES COLLECTION)
 async function loadActiveRace() {
-    const racesSnap = await db
+    const racesSnapshot = await db
         .collection("races")
         .where("status", "==", "open")
         .limit(1)
         .get();
 
-    if (racesSnap.empty) {
-        alert("Şu an açık yarış yok");
+    if (racesSnapshot.empty) {
+        alert("No active races available at the moment.");
         return;
     }
 
-    CURRENT_RACE_ID = racesSnap.docs[0].id;
-    console.log("AKTİF RACE:", CURRENT_RACE_ID);
+    currentRaceId = racesSnapshot.docs[0].id;
+    console.log("ACTIVE RACE:", currentRaceId);
 
-    // 🔓 BUTONU AÇ
-    const betBtn = document.getElementById("betBtn");
-    if (betBtn) betBtn.disabled = false;
+    // 🔓 ENABLE BUTTON
+    const betButton = document.getElementById("betBtn");
+    if (betButton) betButton.disabled = false;
 }
 
 
-// GERİ DÖN
+// NAVIGATE BACK
 function goBack() {
     window.location.href = "index.html";
 }
 
 
-// 🎰 BAHİS YAP
+// 🎰 PLACE A BET
 async function placeBet() {
     const user = auth.currentUser;
-    if (!user || !CURRENT_RACE_ID) {
-        alert("Aktif yarış yok");
+    if (!user || !currentRaceId) {
+        alert("No active race found.");
         return;
     }
 
@@ -60,39 +61,39 @@ async function placeBet() {
     const stake = Number(document.getElementById("stake").value);
 
     if (!car || stake <= 0) {
-        alert("Araba ve puan gir");
+        alert("Please select a car and enter points.");
         return;
     }
 
     const userRef = db.collection("users").doc(user.uid);
-    const betRaceRef = db.collection("bets").doc(CURRENT_RACE_ID);
+    const betRaceRef = db.collection("bets").doc(currentRaceId);
     const betRef = betRaceRef.collection("players").doc(user.uid);
 
-    // 🔑 SADECE BETS DURUMU KONTROL
-    const betRaceSnap = await betRaceRef.get();
-    if (!betRaceSnap.exists || betRaceSnap.data().status !== "open") {
-        alert("Bu yarışa şu an bahis yapılamaz");
+    // 🔑 CHECK BETTING STATUS
+    const betRaceSnapshot = await betRaceRef.get();
+    if (!betRaceSnapshot.exists || betRaceSnapshot.data().status !== "open") {
+        alert("Betting is currently closed for this race.");
         return;
     }
 
-    const userSnap = await userRef.get();
-    if (userSnap.data().points < stake) {
-        alert("Yetersiz puan");
+    const userSnapshot = await userRef.get();
+    if (userSnapshot.data().points < stake) {
+        alert("Insufficient points.");
         return;
     }
 
     const existingBet = await betRef.get();
     if (existingBet.exists) {
-        alert("Bu yarışa zaten bahis yaptın");
+        alert("You have already placed a bet on this race.");
         return;
     }
 
-    // PUAN DÜŞ
+    // DEDUCT POINTS
     await userRef.update({
         points: firebase.firestore.FieldValue.increment(-stake)
     });
 
-    // BAHİS KAYDET
+    // SAVE BET
     await betRef.set({
         car,
         stake,
@@ -100,54 +101,51 @@ async function placeBet() {
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    alert("İddaa başarıyla alındı!");
+    alert("Bet placed successfully!");
     loadMyBets();
 }
 
 
-// 📜 İDDAA GEÇMİŞİ (🔥 DÜZELTİLMİŞ – KİLİTLENME YOK)
-// 📜 İDDAA GEÇMİŞİ (🔥 PERFORMANSLI VE KESİN ÇÖZÜM)
+// 📜 BET HISTORY (OPTIMIZED COLLECTION GROUP)
 async function loadMyBets() {
-    // onAuthStateChanged'den gelen user'ı kullanmak en güvenlisidir
     const user = auth.currentUser;
     if (!user) return;
 
     const betsDiv = document.getElementById("myBets");
     if (!betsDiv) return;
 
-    betsDiv.innerHTML = "Yükleniyor...";
+    betsDiv.innerHTML = "Loading...";
 
     try {
         /* 🚀 COLLECTION GROUP: 
-           Tüm 'players' alt koleksiyonlarını tarar ve doküman adı 
-           senin User ID'n olanları bulur.
+           Searches all 'players' subcollections for documents 
+           matching the current User ID.
         */
-        const betsSnap = await db.collectionGroup("players")
+        const betsSnapshot = await db.collectionGroup("players")
             .where(firebase.firestore.FieldPath.documentId(), "==", user.uid)
             .get();
 
-        if (betsSnap.empty) {
-            betsDiv.innerHTML = "Henüz iddaa yapmadın.";
+        if (betsSnapshot.empty) {
+            betsDiv.innerHTML = "You haven't placed any bets yet.";
             return;
         }
 
-        betsDiv.innerHTML = ""; // Temizle
+        betsDiv.innerHTML = ""; // Clear loader
         
-        // Gelen her bir bahis dokümanını işle
-        betsSnap.forEach((doc) => {
+        betsSnapshot.forEach((doc) => {
             const bet = doc.data();
-            // raceId'yi almak için dokümanın bir üstündeki dokümanın (yarışın) ID'sini alıyoruz
+            // Get raceId from the grandparent document
             const raceId = doc.ref.parent.parent.id;
 
             betsDiv.innerHTML += `
                 <div class="bet-item" style="border-bottom: 1px solid #444; padding: 10px; margin-bottom: 5px;">
                     <span>
-                        <b style="color: #ffcc00;">Yarış: ${raceId}</b><br>
+                        <b style="color: #ffcc00;">Race: ${raceId}</b><br>
                         🚗 ${formatCar(bet.car)}
                     </span>
                     <span style="float: right; text-align: right;">
-                        <b>${bet.stake} Puan</b><br>
-                        ${bet.paid ? "✅ Ödendi" : "⏳ Beklemede"}
+                        <b>${bet.stake} Points</b><br>
+                        ${bet.paid ? "✅ Paid" : "⏳ Pending"}
                     </span>
                     <div style="clear: both;"></div>
                 </div>
@@ -155,15 +153,15 @@ async function loadMyBets() {
         });
 
     } catch (error) {
-        console.error("Geçmiş yüklenirken hata oluştu:", error);
-        betsDiv.innerHTML = "Geçmiş yüklenemedi.";
+        console.error("Error loading history:", error);
+        betsDiv.innerHTML = "Could not load history.";
     }
 }
 
 
-
-// 🚗 FORMAT
+// 🚗 FORMAT CAR NAME
 function formatCar(carId) {
+    if (!carId) return "Unknown Car";
     return carId
         .replaceAll("_", " ")
         .replace("P80C", "P80/C");
