@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Korista Garage | İddaa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Korista Garage | Betting</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
 
-    <!-- USER BAR -->
     <div id="userBar" class="user-bar">
         <span id="userInfo"></span>
-        <button onclick="logout()">Çıkış Yap</button>
+        <button onclick="logout()">Logout</button>
     </div>
 
-    <h1>YARIŞ İDDAASI</h1>
+    <h1>RACE BETTING</h1>
 
     <div class="bet-box">
-        <label>Araba Seç</label>
+        <label for="car">Select a Car</label>
         <select id="car">
-            <option value="">Araba Seç</option>
+            <option value="">-- Choose a Car --</option>
             <option value="KOENIGSEGG_JESKO_ABSOLUT">KOENIGSEGG JESKO ABSOLUT</option>
             <option value="MERCEDES_MAYBACH_EXELERO">MERCEDES-MAYBACH EXELERO</option>
             <option value="FERRARI_P80C">FERRARI P80/C</option>
@@ -31,26 +31,26 @@
             <option value="KOENIGSEGG_CCXR_TREVITA">KOENIGSEGG CCXR TREVITA</option>
         </select>
 
-        <label>Oynanacak Puan</label>
-        <input type="number" id="stake" placeholder="Örn: 100" min="1">
+        <label for="stake">Points to Stake</label>
+        <input type="number" id="stake" placeholder="e.g.: 100" min="1">
 
-        <button onclick="placeBet()">İDDAA OYNA</button>
-        <button class="back-btn" onclick="goBack()">← Geri Dön</button>
+        <button onclick="placeBet()">PLACE BET</button>
+        <button class="back-btn" onclick="goBack()">← Go Back</button>
     </div>
 
-    <h2>İddaa Geçmişim</h2>
-    <div id="myBets">Yükleniyor...</div>
+    <hr>
+
+    <h2>My Bet History</h2>
+    <div id="myBets">Loading...</div>
 
 </div>
 
-<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script src="firebase.js"></script>
 
-<!-- ❗ SADECE BU SAYFAYA ÖZEL JS -->
 <script src="bet.js"></script>
 
 </body>
