@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Korista Garage League</title>
@@ -7,34 +7,31 @@
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="authBox" class="auth-box">
-    <h2>Giriş Yap</h2>
-    <input id="username" placeholder="Kullanıcı adı (kayıt için)">
+    <h2>Login</h2>
+    <input id="username" placeholder="Username (for registration)">
     <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Şifre">
-    <button onclick="register()">Kayıt Ol</button>
-    <button onclick="login()">Giriş Yap</button>
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="register()">Register</button>
+    <button onclick="login()">Login</button>
     <p class="auth-info">
-        Liderlik tablosu herkese açık. İddaa için giriş yap.
+        Leaderboard is public. Login to place bets.
     </p>
 </div>
 
-<!-- USER BAR -->
 <div id="userBar" class="user-bar" style="display:none;">
     <span id="userInfo"></span>
 
-    <!-- 👑 SADECE ADMİN GÖRÜR -->
     <button
         id="adminUpdateBtn"
         class="admin-btn"
         style="display:none; background:#ff4d4d;"
         onclick="calculateRace()"
     >
-        ⚙️ HESAPLA
+        ⚙️ CALCULATE
     </button>
 
-    <button onclick="logout()">Çıkış Yap</button>
+    <button onclick="logout()">Logout</button>
 </div>
 
 <div class="container">
@@ -46,7 +43,6 @@
         SEASON 1 • 1 RACES PLAYED • CURRENT RACE: 8
     </div>
 
-    <!-- LEADERBOARD -->
     <div class="table active">
         <div class="table-header">
             <span>POS</span>
@@ -64,10 +60,8 @@
         <div class="row"><span>8</span><span>KOENIGSEGG CCXR TREVITA</span><span>4</span></div>
     </div>
 
-    <!-- İDDAA -->
-    <button class="bet-btn" onclick="goToBet()">🎰 İDDAA YAP</button>
+    <button class="bet-btn" onclick="goToBet()">🎰 PLACE BET</button>
 
-    <!-- YOUTUBE -->
     <a class="youtube-btn"
        href="https://www.youtube.com/@KORISTAGARAGE"
        target="_blank">
@@ -77,7 +71,6 @@
     <div class="footer">koristagarage.online</div>
 </div>
 
-<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -85,10 +78,9 @@
 <script src="firebase.js"></script>
 <script src="auth.js"></script>
 
-<!-- 🔧 ADMIN – HESAPLA FONKSİYONU -->
 <script>
 async function calculateRace() {
-    const raceId = prompt("Hangi yarışı hesaplayalım? (örn: race2)");
+    const raceId = prompt("Which race should we calculate? (e.g., race2)");
     if (!raceId) return;
 
     const raceRef = db.collection("races").doc(raceId);
@@ -97,35 +89,35 @@ async function calculateRace() {
         .doc(raceId)
         .collection("players");
 
-    // RACE KONTROL
+    // RACE CHECK
     const raceSnap = await raceRef.get();
     if (!raceSnap.exists) {
-        alert("Böyle bir yarış yok");
+        alert("Race not found");
         return;
     }
 
     const race = raceSnap.data();
 
     if (race.calculated === true) {
-        alert("Bu yarış zaten hesaplandı");
+        alert("This race has already been calculated");
         return;
     }
 
     if (race.status !== "finished") {
-        alert("Yarış bitmeden hesaplama yapılamaz");
+        alert("Cannot calculate before the race is finished");
         return;
     }
 
-    // BETLERİ ÇEK
+    // GET BETS
     const betsSnap = await betsRef.get();
 
     if (betsSnap.empty) {
-        alert("Bu yarışa hiç bahis yapılmamış");
+        alert("No bets placed for this race");
     }
 
     let winCount = 0;
 
-    // 🔁 PUAN DAĞIT
+    // 🔁 DISTRIBUTE POINTS
     for (const betDoc of betsSnap.docs) {
         const bet = betDoc.data();
 
@@ -146,25 +138,24 @@ async function calculateRace() {
         });
     }
 
-    // 🔒 BETS KAPAT
+    // 🔒 CLOSE BETS
     await db.collection("bets").doc(raceId).update({
         status: "closed"
     });
 
-    // ✅ RACE KAPAT
+    // ✅ CLOSE RACE
     await raceRef.update({
         calculated: true
     });
 
     alert(
         raceId +
-        " hesaplandı ✅\n" +
-        "Kazanan sayısı: " + winCount + "\n" +
-        "Hafta kapatıldı."
+        " calculated ✅\n" +
+        "Winner count: " + winCount + "\n" +
+        "Week has been closed."
     );
 }
 </script>
-
 
 </body>
 </html>
