@@ -105,5 +105,5 @@ function goToBet() {
     }
 
     // Redirect to the betting page
-    window.location.href = "bahis.html"; 
+    window.location.href = "bet.html"; 
 }
