@@ -1,103 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <title>Korista Garage League</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
- <div id="userBar" class="user-bar" style="display:none;">
-  <span id="userInfo"></span>
-  <button onclick="logout()">Çıkış Yap</button>
-</div>
-   
-<!-- LOGIN PANEL -->
+
+<!-- LOGIN -->
 <div id="authBox" class="auth-box">
     <h2>Giriş Yap</h2>
-
-    <input type="text" id="username" placeholder="Kullanıcı adı (kayıt için)">
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Şifre">
-
+    <input id="username" placeholder="Kullanıcı adı (kayıt için)">
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Şifre">
     <button onclick="register()">Kayıt Ol</button>
     <button onclick="login()">Giriş Yap</button>
+    <p class="auth-info">
+        Liderlik tablosu herkese açık. İddaa için giriş yap.
+    </p>
 </div>
-    
-<div class="container" id="mainContent">
+
+<!-- USER BAR -->
+<div id="userBar" class="user-bar" style="display:none;">
+    <span id="userInfo"></span>
+    <button onclick="logout()">Çıkış Yap</button>
+</div>
+
+<div class="container">
 
     <h2 class="subtitle">KORISTA GARAGE HYPERCARS</h2>
-    <h1 id="tableTitle">A LEAGUE TABLE</h1>
+    <h1>A LEAGUE TABLE</h1>
 
-    <div class="slider">
-
-        <!-- BİREYSEL TABLO (8 ARABA) -->
-        <div class="table active">
-            <div class="table-header">
-                <span>POS</span>
-                <span>CAR</span>
-                <span>PTS</span>
-            </div>
-
-            <div class="row"><span>1</span><span>KOENIGSEGG JESKO ABSOLUT</span><span>25</span></div>
-            <div class="row"><span>2</span><span>MERCEDES-MAYBACH EXELERO</span><span>18</span></div>
-            <div class="row"><span>3</span><span>FERRARI P80/C</span><span>15</span></div>
-            <div class="row"><span>4</span><span>PAGANI ZONDA HP BARCHETTA</span><span>12</span></div>
-            <div class="row"><span>5</span><span>MERCEDES-BENZ 300 SLR</span><span>10</span></div>
-            <div class="row"><span>6</span><span>PAGANI HUAYRA R</span><span>8</span></div>
-            <div class="row"><span>7</span><span>FERRARI 812 SUPERFAST</span><span>6</span></div>
-            <div class="row"><span>8</span><span>KOENIGSEGG CCXR TREVITA</span><span>4</span></div>
+    <!-- LEADERBOARD -->
+    <div class="table active">
+        <div class="table-header">
+            <span>POS</span><span>CAR</span><span>PTS</span>
         </div>
 
-        <!-- TAKIM TABLOSU -->
-        <div class="table">
-            <div class="table-header">
-                <span>POS</span>
-                <span>TEAM</span>
-                <span>PTS</span>
-            </div>
-
-            <div class="row"><span>1</span><span>KOENIGSEGG</span><span>29</span></div>
-            <div class="row"><span>2</span><span>MERCEDES</span><span>28</span></div>
-            <div class="row"><span>3</span><span>FERRARI</span><span>21</span></div>
-            <div class="row"><span>4</span><span>PAGANI</span><span>20</span></div>
-        </div>
-
+        <div class="row"><span>1</span><span>KOENIGSEGG JESKO ABSOLUT</span><span>25</span></div>
+        <div class="row"><span>2</span><span>MERCEDES-MAYBACH EXELERO</span><span>18</span></div>
+        <div class="row"><span>3</span><span>FERRARI P80/C</span><span>15</span></div>
+        <div class="row"><span>4</span><span>PAGANI ZONDA HP BARCHETTA</span><span>12</span></div>
+        <div class="row"><span>5</span><span>MERCEDES-BENZ 300 SLR</span><span>10</span></div>
+        <div class="row"><span>6</span><span>PAGANI HUAYRA R</span><span>8</span></div>
+        <div class="row"><span>7</span><span>FERRARI 812 SUPERFAST</span><span>6</span></div>
+        <div class="row"><span>8</span><span>KOENIGSEGG CCXR TREVITA</span><span>4</span></div>
     </div>
 
-    <div class="controls">
-        <button onclick="prev()">⬅</button>
-        <button onclick="next()">➡</button>
-    </div>
-    <button class="bet-btn" onclick="goToBet()">
-    🎰 İDDAA YAP
-    </button>
+    <button class="bet-btn" onclick="goToBet()">🎰 İDDAA YAP</button>
 
-    <!-- YOUTUBE BUTONU -->
-    <a class="youtube-btn"
-       href="https://www.youtube.com/@KORISTAGARAGE"
-       target="_blank">
-       ▶ VISIT OUR YOUTUBE CHANNEL
+    <a class="youtube-btn" href="https://www.youtube.com/@KORISTAGARAGE" target="_blank">
+        ▶ VISIT OUR YOUTUBE CHANNEL
     </a>
 
     <div class="footer">koristagarage.online</div>
-
 </div>
 
-<script src="script.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="firebase.js"></script>
 <script src="auth.js"></script>
 
-
 </body>
 </html>
-
-
-
-
-
-
-
