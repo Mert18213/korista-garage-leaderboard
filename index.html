@@ -87,11 +87,20 @@
 
 <script>
     // 👑 ADMIN BUTONUNA BASINCA
-    function openAdminPanel() {
-        alert("Admin paneli yakında 👑");
-        // ileride: window.location.href = "admin.html";
-    }
+function openAdminPanel() {
+    const newPoints = prompt("Yeni puanları güncelle (örnek test)");
+
+    if (!newPoints) return;
+
+    db.collection("league").doc("current").update({
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert("Tablo güncellendi");
+}
+
 </script>
 
 </body>
 </html>
+
