@@ -106,45 +106,57 @@ async function placeBet() {
 
 
 // 📜 İDDAA GEÇMİŞİ (🔥 DÜZELTİLMİŞ – KİLİTLENME YOK)
+// 📜 İDDAA GEÇMİŞİ (🔥 PERFORMANSLI VE KESİN ÇÖZÜM)
 async function loadMyBets() {
+    // onAuthStateChanged'den gelen user'ı kullanmak en güvenlisidir
     const user = auth.currentUser;
     if (!user) return;
 
     const betsDiv = document.getElementById("myBets");
-    betsDiv.innerHTML = "";
+    if (!betsDiv) return;
 
-    const betsSnap = await db.collection("bets").get();
-    let found = false;
+    betsDiv.innerHTML = "Yükleniyor...";
 
-    for (const raceDoc of betsSnap.docs) {
-        const betSnap = await db
-            .collection("bets")
-            .doc(raceDoc.id)
-            .collection("players")
-            .doc(user.uid)
+    try {
+        /* 🚀 COLLECTION GROUP: 
+           Tüm 'players' alt koleksiyonlarını tarar ve doküman adı 
+           senin User ID'n olanları bulur.
+        */
+        const betsSnap = await db.collectionGroup("players")
+            .where(firebase.firestore.FieldPath.documentId(), "==", user.uid)
             .get();
 
-        if (betSnap.exists) {
-            found = true;
-            const bet = betSnap.data();
+        if (betsSnap.empty) {
+            betsDiv.innerHTML = "Henüz iddaa yapmadın.";
+            return;
+        }
+
+        betsDiv.innerHTML = ""; // Temizle
+        
+        // Gelen her bir bahis dokümanını işle
+        betsSnap.forEach((doc) => {
+            const bet = doc.data();
+            // raceId'yi almak için dokümanın bir üstündeki dokümanın (yarışın) ID'sini alıyoruz
+            const raceId = doc.ref.parent.parent.id;
 
             betsDiv.innerHTML += `
-                <div class="bet-item">
+                <div class="bet-item" style="border-bottom: 1px solid #444; padding: 10px; margin-bottom: 5px;">
                     <span>
-                        <b>${raceDoc.id}</b><br>
-                        ${formatCar(bet.car)}
+                        <b style="color: #ffcc00;">Yarış: ${raceId}</b><br>
+                        🚗 ${formatCar(bet.car)}
                     </span>
-                    <span>
-                        ${bet.stake} puan<br>
+                    <span style="float: right; text-align: right;">
+                        <b>${bet.stake} Puan</b><br>
                         ${bet.paid ? "✅ Ödendi" : "⏳ Beklemede"}
                     </span>
+                    <div style="clear: both;"></div>
                 </div>
             `;
-        }
-    }
+        });
 
-    if (!found) {
-        betsDiv.innerHTML = "Henüz iddaa yapmadın.";
+    } catch (error) {
+        console.error("Geçmiş yüklenirken hata oluştu:", error);
+        betsDiv.innerHTML = "Geçmiş yüklenemedi.";
     }
 }
 
