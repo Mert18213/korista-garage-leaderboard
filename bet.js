@@ -69,4 +69,48 @@ async function placeBet() {
 
     alert("İddaa başarıyla alındı!");
     goBack();
+
+    async function loadMyBets() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const betsDiv = document.getElementById("myBets");
+    betsDiv.innerHTML = "";
+
+    const racesSnap = await db.collection("bets").get();
+
+    let found = false;
+
+    for (const raceDoc of racesSnap.docs) {
+        const betSnap = await db
+            .collection("bets")
+            .doc(raceDoc.id)
+            .collection("players")
+            .doc(user.uid)
+            .get();
+
+        if (betSnap.exists) {
+            found = true;
+            const bet = betSnap.data();
+
+            betsDiv.innerHTML += `
+                <div class="bet-item">
+                    <span>
+                        <b>${raceDoc.id}</b><br>
+                        ${formatCar(bet.car)}
+                    </span>
+                    <span>
+                        ${bet.stake} puan<br>
+                        ${bet.paid ? "✅ Ödendi" : "⏳ Beklemede"}
+                    </span>
+                </div>
+            `;
+        }
+    }
+
+    if (!found) {
+        betsDiv.innerHTML = "Henüz iddaa yapmadın.";
+    }
+}
+
 }
