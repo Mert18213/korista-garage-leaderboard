@@ -1,27 +1,24 @@
-// Kullanıcı giriş durumunu takip et
+// KULLANICI GİRİŞ DURUMUNU TAKİP ET
 auth.onAuthStateChanged(async user => {
     const authBox = document.getElementById("authBox");
     const userBar = document.getElementById("userBar");
 
     if (user) {
-        authBox.style.display = "none";
-        userBar.style.display = "flex";
+        if (authBox) authBox.style.display = "none";
+        if (userBar) userBar.style.display = "flex";
 
         const snap = await db.collection("users").doc(user.uid).get();
-        document.getElementById("userInfo").innerText =
-            snap.data().username + " | " + snap.data().points + " Puan";
+        if (snap.exists) {
+            document.getElementById("userInfo").innerText =
+                snap.data().username + " | " + snap.data().points + " Puan";
+        }
     } else {
-        authBox.style.display = "block";
-        userBar.style.display = "none";
+        if (authBox) authBox.style.display = "block";
+        if (userBar) userBar.style.display = "none";
     }
 });
 
-function logout() {
-    auth.signOut();
-}
-
-
-// KAYIT OL (500 PUANLA BAŞLAT)
+// KAYIT OL (500 PUAN)
 function register() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
@@ -61,7 +58,7 @@ function login() {
         .catch(err => alert(err.message));
 }
 
-// ÇIKIŞ YAP (ileride kullanacağız)
+// ÇIKIŞ YAP
 function logout() {
     auth.signOut();
 }
@@ -77,9 +74,6 @@ function goToBet() {
         return;
     }
 
-    alert("Bahis ekranı yakında açılacak 👀");
-}
-
-
+    // GİRİŞ VARSA
     window.location.href = "bahis.html";
 }
