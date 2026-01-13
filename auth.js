@@ -1,42 +1,40 @@
 const ADMIN_EMAIL = "mert18213@gmail.com";
 
-// KULLANICI GİRİŞ DURUMUNU TAKİP ET
-auth.onAuthStateChanged(async user => {
+// TRACK USER AUTHENTICATION STATE
+auth.onAuthStateChanged(async (user) => {
     const authBox = document.getElementById("authBox");
     const userBar = document.getElementById("userBar");
     const adminBtn = document.getElementById("adminUpdateBtn");
 
     if (user) {
+        // UI Adjustments for logged-in user
         if (authBox) authBox.style.display = "none";
         if (userBar) userBar.style.display = "flex";
 
         const userRef = db.collection("users").doc(user.uid);
-        const snap = await userRef.get();
+        const userSnapshot = await userRef.get();
 
-        if (snap.exists) {
-            const data = snap.data();
+        if (userSnapshot.exists) {
+            const userData = userSnapshot.data();
 
             document.getElementById("userInfo").innerText =
-                data.username + " | " + data.points + " Puan";
+                `${userData.username} | ${userData.points} Points`;
 
-            // 🔄 SON GİRİŞİ GÜNCELLE
+            // 🔄 UPDATE LAST LOGIN TIMESTAMP
             await userRef.update({
                 lastLogin: firebase.firestore.FieldValue.serverTimestamp()
             });
         }
 
-        // 👑 ADMIN KONTROLÜ (email + kayıtlı user şartı)
-        if (
-            adminBtn &&
-            user.email === ADMIN_EMAIL &&
-            snap.exists
-        ) {
-            adminBtn.style.display = "inline-block";
-        } else if (adminBtn) {
-            adminBtn.style.display = "none";
+        // 👑 ADMIN ACCESS CONTROL (Requires specific email and existing record)
+        const isAdmin = user.email === ADMIN_EMAIL && userSnapshot.exists;
+        
+        if (adminBtn) {
+            adminBtn.style.display = isAdmin ? "inline-block" : "none";
         }
 
     } else {
+        // UI Adjustments for logged-out state
         if (authBox) authBox.style.display = "block";
         if (userBar) userBar.style.display = "none";
         if (adminBtn) adminBtn.style.display = "none";
@@ -44,19 +42,20 @@ auth.onAuthStateChanged(async user => {
 });
 
 
-// KAYIT OL (500 PUAN)
+// REGISTER NEW USER (Initial Reward: 500 Points)
 function register() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     const username = document.getElementById("username").value;
 
     if (!email || !password || !username) {
-        alert("Tüm alanları doldur");
+        alert("Please fill in all fields.");
         return;
     }
 
     auth.createUserWithEmailAndPassword(email, password)
-        .then(cred => {
+        .then((cred) => {
+            // Create user document in Firestore
             return db.collection("users").doc(cred.user.uid).set({
                 username,
                 points: 500,
@@ -65,43 +64,46 @@ function register() {
             });
         })
         .then(() => {
-            alert("Kayıt başarılı! 500 puan yüklendi.");
+            alert("Registration successful! 500 points have been added to your account.");
         })
-        .catch(err => alert(err.message));
+        .catch((err) => alert(err.message));
 }
 
 
-// GİRİŞ YAP
+// LOGIN USER
 function login() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     if (!email || !password) {
-        alert("Email ve şifre gir");
+        alert("Please enter your email and password.");
         return;
     }
 
     auth.signInWithEmailAndPassword(email, password)
-        .catch(err => alert(err.message));
+        .catch((err) => alert(err.message));
 }
 
 
-// ÇIKIŞ YAP
+// LOGOUT USER
 function logout() {
     auth.signOut();
 }
 
 
-// İDDAA SAYFASINA GİT (LOGIN KONTROLLÜ)
+// NAVIGATE TO BETTING PAGE (With Auth Check)
 function goToBet() {
     const user = auth.currentUser;
 
     if (!user) {
-        alert("İddaa oynamak için giriş yapmalısın");
-        document.getElementById("authBox")
-            .scrollIntoView({ behavior: "smooth" });
+        alert("You must be logged in to place a bet.");
+        const authBox = document.getElementById("authBox");
+        if (authBox) {
+            authBox.scrollIntoView({ behavior: "smooth" });
+        }
         return;
     }
 
-    window.location.href = "bahis.html";
+    // Redirect to the betting page
+    window.location.href = "bahis.html"; 
 }
