@@ -77,5 +77,9 @@ function goToBet() {
         return;
     }
 
+    alert("Bahis ekranı yakında açılacak 👀");
+}
+
+
     window.location.href = "bahis.html";
 }
