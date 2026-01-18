@@ -179,31 +179,44 @@ async function makePurchase() {
     const cost = Number(document.getElementById("purchaseCost").value);
 
     if (!itemName || cost <= 0) {
-        alert("Item name and points required");
+        alert("Please enter item name and points");
         return;
     }
 
     const userRef = db.collection("users").doc(user.uid);
     const userSnap = await userRef.get();
 
-    if (userSnap.data().points < cost) {
-        alert("Not enough points");
+    const userPoints = userSnap.data().points;
+
+    // 🔒 MINIMUM 1500 PUAN KURALI
+    if (userPoints < 1500) {
+        alert("You need at least 1500 points to send a message.");
         return;
     }
 
-    // puan düş
+    // 🔒 YETERLİ PUAN VAR MI
+    if (userPoints < cost) {
+        alert("Not enough points.");
+        return;
+    }
+
+    // PUAN DÜŞ
     await userRef.update({
         points: firebase.firestore.FieldValue.increment(-cost)
     });
 
-    // satın alma kaydı
+    // SATIN ALMA / MESAJ KAYDI
     await db.collection("purchases").add({
         userId: user.uid,
         username: userSnap.data().username,
-        itemName,
-        cost,
+        message: itemName,
+        cost: cost,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    alert("Purchase successful!");
+    document.getElementById("purchaseName").value = "";
+    document.getElementById("purchaseCost").value = "";
+
+    alert("Message sent successfully!");
 }
+
