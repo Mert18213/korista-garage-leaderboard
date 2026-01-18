@@ -7,6 +7,7 @@
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="authBox" class="auth-box">
     <h2>Login</h2>
     <input id="username" placeholder="Username (for registration)">
@@ -19,9 +20,11 @@
     </p>
 </div>
 
+<!-- USER BAR -->
 <div id="userBar" class="user-bar" style="display:none;">
     <span id="userInfo"></span>
 
+    <!-- ADMIN -->
     <button
         id="adminUpdateBtn"
         class="admin-btn"
@@ -40,9 +43,10 @@
     <h1>A LEAGUE TABLE</h1>
 
     <div class="season-info">
-        SEASON 1 • 1 RACES PLAYED • CURRENT RACE: 8
+        SEASON 1 • CURRENT RACE ACTIVE
     </div>
 
+    <!-- 🚗 CAR LEADERBOARD (8 CARS – DOKUNULMADI) -->
     <div class="table active">
         <div class="table-header">
             <span>POS</span>
@@ -60,31 +64,41 @@
         <div class="row"><span>8</span><span>KOENIGSEGG CCXR TREVITA</span><span>4</span></div>
     </div>
 
+    <!-- 🔥 TOP 10 USERS -->
+    <h2 style="margin-top:40px;">TOP 10 PLAYERS</h2>
+
+    <div class="table active">
+        <div class="table-header">
+            <span>#</span>
+            <span>USER</span>
+            <span>PTS</span>
+        </div>
+
+        <div id="top10List"></div>
+    </div>
+
+    <!-- BET -->
     <button class="bet-btn" onclick="goToBet()">🎰 PLACE BET</button>
 
-<div class="social-container">
-    <a class="youtube-btn" 
-       href="https://www.youtube.com/@KORISTAGARAGE" 
-       target="_blank">
-        ▶ VISIT OUR YOUTUBE CHANNEL
-    </a>
+    <!-- SOCIAL -->
+    <div class="social-container">
+        <a class="youtube-btn" href="https://www.youtube.com/@KORISTAGARAGE" target="_blank">
+            ▶ VISIT OUR YOUTUBE CHANNEL
+        </a>
 
-    <a class="instagram-btn" 
-       href="https://www.instagram.com/koristagarage" 
-       target="_blank">
-        📸 FOLLOW US ON INSTAGRAM
-    </a>
+        <a class="instagram-btn" href="https://www.instagram.com/koristagarage" target="_blank">
+            📸 FOLLOW US ON INSTAGRAM
+        </a>
 
-    <a class="tiktok-btn" 
-       href="https://www.tiktok.com/@korista.garage" 
-       target="_blank">
-        🎵 FOLLOW US ON TIKTOK
-    </a>
-</div>
+        <a class="tiktok-btn" href="https://www.tiktok.com/@korista.garage" target="_blank">
+            🎵 FOLLOW US ON TIKTOK
+        </a>
+    </div>
 
     <div class="footer">koristagarage.online</div>
 </div>
 
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -93,17 +107,43 @@
 <script src="auth.js"></script>
 
 <script>
+/* 🔥 TOP 10 USERS */
+async function loadTop10() {
+    const list = document.getElementById("top10List");
+    list.innerHTML = "";
+
+    const snap = await db
+        .collection("users")
+        .orderBy("points", "desc")
+        .limit(10)
+        .get();
+
+    let rank = 1;
+
+    snap.forEach(doc => {
+        const user = doc.data();
+
+        list.innerHTML += `
+            <div class="row">
+                <span>${rank}</span>
+                <span>${user.username}</span>
+                <span>${user.points}</span>
+            </div>
+        `;
+        rank++;
+    });
+}
+
+loadTop10();
+
+/* ⚙️ ADMIN – CALCULATE */
 async function calculateRace() {
     const raceId = prompt("Which race should we calculate? (e.g., race2)");
     if (!raceId) return;
 
     const raceRef = db.collection("races").doc(raceId);
-    const betsRef = db
-        .collection("bets")
-        .doc(raceId)
-        .collection("players");
+    const betsRef = db.collection("bets").doc(raceId).collection("players");
 
-    // RACE CHECK
     const raceSnap = await raceRef.get();
     if (!raceSnap.exists) {
         alert("Race not found");
@@ -118,59 +158,33 @@ async function calculateRace() {
     }
 
     if (race.status !== "finished") {
-        alert("Cannot calculate before the race is finished");
+        alert("Race must be finished first");
         return;
     }
 
-    // GET BETS
     const betsSnap = await betsRef.get();
-
-    if (betsSnap.empty) {
-        alert("No bets placed for this race");
-    }
-
     let winCount = 0;
 
-    // 🔁 DISTRIBUTE POINTS
     for (const betDoc of betsSnap.docs) {
         const bet = betDoc.data();
-
-        if (bet.paid === true) continue;
+        if (bet.paid) continue;
 
         if (bet.car === race.winner) {
-            const userRef = db.collection("users").doc(betDoc.id);
-
-            await userRef.update({
+            await db.collection("users").doc(betDoc.id).update({
                 points: firebase.firestore.FieldValue.increment(bet.stake * 2)
             });
-
             winCount++;
         }
 
-        await betDoc.ref.update({
-            paid: true
-        });
+        await betDoc.ref.update({ paid: true });
     }
 
-    // 🔒 CLOSE BETS
-    await db.collection("bets").doc(raceId).update({
-        status: "closed"
-    });
+    await db.collection("bets").doc(raceId).update({ status: "closed" });
+    await raceRef.update({ calculated: true });
 
-    // ✅ CLOSE RACE
-    await raceRef.update({
-        calculated: true
-    });
-
-    alert(
-        raceId +
-        " calculated ✅\n" +
-        "Winner count: " + winCount + "\n" +
-        "Week has been closed."
-    );
+    alert(`${raceId} calculated ✅\nWinners: ${winCount}`);
 }
 </script>
 
 </body>
 </html>
-
