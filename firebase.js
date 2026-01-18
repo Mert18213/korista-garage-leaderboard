@@ -1,4 +1,4 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyBTkuXoSn4NpORgbFLltl8qvXD5D00lM1s",
   authDomain: "koristagarage-ab9fb.firebaseapp.com",
@@ -9,7 +9,9 @@ const firebaseConfig = {
   measurementId: "G-TZ92WETRX6"
 };
 
+// Init
 firebase.initializeApp(firebaseConfig);
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+// 🔑 GLOBAL YAP
+window.auth = firebase.auth();
+window.db = firebase.firestore();
