@@ -1,6 +1,6 @@
 let currentRaceId = null;
 
-// 🔄 SAYFA YÜKLENDİĞİNDE ÇALIŞAN ANA DÖNGÜ
+// 🔄 ON PAGE LOAD
 auth.onAuthStateChanged(async (user) => {
     if (!user) {
         window.location.href = "index.html";
@@ -8,7 +8,7 @@ auth.onAuthStateChanged(async (user) => {
     }
 
     try {
-        // 1. Kullanıcı Verilerini Dinle (onSnapshot ile puanlar anlık güncellenir)
+        // 1. Listen to User Data (Updates UI in real-time)
         const userRef = db.collection("users").doc(user.uid);
         
         userRef.onSnapshot((doc) => {
@@ -16,25 +16,25 @@ auth.onAuthStateChanged(async (user) => {
                 const userData = doc.data();
                 const points = userData.points || 0;
 
-                // Üst barı güncelle
+                // Update top bar
                 document.getElementById("userInfo").innerText = 
                     `${userData.username} | ${points} Points`;
 
-                // Mesaj Gönderme Buton Kontrolü
+                // Update Purchase Button Status
                 updatePurchaseButton(points, userData.lastMessageSentAt);
             }
         });
 
-        // 2. Aktif Yarışı ve Bahis Geçmişini Yükle
+        // 2. Load Active Race & History
         await loadActiveRace();
         await loadMyBets();
 
     } catch (error) {
-        console.error("Başlatma hatası:", error);
+        console.error("Initialization Error:", error);
     }
 });
 
-// 🔍 AKTİF YARIŞI BUL VE BUTONU AÇ
+// 🔍 FIND ACTIVE RACE & ENABLE BUTTON
 async function loadActiveRace() {
     try {
         const racesSnapshot = await db
@@ -50,36 +50,36 @@ async function loadActiveRace() {
                 betButton.disabled = true;
                 betButton.style.opacity = "0.5";
             }
-            console.log("Aktif yarış bulunamadı.");
+            console.log("No active races found.");
             return;
         }
 
         currentRaceId = racesSnapshot.docs[0].id;
         
-        // Yarış varsa butonu aktif et
+        // Enable button if race exists
         if (betButton) {
             betButton.disabled = false;
             betButton.style.opacity = "1";
         }
-        console.log("Aktif Yarış Tanımlandı:", currentRaceId);
+        console.log("Active Race Identified:", currentRaceId);
     } catch (error) {
-        console.error("Yarış yükleme hatası:", error);
+        console.error("Race loading error:", error);
     }
 }
 
-// 🎰 BAHİS OYNAMA
+// 🎰 PLACE A BET
 async function placeBet() {
     const user = auth.currentUser;
     const car = document.getElementById("car").value;
     const stake = Number(document.getElementById("stake").value);
 
     if (!user || !currentRaceId) {
-        alert("Aktif bir yarış bulunamadı.");
+        alert("No active race found.");
         return;
     }
 
     if (!car || stake <= 0) {
-        alert("Lütfen bir araç seçin ve geçerli bir miktar girin.");
+        alert("Please select a car and enter a valid amount of points.");
         return;
     }
 
@@ -89,13 +89,13 @@ async function placeBet() {
     try {
         const userSnap = await userRef.get();
         if (userSnap.data().points < stake) {
-            alert("Yetersiz puan!");
+            alert("Insufficient points!");
             return;
         }
 
         const existingBet = await betRef.get();
         if (existingBet.exists) {
-            alert("Bu yarışa zaten bahis yaptınız.");
+            alert("You have already placed a bet on this race.");
             return;
         }
 
@@ -110,21 +110,21 @@ async function placeBet() {
         });
 
         await batch.commit();
-        alert("Bahis başarıyla oynandı!");
-        // UI yenilemesi için gerekirse loadMyBets çağrılabilir veya reload yapılabilir
+        alert("Bet placed successfully!");
+        // History updates automatically via loadMyBets or snapshot if you prefer
     } catch (error) {
-        alert("Hata: " + error.message);
+        alert("Error: " + error.message);
     }
 }
 
-// 🛒 MESAJ SATIN AL (GÜNLÜK SINIRLI)
+// 🛒 SEND MESSAGE (LIMITED TO 1 PER DAY)
 async function makePurchase() {
     const user = auth.currentUser;
     const message = document.getElementById("purchaseName").value.trim();
     const COST = 1500;
 
     if (!user || !message) {
-        alert("Lütfen bir mesaj yazın.");
+        alert("Please write a message.");
         return;
     }
 
@@ -134,17 +134,17 @@ async function makePurchase() {
         const userSnap = await userRef.get();
         const userData = userSnap.data();
 
-        // Günlük sınır kontrolü
+        // Daily limit check
         if (userData.lastMessageSentAt) {
             const lastSent = userData.lastMessageSentAt.toDate();
             if (lastSent.toDateString() === new Date().toDateString()) {
-                alert("Bugün zaten bir mesaj gönderdiniz!");
+                alert("You have already sent a message today. Daily limit reached!");
                 return;
             }
         }
 
         if (userData.points < COST) {
-            alert("Puanınız yetersiz.");
+            alert("Insufficient points.");
             return;
         }
 
@@ -164,13 +164,14 @@ async function makePurchase() {
 
         await batch.commit();
         document.getElementById("purchaseName").value = "";
-        alert("Mesaj gönderildi!");
+        alert("Message sent successfully! (Daily limit reached)");
     } catch (error) {
-        console.error("Hata:", error);
+        console.error("Purchase Error:", error);
+        alert("An error occurred during the transaction.");
     }
 }
 
-// 📜 GEÇMİŞİ YÜKLE
+// 📜 LOAD HISTORY
 async function loadMyBets() {
     const user = auth.currentUser;
     const betsDiv = document.getElementById("myBets");
@@ -182,7 +183,7 @@ async function loadMyBets() {
             .get();
 
         if (snap.empty) {
-            betsDiv.innerHTML = "No bets found.";
+            betsDiv.innerHTML = "You haven't placed any bets yet.";
             return;
         }
 
@@ -192,16 +193,24 @@ async function loadMyBets() {
             const raceId = doc.ref.parent.parent.id;
             betsDiv.innerHTML += `
                 <div class="bet-item" style="border-bottom: 1px solid #444; padding: 10px;">
-                    <b>Race: ${raceId}</b><br>
-                    🚗 ${formatCar(b.car)} | 💰 ${b.stake} Pts | ${b.paid ? "✅ Paid" : "⏳ Pending"}
+                    <span style="float: left;">
+                        <b style="color: #ffcc00;">Race: ${raceId}</b><br>
+                        🚗 ${formatCar(b.car)}
+                    </span>
+                    <span style="float: right; text-align: right;">
+                        <b>${b.stake} Points</b><br>
+                        ${b.paid ? "✅ Paid" : "⏳ Pending"}
+                    </span>
+                    <div style="clear: both;"></div>
                 </div>`;
         });
     } catch (e) {
+        console.error("History Error:", e);
         betsDiv.innerHTML = "Error loading history.";
     }
 }
 
-// 🛠️ YARDIMCI FONKSİYONLAR
+// 🛠️ UTILITY FUNCTIONS
 function updatePurchaseButton(points, lastSentTS) {
     const buyBtn = document.getElementById("buyBtn");
     const info = document.getElementById("purchaseInfo");
@@ -215,7 +224,7 @@ function updatePurchaseButton(points, lastSentTS) {
     if (points < 1500) {
         buyBtn.disabled = true;
         buyBtn.style.opacity = "0.5";
-        info.innerHTML = "🔒 You need 1500 points.";
+        info.innerHTML = "🔒 You need at least <b>1500 points</b>.";
     } else if (isToday) {
         buyBtn.disabled = true;
         buyBtn.style.opacity = "0.5";
@@ -223,12 +232,12 @@ function updatePurchaseButton(points, lastSentTS) {
     } else {
         buyBtn.disabled = false;
         buyBtn.style.opacity = "1";
-        info.innerHTML = "✅ You can send a message for 1500 points.";
+        info.innerHTML = "✅ You can send a message for <b>1500 points</b>.";
     }
 }
 
 function formatCar(carId) {
-    return carId ? carId.replaceAll("_", " ").replace("P80C", "P80/C") : "Unknown";
+    return carId ? carId.replaceAll("_", " ").replace("P80C", "P80/C") : "Unknown Car";
 }
 
 function goBack() { window.location.href = "index.html"; }
