@@ -9,34 +9,26 @@ auth.onAuthStateChanged(async (user) => {
 
     try {
         const userRef = db.collection("users").doc(user.uid);
-        const userSnapshot = await userRef.get(); // snap yerine userSnapshot kullandık
+        const userSnapshot = await userRef.get();
 
         if (userSnapshot.exists) {
             const userData = userSnapshot.data();
             const points = userData.points || 0;
 
-            document.getElementById("userInfo").innerText = 
+            document.getElementById("userInfo").innerText =
                 `${userData.username} | ${points} Points`;
 
-            // Mesaj butonunu puan durumuna göre güncelle
             updatePurchaseButton(points, userData.lastMessageSentAt);
         }
 
         await loadActiveRace();
         await loadMyBets();
-    } catch (error) {
-        console.error("Initialization Error:", error);
-    }
-});
-
-        // 2. Load Active Race & History
-        await loadActiveRace();
-        await loadMyBets();
 
     } catch (error) {
         console.error("Initialization Error:", error);
     }
 });
+
 
 // 🔍 FIND ACTIVE RACE & ENABLE BUTTON
 async function loadActiveRace() {
