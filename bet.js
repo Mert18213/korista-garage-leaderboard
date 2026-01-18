@@ -171,3 +171,39 @@ function formatCar(carId) {
         .replaceAll("_", " ")
         .replace("P80C", "P80/C");
 }
+async function makePurchase() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const itemName = document.getElementById("purchaseName").value;
+    const cost = Number(document.getElementById("purchaseCost").value);
+
+    if (!itemName || cost <= 0) {
+        alert("Item name and points required");
+        return;
+    }
+
+    const userRef = db.collection("users").doc(user.uid);
+    const userSnap = await userRef.get();
+
+    if (userSnap.data().points < cost) {
+        alert("Not enough points");
+        return;
+    }
+
+    // puan düş
+    await userRef.update({
+        points: firebase.firestore.FieldValue.increment(-cost)
+    });
+
+    // satın alma kaydı
+    await db.collection("purchases").add({
+        userId: user.uid,
+        username: userSnap.data().username,
+        itemName,
+        cost,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert("Purchase successful!");
+}
