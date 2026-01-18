@@ -1,6 +1,6 @@
 let currentRaceId = null;
 
-// SAYFA YÜKLENDİĞİNDE
+// 🔄 SAYFA YÜKLENDİĞİNDE ÇALIŞAN ANA DÖNGÜ
 auth.onAuthStateChanged(async (user) => {
     if (!user) {
         window.location.href = "index.html";
@@ -8,7 +8,7 @@ auth.onAuthStateChanged(async (user) => {
     }
 
     try {
-        // 1. KULLANICI VERİSİNİ ÇEK (Doğru yöntem budur)
+        // 1. KULLANICI BİLGİLERİNİ ÇEK VE EKRANI GÜNCELLE
         const userRef = db.collection("users").doc(user.uid);
         const userSnapshot = await userRef.get();
 
@@ -16,11 +16,11 @@ auth.onAuthStateChanged(async (user) => {
             const userData = userSnapshot.data();
             const points = userData.points || 0;
 
-            // Üst barı güncelle
+            // Kullanıcı adı ve puanı üst bara yazdır
             document.getElementById("userInfo").innerText = 
                 `${userData.username} | ${points} Points`;
 
-            // MESAJ GÖNDERME BUTONUNU KONTROL ET
+            // Mesaj Gönderme Butonunun Durumunu Kontrol Et
             const buyBtn = document.getElementById("buyBtn");
             const purchaseInfo = document.getElementById("purchaseInfo");
             
@@ -37,7 +37,7 @@ auth.onAuthStateChanged(async (user) => {
             }
         }
 
-        // 2. YARIŞLARI VE GEÇMİŞİ YÜKLE
+        // 2. AKTİF YARIŞI VE KULLANICININ GEÇMİŞİNİ YÜKLE
         await loadActiveRace();
         await loadMyBets();
 
@@ -46,7 +46,85 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
-// Bahis geçmişini yükleyen fonksiyon (Hata payı düşük hali)
+// 🔍 AKTİF YARIŞI BULAN FONKSİYON
+async function loadActiveRace() {
+    try {
+        const racesSnapshot = await db
+            .collection("races")
+            .where("status", "==", "open")
+            .limit(1)
+            .get();
+
+        const betButton = document.getElementById("betBtn");
+
+        if (racesSnapshot.empty) {
+            if (betButton) betButton.disabled = true;
+            console.log("Aktif yarış bulunamadı.");
+            return;
+        }
+
+        currentRaceId = racesSnapshot.docs[0].id;
+        if (betButton) betButton.disabled = false;
+        console.log("Aktif Yarış Tanımlandı:", currentRaceId);
+    } catch (error) {
+        console.error("Yarış yükleme hatası:", error);
+    }
+}
+
+// 🎰 BAHİS OYNAMA FONKSİYONU
+async function placeBet() {
+    const user = auth.currentUser;
+    const car = document.getElementById("car").value;
+    const stake = Number(document.getElementById("stake").value);
+
+    if (!user || !currentRaceId) {
+        alert("Aktif bir yarış bulunamadı.");
+        return;
+    }
+
+    if (!car || stake <= 0) {
+        alert("Lütfen bir araç seçin ve geçerli bir miktar girin.");
+        return;
+    }
+
+    const userRef = db.collection("users").doc(user.uid);
+    const betRaceRef = db.collection("bets").doc(currentRaceId);
+    const betRef = betRaceRef.collection("players").doc(user.uid);
+
+    try {
+        const userSnap = await userRef.get();
+        if (userSnap.data().points < stake) {
+            alert("Yetersiz puan!");
+            return;
+        }
+
+        const existingBet = await betRef.get();
+        if (existingBet.exists) {
+            alert("Bu yarışa zaten bahis yaptınız.");
+            return;
+        }
+
+        // Puan düş ve bahisi kaydet
+        await userRef.update({
+            points: firebase.firestore.FieldValue.increment(-stake)
+        });
+
+        await betRef.set({
+            uid: user.uid,
+            car: car,
+            stake: stake,
+            paid: false,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert("Bahis başarıyla oynandı!");
+        location.reload(); // Bilgilerin tazelenmesi için sayfayı yenile
+    } catch (error) {
+        alert("Hata: " + error.message);
+    }
+}
+
+// 📜 BAHİS GEÇMİŞİNİ LİSTELEME
 async function loadMyBets() {
     const user = auth.currentUser;
     const betsDiv = document.getElementById("myBets");
@@ -68,8 +146,15 @@ async function loadMyBets() {
             const raceId = doc.ref.parent.parent.id;
             betsDiv.innerHTML += `
                 <div class="bet-item" style="border-bottom: 1px solid #444; padding: 10px; margin-bottom: 5px;">
-                    <b style="color: #ffcc00;">Race: ${raceId}</b><br>
-                    🚗 ${formatCar(bet.car)} | 💰 ${bet.stake} Pts | ${bet.paid ? "✅ Paid" : "⏳ Pending"}
+                    <span style="float: left;">
+                        <b style="color: #ffcc00;">Race: ${raceId}</b><br>
+                        🚗 ${formatCar(bet.car)}
+                    </span>
+                    <span style="float: right; text-align: right;">
+                        <b>${bet.stake} Points</b><br>
+                        ${bet.paid ? "✅ Paid" : "⏳ Pending"}
+                    </span>
+                    <div style="clear: both;"></div>
                 </div>`;
         });
     } catch (error) {
@@ -78,7 +163,7 @@ async function loadMyBets() {
     }
 }
 
-// 🛒 MESAJ SATIN AL
+// 🛒 MESAJ GÖNDERME FONKSİYONU
 async function makePurchase() {
     const user = auth.currentUser;
     const message = document.getElementById("purchaseName").value.trim();
@@ -98,7 +183,6 @@ async function makePurchase() {
             return;
         }
 
-        // PUAN DÜŞ VE MESAJI KAYDET
         await userRef.update({
             points: firebase.firestore.FieldValue.increment(-COST)
         });
@@ -113,14 +197,15 @@ async function makePurchase() {
 
         document.getElementById("purchaseName").value = "";
         alert("Mesaj başarıyla gönderildi!");
+        location.reload();
     } catch (error) {
-        alert("Satın alma hatası: " + error.message);
+        alert("Mesaj hatası: " + error.message);
     }
 }
 
-// 🚗 ARAÇ ADINI FORMATLA
+// 🛠️ YARDIMCI FONKSİYONLAR
 function formatCar(carId) {
-    if (!carId) return "Bilinmeyen Araç";
+    if (!carId) return "Unknown Car";
     return carId.replaceAll("_", " ").replace("P80C", "P80/C");
 }
 
