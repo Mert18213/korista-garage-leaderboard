@@ -1,6 +1,6 @@
 const ADMIN_EMAIL = "mert18213@gmail.com";
 
-// TRACK USER AUTHENTICATION STATE
+// 🔄 TRACK USER AUTHENTICATION STATE
 auth.onAuthStateChanged(async (user) => {
     const authBox = document.getElementById("authBox");
     const userBar = document.getElementById("userBar");
@@ -20,15 +20,14 @@ auth.onAuthStateChanged(async (user) => {
             document.getElementById("userInfo").innerText =
                 `${userData.username} | ${userData.points} Points`;
 
-            // 🔄 UPDATE LAST LOGIN TIMESTAMP
+            // Update last login timestamp
             await userRef.update({
                 lastLogin: firebase.firestore.FieldValue.serverTimestamp()
             });
         }
 
-        // 👑 ADMIN ACCESS CONTROL (Requires specific email and existing record)
-        const isAdmin = user.email === ADMIN_EMAIL && userSnapshot.exists;
-        
+        // 👑 ADMIN ACCESS CONTROL
+        const isAdmin = user.email === ADMIN_EMAIL;
         if (adminBtn) {
             adminBtn.style.display = isAdmin ? "inline-block" : "none";
         }
@@ -41,23 +40,14 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
-
-// REGISTER NEW USER (Initial Reward: 500 Points)
-function register() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const username = document.getElementById("username").value;
-
-    if (!email || !password || !username) {
-        alert("Please fill in all fields.");
-        return;
-    }
-
+// 📝 REGISTER NEW USER
+// Parameters are passed from handleAuth() in index.html
+function register(username, email, password) {
     auth.createUserWithEmailAndPassword(email, password)
         .then((cred) => {
-            // Create user document in Firestore
+            // Create user document in Firestore with 500 starting points
             return db.collection("users").doc(cred.user.uid).set({
-                username,
+                username: username,
                 points: 500,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 lastLogin: firebase.firestore.FieldValue.serverTimestamp()
@@ -66,32 +56,33 @@ function register() {
         .then(() => {
             alert("Registration successful! 500 points have been added to your account.");
         })
-        .catch((err) => alert(err.message));
+        .catch((err) => {
+            console.error("Registration Error:", err);
+            alert(err.message);
+        });
 }
 
-
-// LOGIN USER
-function login() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    if (!email || !password) {
-        alert("Please enter your email and password.");
-        return;
-    }
-
+// 🔑 LOGIN USER
+// Parameters are passed from handleAuth() in index.html
+function login(email, password) {
     auth.signInWithEmailAndPassword(email, password)
-        .catch((err) => alert(err.message));
+        .then(() => {
+            console.log("Login successful");
+        })
+        .catch((err) => {
+            console.error("Login Error:", err);
+            alert(err.message);
+        });
 }
 
-
-// LOGOUT USER
+// 🚪 LOGOUT USER
 function logout() {
-    auth.signOut();
+    auth.signOut().then(() => {
+        window.location.reload(); // Refresh to update UI
+    });
 }
 
-
-// NAVIGATE TO BETTING PAGE (With Auth Check)
+// 🎰 NAVIGATE TO BETTING PAGE (With Auth Check)
 function goToBet() {
     const user = auth.currentUser;
 
