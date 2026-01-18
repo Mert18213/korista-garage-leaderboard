@@ -170,6 +170,7 @@ async function makePurchase() {
 }
 
 // 📜 LOAD HISTORY
+// 📜 LOAD HISTORY
 async function loadMyBets() {
     const user = auth.currentUser;
     const betsDiv = document.getElementById("myBets");
@@ -177,7 +178,7 @@ async function loadMyBets() {
 
     try {
         const snap = await db.collectionGroup("players")
-            .where("uid", "==", user.uid)
+            .where(firebase.firestore.FieldPath.documentId(), "==", user.uid)
             .get();
 
         if (snap.empty) {
@@ -189,6 +190,7 @@ async function loadMyBets() {
         snap.forEach(doc => {
             const b = doc.data();
             const raceId = doc.ref.parent.parent.id;
+
             betsDiv.innerHTML += `
                 <div class="bet-item" style="border-bottom: 1px solid #444; padding: 10px;">
                     <span style="float: left;">
@@ -207,6 +209,7 @@ async function loadMyBets() {
         betsDiv.innerHTML = "Error loading history.";
     }
 }
+
 
 // 🛠️ UTILITY FUNCTIONS
 function updatePurchaseButton(points, lastSentTS) {
