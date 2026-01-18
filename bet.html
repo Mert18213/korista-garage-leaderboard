@@ -41,26 +41,29 @@
     </div>
 
     <!-- 🛒 PURCHASE SECTION -->
-    <h2 style="margin-top:40px;">Purchase</h2>
+<h2 style="margin-top:40px;">Send a Message</h2>
 
-    <div class="bet-box">
-        <label for="purchaseName">Item Name</label>
-        <input
-            type="text"
-            id="purchaseName"
-            placeholder="Enter item name"
-        />
+<p id="purchaseInfo" style="
+    color:#ffd400;
+    font-size:14px;
+    margin-bottom:10px;
+">
+    🔒 Sending a message costs <b>1500 points</b>.
+</p>
 
-        <label for="purchaseCost">Points to Spend</label>
-        <input
-            type="number"
-            id="purchaseCost"
-            placeholder="Points"
-            min="1"
-        />
+<div class="bet-box">
+    <label for="purchaseName">Your Message</label>
+    <input
+        type="text"
+        id="purchaseName"
+        placeholder="Write your message"
+    />
 
-        <button onclick="makePurchase()">BUY</button>
-    </div>
+    <button id="buyBtn" onclick="makePurchase()" disabled>
+        SEND MESSAGE (1500 PTS)
+    </button>
+</div>
+
 
     <hr>
 
