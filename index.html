@@ -2,35 +2,123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Korista Garage League</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Modern Auth Styles */
+        .auth-box {
+            background: #0f172a;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 400px;
+            margin: 40px auto;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.15);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .auth-tabs button {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            padding: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .auth-tabs button.active {
+            color: #ffd700;
+            border-bottom: 3px solid #ffd700;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            color: white;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: #0f172a;
+        }
+
+        .auth-form button#mainAuthBtn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 20px;
+            background: #ffd700;
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s;
+        }
+
+        .auth-form button#mainAuthBtn:hover {
+            background: #facc15;
+            transform: translateY(-2px);
+        }
+
+        .auth-info {
+            text-align: center;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="authBox" class="auth-box">
-    <h2>Login</h2>
-    <input id="username" placeholder="Username (for registration)">
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <button onclick="register()">Register</button>
-    <button onclick="login()">Login</button>
+    <div class="auth-tabs">
+        <button id="tabLogin" class="active" onclick="toggleAuth('login')">Login</button>
+        <button id="tabRegister" onclick="toggleAuth('register')">Register</button>
+    </div>
+
+    <div class="auth-form">
+        <div id="usernameField" style="display:none;">
+            <input id="regUsername" placeholder="Username">
+        </div>
+        
+        <input id="email" type="email" placeholder="Email Address">
+        <input id="password" type="password" placeholder="Password">
+        
+        <div id="confirmPasswordField" style="display:none;">
+            <input id="confirmPassword" type="password" placeholder="Confirm Password">
+        </div>
+
+        <button id="mainAuthBtn" onclick="handleAuth()">Login</button>
+    </div>
+    
     <p class="auth-info">
         Leaderboard is public. Login to place bets.
     </p>
 </div>
 
-<!-- USER BAR -->
 <div id="userBar" class="user-bar" style="display:none;">
     <span id="userInfo"></span>
 
-    <!-- ADMIN -->
-    <button
-        id="adminUpdateBtn"
-        class="admin-btn"
-        style="display:none; background:#ff4d4d;"
-        onclick="calculateRace()"
-    >
+    <button id="adminUpdateBtn" class="admin-btn" style="display:none; background:#ef4444;" onclick="calculateRace()">
         ⚙️ CALCULATE
     </button>
 
@@ -38,22 +126,19 @@
 </div>
 
 <div class="container">
-
     <h2 class="subtitle">KORISTA GARAGE HYPERCARS</h2>
     <h1>A LEAGUE TABLE</h1>
 
     <div class="season-info">
-        SEASON 1 • CURRENT RACE ACTIVE
+        SEASON 1 • 2026 • CURRENT RACE ACTIVE
     </div>
 
-    <!-- 🚗 CAR LEADERBOARD (8 CARS – DOKUNULMADI) -->
     <div class="table active">
         <div class="table-header">
             <span>POS</span>
             <span>CAR</span>
             <span>PTS</span>
         </div>
-
         <div class="row"><span>1</span><span>KOENIGSEGG JESKO ABSOLUT</span><span>25</span></div>
         <div class="row"><span>2</span><span>MERCEDES-MAYBACH EXELERO</span><span>18</span></div>
         <div class="row"><span>3</span><span>FERRARI P80/C</span><span>15</span></div>
@@ -64,41 +149,27 @@
         <div class="row"><span>8</span><span>KOENIGSEGG CCXR TREVITA</span><span>4</span></div>
     </div>
 
-    <!-- 🔥 TOP 10 USERS -->
     <h2 style="margin-top:40px;">TOP 10 PLAYERS</h2>
-
     <div class="table active">
         <div class="table-header">
             <span>#</span>
             <span>USER</span>
             <span>PTS</span>
         </div>
-
         <div id="top10List"></div>
     </div>
 
-    <!-- BET -->
-    <button class="bet-btn" onclick="goToBet()">🎰 PLACE BET</button>
+    <button class="bet-btn" onclick="goToBet()">🎰 GO TO BETTING PAGE</button>
 
-    <!-- SOCIAL -->
     <div class="social-container">
-        <a class="youtube-btn" href="https://www.youtube.com/@KORISTAGARAGE" target="_blank">
-            ▶ VISIT OUR YOUTUBE CHANNEL
-        </a>
-
-        <a class="instagram-btn" href="https://www.instagram.com/koristagarage" target="_blank">
-            📸 FOLLOW US ON INSTAGRAM
-        </a>
-
-        <a class="tiktok-btn" href="https://www.tiktok.com/@korista.garage" target="_blank">
-            🎵 FOLLOW US ON TIKTOK
-        </a>
+        <a class="youtube-btn" href="https://www.youtube.com/@KORISTAGARAGE" target="_blank">▶ YOUTUBE</a>
+        <a class="instagram-btn" href="https://www.instagram.com/koristagarage" target="_blank">📸 INSTAGRAM</a>
+        <a class="tiktok-btn" href="https://www.tiktok.com/@korista.garage" target="_blank">🎵 TIKTOK</a>
     </div>
 
     <div class="footer">koristagarage.online</div>
 </div>
 
-<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -107,83 +178,112 @@
 <script src="auth.js"></script>
 
 <script>
-/* 🔥 TOP 10 USERS */
+/* 🔄 AUTH TOGGLE LOGIC */
+let currentMode = 'login';
+
+function toggleAuth(mode) {
+    currentMode = mode;
+    const userField = document.getElementById('usernameField');
+    const confirmField = document.getElementById('confirmPasswordField');
+    const mainBtn = document.getElementById('mainAuthBtn');
+    const tabLogin = document.getElementById('tabLogin');
+    const tabRegister = document.getElementById('tabRegister');
+
+    if (mode === 'register') {
+        userField.style.display = 'block';
+        confirmField.style.display = 'block';
+        mainBtn.innerText = 'Create Account';
+        tabRegister.classList.add('active');
+        tabLogin.classList.remove('active');
+    } else {
+        userField.style.display = 'none';
+        confirmField.style.display = 'none';
+        mainBtn.innerText = 'Login';
+        tabLogin.classList.add('active');
+        tabRegister.classList.remove('active');
+    }
+}
+
+async function handleAuth() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    if (currentMode === 'login') {
+        if(!email || !password) return alert("Please fill all fields.");
+        login(email, password); 
+    } else {
+        const username = document.getElementById('regUsername').value;
+        const confirmPass = document.getElementById('confirmPassword').value;
+
+        if (!username || !email || !password) {
+            return alert("Please fill all fields.");
+        }
+        if (password !== confirmPass) {
+            return alert("Passwords do not match!");
+        }
+        if (password.length < 6) {
+            return alert("Password must be at least 6 characters.");
+        }
+        register(username, email, password);
+    }
+}
+
+/* 🏆 TOP 10 PLAYERS */
 async function loadTop10() {
     const list = document.getElementById("top10List");
-    list.innerHTML = "";
-
-    const snap = await db
-        .collection("users")
-        .orderBy("points", "desc")
-        .limit(10)
-        .get();
-
-    let rank = 1;
-
-    snap.forEach(doc => {
-        const user = doc.data();
-
-        list.innerHTML += `
-            <div class="row">
-                <span>${rank}</span>
-                <span>${user.username}</span>
-                <span>${user.points}</span>
-            </div>
-        `;
-        rank++;
-    });
+    list.innerHTML = "Loading leaderboard...";
+    try {
+        const snap = await db.collection("users").orderBy("points", "desc").limit(10).get();
+        list.innerHTML = "";
+        let rank = 1;
+        snap.forEach(doc => {
+            const user = doc.data();
+            list.innerHTML += `
+                <div class="row">
+                    <span>${rank}</span>
+                    <span>${user.username}</span>
+                    <span>${user.points}</span>
+                </div>`;
+            rank++;
+        });
+    } catch (e) { list.innerHTML = "Error loading players."; }
 }
-
 loadTop10();
 
-/* ⚙️ ADMIN – CALCULATE */
+/* ⚙️ ADMIN CALCULATION */
 async function calculateRace() {
-    const raceId = prompt("Which race should we calculate? (e.g., race2)");
+    const raceId = prompt("Enter Race ID to calculate (e.g., race1):");
     if (!raceId) return;
 
-    const raceRef = db.collection("races").doc(raceId);
-    const betsRef = db.collection("bets").doc(raceId).collection("players");
+    try {
+        const raceRef = db.collection("races").doc(raceId);
+        const raceSnap = await raceRef.get();
+        if (!raceSnap.exists) return alert("Race not found.");
 
-    const raceSnap = await raceRef.get();
-    if (!raceSnap.exists) {
-        alert("Race not found");
-        return;
-    }
+        const race = raceSnap.data();
+        if (race.calculated) return alert("Already calculated.");
+        if (race.status !== "finished") return alert("Race is not finished yet.");
 
-    const race = raceSnap.data();
+        const betsSnap = await db.collection("bets").doc(raceId).collection("players").get();
+        let winners = 0;
 
-    if (race.calculated === true) {
-        alert("This race has already been calculated");
-        return;
-    }
-
-    if (race.status !== "finished") {
-        alert("Race must be finished first");
-        return;
-    }
-
-    const betsSnap = await betsRef.get();
-    let winCount = 0;
-
-    for (const betDoc of betsSnap.docs) {
-        const bet = betDoc.data();
-        if (bet.paid) continue;
-
-        if (bet.car === race.winner) {
-            await db.collection("users").doc(betDoc.id).update({
-                points: firebase.firestore.FieldValue.increment(bet.stake * 2)
-            });
-            winCount++;
+        for (const betDoc of betsSnap.docs) {
+            const bet = betDoc.data();
+            if (bet.car === race.winner) {
+                await db.collection("users").doc(betDoc.id).update({
+                    points: firebase.firestore.FieldValue.increment(bet.stake * 2)
+                });
+                winners++;
+            }
+            await betDoc.ref.update({ paid: true });
         }
-
-        await betDoc.ref.update({ paid: true });
-    }
-
-    await db.collection("bets").doc(raceId).update({ status: "closed" });
-    await raceRef.update({ calculated: true });
-
-    alert(`${raceId} calculated ✅\nWinners: ${winCount}`);
+        await raceRef.update({ calculated: true });
+        alert(`Calculated! Winners: ${winners}`);
+        loadTop10();
+    } catch (e) { alert("Error: " + e.message); }
 }
+
+function goToBet() { window.location.href = "bet.html"; }
 </script>
 
 </body>
