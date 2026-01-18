@@ -7,7 +7,23 @@ auth.onAuthStateChanged(async (user) => {
         window.location.href = "index.html";
         return;
     }
+const buyBtn = document.getElementById("buyBtn");
+const purchaseInfo = document.getElementById("purchaseInfo");
 
+if (buyBtn && purchaseInfo) {
+    const points = snap.data().points;
+
+    if (points >= 1500) {
+        buyBtn.disabled = false;
+        buyBtn.style.opacity = "1";
+        purchaseInfo.innerHTML = "✅ You can send a message for <b>1500 points</b>.";
+    } else {
+        buyBtn.disabled = true;
+        buyBtn.style.opacity = "0.5";
+        purchaseInfo.innerHTML =
+            "🔒 You need <b>1500 points</b> to send a message.";
+    }
+}
     // USER INFO
     const userSnapshot = await db.collection("users").doc(user.uid).get();
     if (userSnapshot.exists) {
