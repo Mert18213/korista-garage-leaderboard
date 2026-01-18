@@ -1,3 +1,5 @@
+const auth = window.auth;
+const db = window.db;
 let currentRaceId = null;
 
 // 🔄 ON PAGE LOAD
