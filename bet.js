@@ -164,6 +164,7 @@ async function loadMyBets() {
 }
 
 // 🛒 MESAJ GÖNDERME FONKSİYONU
+// 🛒 MESAJ SATIN AL (GÜNLÜK 1 ADET SINIRLI)
 async function makePurchase() {
     const user = auth.currentUser;
     const message = document.getElementById("purchaseName").value.trim();
@@ -178,28 +179,54 @@ async function makePurchase() {
 
     try {
         const userSnap = await userRef.get();
-        if (userSnap.data().points < COST) {
+        const userData = userSnap.data();
+
+        // 📅 GÜNLÜK SINIR KONTROLÜ
+        if (userData.lastMessageSentAt) {
+            const lastSent = userData.lastMessageSentAt.toDate(); // Firestore zamanını tarihe çevir
+            const today = new Date();
+
+            // Eğer son gönderilen tarih (Gün/Ay/Yıl) bugüne eşitse engelle
+            if (lastSent.toDateString() === today.toDateString()) {
+                alert("Günde sadece 1 mesaj gönderme hakkınız var. Yarın tekrar deneyebilirsiniz!");
+                return;
+            }
+        }
+
+        // 💰 PUAN KONTROLÜ
+        if (userData.points < COST) {
             alert("Puanınız yetersiz.");
             return;
         }
 
-        await userRef.update({
-            points: firebase.firestore.FieldValue.increment(-COST)
+        // ✅ İŞLEMİ GERÇEKLEŞTİR (BATCH KULLANIMI)
+        const batch = db.batch();
+
+        // 1. Kullanıcının puanını düş ve gönderim zamanını güncelle
+        batch.update(userRef, {
+            points: firebase.firestore.FieldValue.increment(-COST),
+            lastMessageSentAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        await db.collection("purchases").add({
+        // 2. Mesajı purchases koleksiyonuna ekle
+        const purchaseRef = db.collection("purchases").doc();
+        batch.set(purchaseRef, {
             userId: user.uid,
-            username: userSnap.data().username,
+            username: userData.username,
             message: message,
             cost: COST,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
+        await batch.commit();
+
         document.getElementById("purchaseName").value = "";
-        alert("Mesaj başarıyla gönderildi!");
+        alert("Mesajınız başarıyla gönderildi! (Bugünkü hakkınızı kullandınız)");
         location.reload();
+
     } catch (error) {
-        alert("Mesaj hatası: " + error.message);
+        console.error("Satın alma hatası:", error);
+        alert("İşlem sırasında bir hata oluştu.");
     }
 }
 
