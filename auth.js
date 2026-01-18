@@ -40,30 +40,39 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
-// 📝 REGISTER NEW USER
-// Parameters are passed from handleAuth() in index.html
-function register(username, email, password) {
-    auth.createUserWithEmailAndPassword(email, password)
-        .then((cred) => {
-            // Create user document in Firestore with 500 starting points
-            return db.collection("users").doc(cred.user.uid).set({
-                username: username,
-                points: 500,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-            });
-        })
-        .then(() => {
-            alert("Registration successful! 500 points have been added to your account.");
-        })
-        .catch((err) => {
-            console.error("Registration Error:", err);
-            alert(err.message);
+// 📝 REGISTER NEW USER (With Unique Username Check)
+async function register(username, email, password) {
+    try {
+        // 1. Check if the username already exists in Firestore
+        const usernameQuery = await db.collection("users")
+            .where("username", "==", username)
+            .get();
+
+        if (!usernameQuery.empty) {
+            alert("This username is already taken. Please choose a different one.");
+            return; // Stop the registration
+        }
+
+        // 2. Create the Auth account
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+
+        // 3. Create the user document in Firestore with 500 starting points
+        await db.collection("users").doc(cred.user.uid).set({
+            username: username,
+            points: 500,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
         });
+
+        alert("Registration successful! 500 points have been added to your account.");
+        
+    } catch (err) {
+        console.error("Registration Error:", err);
+        alert(err.message);
+    }
 }
 
 // 🔑 LOGIN USER
-// Parameters are passed from handleAuth() in index.html
 function login(email, password) {
     auth.signInWithEmailAndPassword(email, password)
         .then(() => {
