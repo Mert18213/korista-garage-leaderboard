@@ -7,26 +7,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h2>Purchase</h2>
-
-<input
-  type="text"
-  id="purchaseName"
-  placeholder="Enter item name"
-/>
-
-<input
-  type="number"
-  id="purchaseCost"
-  placeholder="Points to spend"
-/>
-
-<button onclick="makePurchase()">
-  BUY
-</button>
 
 <div class="container">
 
+    <!-- USER BAR -->
     <div id="userBar" class="user-bar">
         <span id="userInfo"></span>
         <button onclick="logout()">Logout</button>
@@ -34,6 +18,7 @@
 
     <h1>RACE BETTING</h1>
 
+    <!-- 🎰 BET BOX -->
     <div class="bet-box">
         <label for="car">Select a Car</label>
         <select id="car">
@@ -55,19 +40,42 @@
         <button class="back-btn" onclick="goBack()">← Go Back</button>
     </div>
 
+    <!-- 🛒 PURCHASE SECTION -->
+    <h2 style="margin-top:40px;">Purchase</h2>
+
+    <div class="bet-box">
+        <label for="purchaseName">Item Name</label>
+        <input
+            type="text"
+            id="purchaseName"
+            placeholder="Enter item name"
+        />
+
+        <label for="purchaseCost">Points to Spend</label>
+        <input
+            type="number"
+            id="purchaseCost"
+            placeholder="Points"
+            min="1"
+        />
+
+        <button onclick="makePurchase()">BUY</button>
+    </div>
+
     <hr>
 
+    <!-- 📜 BET HISTORY -->
     <h2>My Bet History</h2>
     <div id="myBets">Loading...</div>
 
 </div>
 
+<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 <script src="firebase.js"></script>
-
 <script src="bet.js"></script>
 
 </body>
