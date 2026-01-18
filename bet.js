@@ -1,82 +1,86 @@
 let currentRaceId = null;
 
-// ON PAGE LOAD
+// 🔄 SAYFA YÜKLENDİĞİNDE
 auth.onAuthStateChanged(async (user) => {
     if (!user) {
-        alert("You cannot place a bet without logging in.");
+        alert("Giriş yapmadan bahis oynayamazsınız.");
         window.location.href = "index.html";
         return;
     }
-const buyBtn = document.getElementById("buyBtn");
-const purchaseInfo = document.getElementById("purchaseInfo");
 
-if (buyBtn && purchaseInfo) {
-    const points = snap.data().points;
+    // 1. KULLANICI VERİLERİNİ GERÇEK ZAMANLI TAKİP ET (onSnapshot)
+    // Bu sayede puan harcandığında butonlar ve üst bar anında güncellenir.
+    db.collection("users").doc(user.uid).onSnapshot((doc) => {
+        if (doc.exists) {
+            const userData = doc.data();
+            const points = userData.points || 0;
 
-    if (points >= 1500) {
-        buyBtn.disabled = false;
-        buyBtn.style.opacity = "1";
-        purchaseInfo.innerHTML = "✅ You can send a message for <b>1500 points</b>.";
-    } else {
-        buyBtn.disabled = true;
-        buyBtn.style.opacity = "0.5";
-        purchaseInfo.innerHTML =
-            "🔒 You need <b>1500 points</b> to send a message.";
-    }
-}
-    // USER INFO
-    const userSnapshot = await db.collection("users").doc(user.uid).get();
-    if (userSnapshot.exists) {
-        const userData = userSnapshot.data();
-        document.getElementById("userInfo").innerText =
-            `${userData.username} | ${userData.points} Points`;
-    }
+            // Üst barı güncelle
+            document.getElementById("userInfo").innerText = 
+                `${userData.username} | ${points} Puan`;
 
+            // MESAJ GÖNDERME BUTON KONTROLÜ
+            const buyBtn = document.getElementById("buyBtn");
+            const purchaseInfo = document.getElementById("purchaseInfo");
+            
+            if (buyBtn && purchaseInfo) {
+                if (points >= 1500) {
+                    buyBtn.disabled = false;
+                    buyBtn.style.opacity = "1";
+                    purchaseInfo.innerHTML = "✅ **1500 puan** karşılığında mesaj gönderebilirsiniz.";
+                } else {
+                    buyBtn.disabled = true;
+                    buyBtn.style.opacity = "0.5";
+                    purchaseInfo.innerHTML = `🔒 Mesaj göndermek için **${1500 - points} puan** daha gerekiyor.`;
+                }
+            }
+        }
+    });
+
+    // 2. AKTİF YARIŞI VE GEÇMİŞİ YÜKLE
     await loadActiveRace();
     await loadMyBets();
 });
 
 
-// 🔍 FIND ACTIVE RACE
+// 🔍 AKTİF YARIŞI BUL
 async function loadActiveRace() {
-    const racesSnapshot = await db
-        .collection("races")
-        .where("status", "==", "open")
-        .limit(1)
-        .get();
+    try {
+        const racesSnapshot = await db
+            .collection("races")
+            .where("status", "==", "open")
+            .limit(1)
+            .get();
 
-    if (racesSnapshot.empty) {
-        alert("No active races available at the moment.");
-        return;
+        const betButton = document.getElementById("betBtn");
+
+        if (racesSnapshot.empty) {
+            if (betButton) betButton.disabled = true;
+            console.log("Aktif yarış bulunamadı.");
+            return;
+        }
+
+        currentRaceId = racesSnapshot.docs[0].id;
+        if (betButton) betButton.disabled = false;
+    } catch (error) {
+        console.error("Yarış yükleme hatası:", error);
     }
-
-    currentRaceId = racesSnapshot.docs[0].id;
-    console.log("ACTIVE RACE:", currentRaceId);
-
-    const betButton = document.getElementById("betBtn");
-    if (betButton) betButton.disabled = false;
 }
 
 
-// NAVIGATE BACK
-function goBack() {
-    window.location.href = "index.html";
-}
-
-
-// 🎰 PLACE A BET
+// 🎰 BAHİS YAP
 async function placeBet() {
     const user = auth.currentUser;
-    if (!user || !currentRaceId) {
-        alert("No active race found.");
-        return;
-    }
-
     const car = document.getElementById("car").value;
     const stake = Number(document.getElementById("stake").value);
 
+    if (!user || !currentRaceId) {
+        alert("Aktif bir yarış bulunamadı.");
+        return;
+    }
+
     if (!car || stake <= 0) {
-        alert("Please select a car and enter points.");
+        alert("Lütfen bir araç seçin ve geçerli bir miktar girin.");
         return;
     }
 
@@ -84,148 +88,133 @@ async function placeBet() {
     const betRaceRef = db.collection("bets").doc(currentRaceId);
     const betRef = betRaceRef.collection("players").doc(user.uid);
 
-    const betRaceSnapshot = await betRaceRef.get();
-    if (!betRaceSnapshot.exists || betRaceSnapshot.data().status !== "open") {
-        alert("Betting is currently closed for this race.");
-        return;
+    try {
+        const userSnap = await userRef.get();
+        if (userSnap.data().points < stake) {
+            alert("Yetersiz puan!");
+            return;
+        }
+
+        const existingBet = await betRef.get();
+        if (existingBet.exists) {
+            alert("Bu yarışa zaten bahis yaptınız.");
+            return;
+        }
+
+        // PUAN DÜŞ VE BAHİS KAYDET
+        await userRef.update({
+            points: firebase.firestore.FieldValue.increment(-stake)
+        });
+
+        await betRef.set({
+            uid: user.uid,
+            car: car,
+            stake: stake,
+            paid: false,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert("Bahis başarıyla oynandı!");
+        loadMyBets();
+    } catch (error) {
+        alert("Hata oluştu: " + error.message);
     }
-
-    const userSnapshot = await userRef.get();
-    if (userSnapshot.data().points < stake) {
-        alert("Insufficient points.");
-        return;
-    }
-
-    const existingBet = await betRef.get();
-    if (existingBet.exists) {
-        alert("You have already placed a bet on this race.");
-        return;
-    }
-
-    // DEDUCT POINTS
-    await userRef.update({
-        points: firebase.firestore.FieldValue.increment(-stake)
-    });
-
-    // ✅ SAVE BET (DÜZELTİLDİ: uid alanı eklendi)
-    await betRef.set({
-        uid: user.uid, // Sorgu için bu alan kritik!
-        car: car,
-        stake: stake,
-        paid: false,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    alert("Bet placed successfully!");
-    loadMyBets();
 }
 
 
-// 📜 BET HISTORY (DÜZELTİLDİ: uid üzerinden sorgu yapılıyor)
+// 📜 BAHİS GEÇMİŞİ
 async function loadMyBets() {
     const user = auth.currentUser;
-    if (!user) return;
-
     const betsDiv = document.getElementById("myBets");
-    if (!betsDiv) return;
+    if (!user || !betsDiv) return;
 
-    betsDiv.innerHTML = "Loading...";
+    betsDiv.innerHTML = "Yükleniyor...";
 
     try {
-        // ✅ Sorgu döküman ID'si yerine 'uid' alanı ile güncellendi
+        // NOT: Firestore'da 'collectionGroup' kullanmak için Index oluşturmanız gerekebilir.
         const betsSnapshot = await db.collectionGroup("players")
             .where("uid", "==", user.uid)
             .get();
 
         if (betsSnapshot.empty) {
-            betsDiv.innerHTML = "You haven't placed any bets yet.";
+            betsDiv.innerHTML = "Henüz bir bahis yapmadınız.";
             return;
         }
 
         betsDiv.innerHTML = ""; 
-        
         betsSnapshot.forEach((doc) => {
             const bet = doc.data();
-            const raceId = doc.ref.parent.parent.id;
+            const raceId = doc.ref.parent.parent.id; // Üst döküman ID'sini (yarış adı) al
 
             betsDiv.innerHTML += `
                 <div class="bet-item" style="border-bottom: 1px solid #444; padding: 10px; margin-bottom: 5px;">
-                    <span>
-                        <b style="color: #ffcc00;">Race: ${raceId}</b><br>
+                    <span style="float: left;">
+                        <b style="color: #ffcc00;">Yarış: ${raceId}</b><br>
                         🚗 ${formatCar(bet.car)}
                     </span>
                     <span style="float: right; text-align: right;">
-                        <b>${bet.stake} Points</b><br>
-                        ${bet.paid ? "✅ Paid" : "⏳ Pending"}
+                        <b>${bet.stake} Puan</b><br>
+                        ${bet.paid ? "✅ Ödendi" : "⏳ Bekliyor"}
                     </span>
                     <div style="clear: both;"></div>
                 </div>
             `;
         });
-
     } catch (error) {
-        console.error("Error loading history:", error);
-        betsDiv.innerHTML = "Could not load history.";
-    }
-}
-// 🚪 LOGOUT FUNCTION
-async function logout() {
-    try {
-        await auth.signOut(); // Firebase oturumunu kapatır
-        alert("Logged out successfully!");
-        window.location.href = "index.html"; // Giriş sayfasına yönlendirir
-    } catch (error) {
-        console.error("Logout Error:", error);
-        alert("An error occurred while logging out.");
+        console.error("Geçmiş yükleme hatası:", error);
+        betsDiv.innerHTML = "Geçmiş yüklenirken hata oluştu.";
     }
 }
 
-// 🚗 FORMAT CAR NAME
-function formatCar(carId) {
-    if (!carId) return "Unknown Car";
-    return carId
-        .replaceAll("_", " ")
-        .replace("P80C", "P80/C");
-}
+// 🛒 MESAJ SATIN AL
 async function makePurchase() {
     const user = auth.currentUser;
-    if (!user) return;
-
     const message = document.getElementById("purchaseName").value.trim();
-    if (!message) {
-        alert("Please write a message.");
-        return;
-    }
-
     const COST = 1500;
 
-    const userRef = db.collection("users").doc(user.uid);
-    const userSnap = await userRef.get();
-
-    const points = userSnap.data().points;
-
-    if (points < COST) {
-        alert("You need at least 1500 points to send a message.");
+    if (!user || !message) {
+        alert("Lütfen bir mesaj yazın.");
         return;
     }
 
-    // PUAN DÜŞ
-    await userRef.update({
-        points: firebase.firestore.FieldValue.increment(-COST)
-    });
+    const userRef = db.collection("users").doc(user.uid);
 
-    // MESAJ KAYDET
-    await db.collection("purchases").add({
-        userId: user.uid,
-        username: userSnap.data().username,
-        message: message,
-        cost: COST,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    try {
+        const userSnap = await userRef.get();
+        if (userSnap.data().points < COST) {
+            alert("Puanınız yetersiz.");
+            return;
+        }
 
-    document.getElementById("purchaseName").value = "";
+        // PUAN DÜŞ VE MESAJI KAYDET
+        await userRef.update({
+            points: firebase.firestore.FieldValue.increment(-COST)
+        });
 
-    alert("Message sent successfully!");
+        await db.collection("purchases").add({
+            userId: user.uid,
+            username: userSnap.data().username,
+            message: message,
+            cost: COST,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        document.getElementById("purchaseName").value = "";
+        alert("Mesaj başarıyla gönderildi!");
+    } catch (error) {
+        alert("Satın alma hatası: " + error.message);
+    }
 }
 
+// 🚗 ARAÇ ADINI FORMATLA
+function formatCar(carId) {
+    if (!carId) return "Bilinmeyen Araç";
+    return carId.replaceAll("_", " ").replace("P80C", "P80/C");
+}
 
+function goBack() { window.location.href = "index.html"; }
+
+async function logout() {
+    await auth.signOut();
+    window.location.href = "index.html";
+}
