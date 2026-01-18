@@ -244,3 +244,9 @@ async function logout() {
     await auth.signOut();
     window.location.href = "index.html";
 }
+// 🔑 HTML onclick erişimi için global yap
+window.placeBet = placeBet;
+window.goBack = goBack;
+window.makePurchase = makePurchase;
+window.logout = logout;
+
