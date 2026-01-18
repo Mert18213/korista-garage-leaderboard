@@ -8,22 +8,26 @@ auth.onAuthStateChanged(async (user) => {
     }
 
     try {
-        // 1. Listen to User Data (Updates UI in real-time)
         const userRef = db.collection("users").doc(user.uid);
-        
-        userRef.onSnapshot((doc) => {
-            if (doc.exists) {
-                const userData = doc.data();
-                const points = userData.points || 0;
+        const userSnapshot = await userRef.get(); // snap yerine userSnapshot kullandık
 
-                // Update top bar
-                document.getElementById("userInfo").innerText = 
-                    `${userData.username} | ${points} Points`;
+        if (userSnapshot.exists) {
+            const userData = userSnapshot.data();
+            const points = userData.points || 0;
 
-                // Update Purchase Button Status
-                updatePurchaseButton(points, userData.lastMessageSentAt);
-            }
-        });
+            document.getElementById("userInfo").innerText = 
+                `${userData.username} | ${points} Points`;
+
+            // Mesaj butonunu puan durumuna göre güncelle
+            updatePurchaseButton(points, userData.lastMessageSentAt);
+        }
+
+        await loadActiveRace();
+        await loadMyBets();
+    } catch (error) {
+        console.error("Initialization Error:", error);
+    }
+});
 
         // 2. Load Active Race & History
         await loadActiveRace();
