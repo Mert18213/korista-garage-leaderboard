@@ -178,7 +178,7 @@ async function loadMyBets() {
 
     try {
         const snap = await db.collectionGroup("players")
-            .where(firebase.firestore.FieldPath.documentId(), "==", user.uid)
+            .where("uid", "==", user.uid)
             .get();
 
         if (snap.empty) {
