@@ -8,36 +8,24 @@ auth.onAuthStateChanged(async (user) => {
     }
 
     try {
-        // 1. KULLANICI BİLGİLERİNİ ÇEK VE EKRANI GÜNCELLE
+        // 1. Kullanıcı Verilerini Dinle (onSnapshot ile puanlar anlık güncellenir)
         const userRef = db.collection("users").doc(user.uid);
-        const userSnapshot = await userRef.get();
+        
+        userRef.onSnapshot((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+                const points = userData.points || 0;
 
-        if (userSnapshot.exists) {
-            const userData = userSnapshot.data();
-            const points = userData.points || 0;
+                // Üst barı güncelle
+                document.getElementById("userInfo").innerText = 
+                    `${userData.username} | ${points} Points`;
 
-            // Kullanıcı adı ve puanı üst bara yazdır
-            document.getElementById("userInfo").innerText = 
-                `${userData.username} | ${points} Points`;
-
-            // Mesaj Gönderme Butonunun Durumunu Kontrol Et
-            const buyBtn = document.getElementById("buyBtn");
-            const purchaseInfo = document.getElementById("purchaseInfo");
-            
-            if (buyBtn && purchaseInfo) {
-                if (points >= 1500) {
-                    buyBtn.disabled = false;
-                    buyBtn.style.opacity = "1";
-                    purchaseInfo.innerHTML = "✅ You can send a message for <b>1500 points</b>.";
-                } else {
-                    buyBtn.disabled = true;
-                    buyBtn.style.opacity = "0.5";
-                    purchaseInfo.innerHTML = `🔒 You need <b>1500 points</b> to send a message.`;
-                }
+                // Mesaj Gönderme Buton Kontrolü
+                updatePurchaseButton(points, userData.lastMessageSentAt);
             }
-        }
+        });
 
-        // 2. AKTİF YARIŞI VE KULLANICININ GEÇMİŞİNİ YÜKLE
+        // 2. Aktif Yarışı ve Bahis Geçmişini Yükle
         await loadActiveRace();
         await loadMyBets();
 
@@ -46,7 +34,7 @@ auth.onAuthStateChanged(async (user) => {
     }
 });
 
-// 🔍 AKTİF YARIŞI BULAN FONKSİYON
+// 🔍 AKTİF YARIŞI BUL VE BUTONU AÇ
 async function loadActiveRace() {
     try {
         const racesSnapshot = await db
@@ -58,20 +46,28 @@ async function loadActiveRace() {
         const betButton = document.getElementById("betBtn");
 
         if (racesSnapshot.empty) {
-            if (betButton) betButton.disabled = true;
+            if (betButton) {
+                betButton.disabled = true;
+                betButton.style.opacity = "0.5";
+            }
             console.log("Aktif yarış bulunamadı.");
             return;
         }
 
         currentRaceId = racesSnapshot.docs[0].id;
-        if (betButton) betButton.disabled = false;
+        
+        // Yarış varsa butonu aktif et
+        if (betButton) {
+            betButton.disabled = false;
+            betButton.style.opacity = "1";
+        }
         console.log("Aktif Yarış Tanımlandı:", currentRaceId);
     } catch (error) {
         console.error("Yarış yükleme hatası:", error);
     }
 }
 
-// 🎰 BAHİS OYNAMA FONKSİYONU
+// 🎰 BAHİS OYNAMA
 async function placeBet() {
     const user = auth.currentUser;
     const car = document.getElementById("car").value;
@@ -88,8 +84,7 @@ async function placeBet() {
     }
 
     const userRef = db.collection("users").doc(user.uid);
-    const betRaceRef = db.collection("bets").doc(currentRaceId);
-    const betRef = betRaceRef.collection("players").doc(user.uid);
+    const betRef = db.collection("bets").doc(currentRaceId).collection("players").doc(user.uid);
 
     try {
         const userSnap = await userRef.get();
@@ -104,12 +99,9 @@ async function placeBet() {
             return;
         }
 
-        // Puan düş ve bahisi kaydet
-        await userRef.update({
-            points: firebase.firestore.FieldValue.increment(-stake)
-        });
-
-        await betRef.set({
+        const batch = db.batch();
+        batch.update(userRef, { points: firebase.firestore.FieldValue.increment(-stake) });
+        batch.set(betRef, {
             uid: user.uid,
             car: car,
             stake: stake,
@@ -117,54 +109,15 @@ async function placeBet() {
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
+        await batch.commit();
         alert("Bahis başarıyla oynandı!");
-        location.reload(); // Bilgilerin tazelenmesi için sayfayı yenile
+        // UI yenilemesi için gerekirse loadMyBets çağrılabilir veya reload yapılabilir
     } catch (error) {
         alert("Hata: " + error.message);
     }
 }
 
-// 📜 BAHİS GEÇMİŞİNİ LİSTELEME
-async function loadMyBets() {
-    const user = auth.currentUser;
-    const betsDiv = document.getElementById("myBets");
-    if (!user || !betsDiv) return;
-
-    try {
-        const betsSnapshot = await db.collectionGroup("players")
-            .where("uid", "==", user.uid)
-            .get();
-
-        if (betsSnapshot.empty) {
-            betsDiv.innerHTML = "You haven't placed any bets yet.";
-            return;
-        }
-
-        betsDiv.innerHTML = ""; 
-        betsSnapshot.forEach((doc) => {
-            const bet = doc.data();
-            const raceId = doc.ref.parent.parent.id;
-            betsDiv.innerHTML += `
-                <div class="bet-item" style="border-bottom: 1px solid #444; padding: 10px; margin-bottom: 5px;">
-                    <span style="float: left;">
-                        <b style="color: #ffcc00;">Race: ${raceId}</b><br>
-                        🚗 ${formatCar(bet.car)}
-                    </span>
-                    <span style="float: right; text-align: right;">
-                        <b>${bet.stake} Points</b><br>
-                        ${bet.paid ? "✅ Paid" : "⏳ Pending"}
-                    </span>
-                    <div style="clear: both;"></div>
-                </div>`;
-        });
-    } catch (error) {
-        console.error("Geçmiş hatası:", error);
-        betsDiv.innerHTML = "Error loading history.";
-    }
-}
-
-// 🛒 MESAJ GÖNDERME FONKSİYONU
-// 🛒 MESAJ SATIN AL (GÜNLÜK 1 ADET SINIRLI)
+// 🛒 MESAJ SATIN AL (GÜNLÜK SINIRLI)
 async function makePurchase() {
     const user = auth.currentUser;
     const message = document.getElementById("purchaseName").value.trim();
@@ -181,59 +134,101 @@ async function makePurchase() {
         const userSnap = await userRef.get();
         const userData = userSnap.data();
 
-        // 📅 GÜNLÜK SINIR KONTROLÜ
+        // Günlük sınır kontrolü
         if (userData.lastMessageSentAt) {
-            const lastSent = userData.lastMessageSentAt.toDate(); // Firestore zamanını tarihe çevir
-            const today = new Date();
-
-            // Eğer son gönderilen tarih (Gün/Ay/Yıl) bugüne eşitse engelle
-            if (lastSent.toDateString() === today.toDateString()) {
-                alert("Günde sadece 1 mesaj gönderme hakkınız var. Yarın tekrar deneyebilirsiniz!");
+            const lastSent = userData.lastMessageSentAt.toDate();
+            if (lastSent.toDateString() === new Date().toDateString()) {
+                alert("Bugün zaten bir mesaj gönderdiniz!");
                 return;
             }
         }
 
-        // 💰 PUAN KONTROLÜ
         if (userData.points < COST) {
             alert("Puanınız yetersiz.");
             return;
         }
 
-        // ✅ İŞLEMİ GERÇEKLEŞTİR (BATCH KULLANIMI)
         const batch = db.batch();
-
-        // 1. Kullanıcının puanını düş ve gönderim zamanını güncelle
         batch.update(userRef, {
             points: firebase.firestore.FieldValue.increment(-COST),
             lastMessageSentAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        // 2. Mesajı purchases koleksiyonuna ekle
         const purchaseRef = db.collection("purchases").doc();
         batch.set(purchaseRef, {
             userId: user.uid,
             username: userData.username,
             message: message,
-            cost: COST,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
         await batch.commit();
-
         document.getElementById("purchaseName").value = "";
-        alert("Mesajınız başarıyla gönderildi! (Bugünkü hakkınızı kullandınız)");
-        location.reload();
-
+        alert("Mesaj gönderildi!");
     } catch (error) {
-        console.error("Satın alma hatası:", error);
-        alert("İşlem sırasında bir hata oluştu.");
+        console.error("Hata:", error);
+    }
+}
+
+// 📜 GEÇMİŞİ YÜKLE
+async function loadMyBets() {
+    const user = auth.currentUser;
+    const betsDiv = document.getElementById("myBets");
+    if (!user || !betsDiv) return;
+
+    try {
+        const snap = await db.collectionGroup("players")
+            .where("uid", "==", user.uid)
+            .get();
+
+        if (snap.empty) {
+            betsDiv.innerHTML = "No bets found.";
+            return;
+        }
+
+        betsDiv.innerHTML = "";
+        snap.forEach(doc => {
+            const b = doc.data();
+            const raceId = doc.ref.parent.parent.id;
+            betsDiv.innerHTML += `
+                <div class="bet-item" style="border-bottom: 1px solid #444; padding: 10px;">
+                    <b>Race: ${raceId}</b><br>
+                    🚗 ${formatCar(b.car)} | 💰 ${b.stake} Pts | ${b.paid ? "✅ Paid" : "⏳ Pending"}
+                </div>`;
+        });
+    } catch (e) {
+        betsDiv.innerHTML = "Error loading history.";
     }
 }
 
 // 🛠️ YARDIMCI FONKSİYONLAR
+function updatePurchaseButton(points, lastSentTS) {
+    const buyBtn = document.getElementById("buyBtn");
+    const info = document.getElementById("purchaseInfo");
+    if (!buyBtn) return;
+
+    let isToday = false;
+    if (lastSentTS) {
+        isToday = lastSentTS.toDate().toDateString() === new Date().toDateString();
+    }
+
+    if (points < 1500) {
+        buyBtn.disabled = true;
+        buyBtn.style.opacity = "0.5";
+        info.innerHTML = "🔒 You need 1500 points.";
+    } else if (isToday) {
+        buyBtn.disabled = true;
+        buyBtn.style.opacity = "0.5";
+        info.innerHTML = "🕒 Daily limit reached. Come back tomorrow!";
+    } else {
+        buyBtn.disabled = false;
+        buyBtn.style.opacity = "1";
+        info.innerHTML = "✅ You can send a message for 1500 points.";
+    }
+}
+
 function formatCar(carId) {
-    if (!carId) return "Unknown Car";
-    return carId.replaceAll("_", " ").replace("P80C", "P80/C");
+    return carId ? carId.replaceAll("_", " ").replace("P80C", "P80/C") : "Unknown";
 }
 
 function goBack() { window.location.href = "index.html"; }
