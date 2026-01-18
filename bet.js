@@ -175,48 +175,41 @@ async function makePurchase() {
     const user = auth.currentUser;
     if (!user) return;
 
-    const itemName = document.getElementById("purchaseName").value;
-    const cost = Number(document.getElementById("purchaseCost").value);
-
-    if (!itemName || cost <= 0) {
-        alert("Please enter item name and points");
+    const message = document.getElementById("purchaseName").value.trim();
+    if (!message) {
+        alert("Please write a message.");
         return;
     }
+
+    const COST = 1500;
 
     const userRef = db.collection("users").doc(user.uid);
     const userSnap = await userRef.get();
 
-    const userPoints = userSnap.data().points;
+    const points = userSnap.data().points;
 
-    // 🔒 MINIMUM 1500 PUAN KURALI
-    if (userPoints < 1500) {
+    if (points < COST) {
         alert("You need at least 1500 points to send a message.");
-        return;
-    }
-
-    // 🔒 YETERLİ PUAN VAR MI
-    if (userPoints < cost) {
-        alert("Not enough points.");
         return;
     }
 
     // PUAN DÜŞ
     await userRef.update({
-        points: firebase.firestore.FieldValue.increment(-cost)
+        points: firebase.firestore.FieldValue.increment(-COST)
     });
 
-    // SATIN ALMA / MESAJ KAYDI
+    // MESAJ KAYDET
     await db.collection("purchases").add({
         userId: user.uid,
         username: userSnap.data().username,
-        message: itemName,
-        cost: cost,
+        message: message,
+        cost: COST,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
     document.getElementById("purchaseName").value = "";
-    document.getElementById("purchaseCost").value = "";
 
     alert("Message sent successfully!");
 }
+
 
