@@ -2,20 +2,20 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Otomata Quiz</title>
+<title>Otomata Quiz Pro</title>
 <style>
 body { font-family: Arial; padding: 20px; background:#f4f4f4; }
 .question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
 button { margin-top:10px; padding:8px 12px; cursor:pointer; }
 .correct { color: green; font-weight:bold; }
 .wrong { color: red; font-weight:bold; }
-#score { font-size:20px; font-weight:bold; margin-top:20px; }
+h3 { background:#ddd; padding:10px; border-radius:8px; }
 </style>
 </head>
 
 <body>
 
-<h2>🧠 Otomata Quiz (30 Soru)</h2>
+<h2>🧠 Otomata Quiz (20 Soru - Vize Tarzı)</h2>
 
 <div id="quiz"></div>
 
@@ -25,45 +25,178 @@ button { margin-top:10px; padding:8px 12px; cursor:pointer; }
 <script>
 
 const questions = [
-{q:"Alfabe nedir?", options:["Sonsuz küme","Sonlu semboller kümesi","Sayılar kümesi","Kelimeler kümesi"], a:1},
-{q:"Boş kelimenin uzunluğu?", options:["1","0","Sonsuz","Tanımsız"], a:1},
-{q:"|w| neyi ifade eder?", options:["Değer","Uzunluk","Tür","Dil"], a:1},
-{q:"Dil tanımı için gerekli?", options:["Kelimeler","Alfabe","Alfabe+kurallar","Semboller"], a:2},
-{q:"Concatenation nedir?", options:["Ters çevirme","Birleştirme","Silme","Bölme"], a:1},
-{q:"Palindrome nedir?", options:["Farklı okunan","Aynı okunan","Sayı","Çift uzunluk"], a:1},
-{q:"Σ* nedir?", options:["Tek kelime","Tüm kelimeler","Boş küme","Sayı"], a:1},
-{q:"Prefix nedir?", options:["Orta","Son","Baş","Tüm"], a:2},
-{q:"Suffix nedir?", options:["Baş","Son","Orta","Uzunluk"], a:1},
-{q:"Subword nedir?", options:["Baş","Son","Alt dizi","Tüm"], a:2},
 
-{q:"DFA’da geçiş sayısı?", options:["0","1","2","Sonsuz"], a:1},
-{q:"NFA özelliği?", options:["Tek yol","Çok yol","Geçiş yok","Deterministik"], a:1},
-{q:"DFA’da olmayan?", options:["Q","Σ","Γ","f"], a:2},
-{q:"Başlangıç durumu?", options:["F","Q","s","Σ"], a:2},
-{q:"Kabul durumları?", options:["Σ","Q","F","f"], a:2},
-{q:"Kabul şartı?", options:["Döngü","Başlangıç","Final state","Kısa yol"], a:2},
-{q:"ε geçişi?", options:["DFA","NFA","ε-NFA","TG"], a:2},
-{q:"Her NFA için?", options:["DFA yok","DFA vardır","Daha güçlü","Çalışmaz"], a:1},
-{q:"TG özelliği?", options:["Tek sembol","Çok sembol","Sayı","Deterministik"], a:1},
-{q:"Geçersiz FA?", options:["Çok state","Final yok","Alfabe var","Döngü"], a:1},
+/////// SET 1 ///////
+{q:"Σ = {a,b} alfabesi için tanımlanan bir dilde, 'kelime' kavramı aşağıdakilerden hangisini ifade eder?",
+options:[
+"Alfabedeki tüm sembollerin birleşimi",
+"Alfabeden seçilen sonlu sembol dizisi",
+"Sadece tek karakterli ifadeler",
+"Sonsuz uzunlukta diziler"
+], a:1},
 
-{q:"RE neyi tanımlar?", options:["Sayı","Dil","Grafik","Kod"], a:1},
-{q:"x* nedir?", options:["1","0+","Sonsuz","Yok"], a:1},
-{q:"ab* nedir?", options:["a+ b","ab","a + 0+ b","b"], a:2},
-{q:"(ab)* nedir?", options:["a+b","ab tekrar","a","b"], a:1},
-{q:"Özyineli tanım kaç adım?", options:["1","2","3","4"], a:2},
-{q:"Basis nedir?", options:["Son","İlk","Orta","Tanım"], a:1},
-{q:"Inductive nedir?", options:["Başlangıç","Kural","Sonuç","Tanım"], a:1},
-{q:"Tümdengelim?", options:["Özel→genel","Genel→özel","Rastgele","Sayısal"], a:1},
-{q:"Çelişki ispatı?", options:["Doğru","Yanlış varsay","Rastgele","Hesap"], a:1},
-{q:"(a+b)* nedir?", options:["a","b","Tüm kombinasyon","Boş"], a:2}
+{q:"Boş kelime (λ) ile ilgili aşağıdakilerden hangisi doğrudur?",
+options:[
+"Uzunluğu 1’dir ve alfabenin elemanıdır",
+"Hiçbir dilde bulunamaz",
+"Uzunluğu 0’dır ve alfabenin elemanı değildir",
+"Sadece sayısal alfabelerde bulunur"
+], a:2},
+
+{q:"Bir dilin biçimsel olarak tanımlanabilmesi için hangi iki unsur mutlaka gereklidir?",
+options:[
+"Alfabe ve dilin kuralları",
+"Sadece semboller",
+"Durumlar ve geçişler",
+"Fonksiyonlar ve grafikler"
+], a:0},
+
+{q:"Σ* ifadesi aşağıdakilerden hangisini temsil eder?",
+options:[
+"Alfabedeki sembollerin sadece tekli halleri",
+"Alfabenin alt kümeleri",
+"Alfabeden üretilebilecek tüm olası kelimeler",
+"Sadece boş kelime"
+], a:2},
+
+{q:"w1 ve w2 iki kelime ise w1w2 ifadesi neyi gösterir?",
+options:[
+"w1’in tersini",
+"w1 ve w2’nin birleşimini",
+"w2’nin uzunluğunu",
+"İki kelimenin farkını"
+], a:1},
+
+{q:"Palindrome bir dil için neyi ifade eder?",
+options:[
+"Sadece çift uzunluklu kelimeleri",
+"Baştan ve sondan okunduğunda farklı olan kelimeleri",
+"Sadece sayısal dizileri",
+"Baştan ve sondan aynı okunan kelimeleri"
+], a:3},
+
+{q:"Bir kelimenin prefix’i (önek) neyi ifade eder?",
+options:[
+"Kelimenin ortasındaki parça",
+"Kelimenin baş kısmı",
+"Kelimenin son kısmı",
+"Kelimenin ters hali"
+], a:1},
+
+{q:"Bir kelimenin suffix’i (sonek) neyi ifade eder?",
+options:[
+"Kelimenin son kısmı",
+"Kelimenin başı",
+"Kelimenin tamamı",
+"Kelimenin ortası"
+], a:0},
+
+{q:"Subword (alt kelime) kavramı aşağıdakilerden hangisidir?",
+options:[
+"Sadece ilk karakter",
+"Kelimenin son karakteri",
+"Ardışık sembollerden oluşan herhangi bir alt dizi",
+"Kelimenin uzunluğu"
+], a:2},
+
+{q:"|w| = 5 ifadesi neyi gösterir?",
+options:[
+"Kelimenin değeri",
+"Kelimenin uzunluğu 5’tir",
+"Kelime geçersizdir",
+"Kelime sonsuzdur"
+], a:1},
+
+/////// SET 2 ///////
+{q:"Deterministik sonlu otomata (DFA) için aşağıdakilerden hangisi doğrudur?",
+options:[
+"Bir giriş için birden fazla geçiş olabilir",
+"Hiç geçiş olmayabilir",
+"Her durum ve her sembol için tam olarak bir geçiş vardır",
+"Boşluk geçişleri içerir"
+], a:2},
+
+{q:"NFA ile DFA arasındaki temel fark nedir?",
+options:[
+"NFA daha az durum içerir",
+"NFA deterministiktir",
+"NFA’da bir durumdan aynı sembolle birden fazla geçiş olabilir",
+"DFA boşluk geçişi içerir"
+], a:2},
+
+{q:"Bir kelimenin otomata tarafından kabul edilmesi ne anlama gelir?",
+options:[
+"Başlangıç durumunda kalması",
+"Rastgele bir duruma gitmesi",
+"En kısa yolu izlemesi",
+"Kabul (final) durumuna ulaşması"
+], a:3},
+
+{q:"Aşağıdakilerden hangisi DFA’nın bileşenlerinden biri değildir?",
+options:[
+"Q (durumlar kümesi)",
+"Σ (alfabe)",
+"Γ (çıktı alfabesi)",
+"f (geçiş fonksiyonu)"
+], a:2},
+
+{q:"ε (lambda) geçişi hangi modelde kullanılabilir?",
+options:[
+"Sadece DFA",
+"NFA",
+"ε-NFA",
+"Tüm modeller"
+], a:2},
+
+{q:"Her NFA için aşağıdakilerden hangisi doğrudur?",
+options:[
+"Eşdeğer bir DFA yoktur",
+"Aynı dili tanıyan bir DFA oluşturulabilir",
+"NFA daha güçlüdür",
+"NFA her zaman başarısız olur"
+], a:1},
+
+{q:"Geçiş çizgeleri (TG) için hangisi doğrudur?",
+options:[
+"Sadece tek sembol okunur",
+"Birden fazla sembol aynı anda okunabilir",
+"Hiç geçiş yoktur",
+"Sadece sayılarla çalışır"
+], a:1},
+
+{q:"Bir sonlu otomata modelinin geçerli sayılabilmesi için aşağıdakilerden hangisi zorunludur?",
+options:[
+"En az 10 durum olması",
+"Final (kabul) durumunun bulunması",
+"Döngü içermesi",
+"Sonsuz alfabe"
+], a:1},
+
+{q:"RE: a(a+b)*b ifadesi hangi kelimeleri tanımlar?",
+options:[
+"a ile başlayıp b ile biten kelimeler",
+"Sadece a içeren kelimeler",
+"b ile başlayıp a ile biten kelimeler",
+"Sadece ab kelimesi"
+], a:0},
+
+{q:"Kleene yıldızı (*) operatörü neyi ifade eder?",
+options:[
+"En az bir tekrar",
+"Sadece bir tekrar",
+"0 veya daha fazla tekrar",
+"Sonsuzluk"
+], a:2}
+
 ];
 
 let score = 0;
-
 const quizDiv = document.getElementById("quiz");
 
 questions.forEach((item, index) => {
+    if(index === 0) quizDiv.innerHTML += "<h3>📘 Bölüm 1</h3>";
+    if(index === 10) quizDiv.innerHTML += "<h3>📗 Bölüm 2</h3>";
+
     let html = `<div class="question">
     <p>${index+1}) ${item.q}</p>`;
     
@@ -113,7 +246,7 @@ function showScore(){
         }
     });
 
-    document.getElementById("score").innerHTML = "Skor: " + score + " / 30";
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 20";
 }
 
 </script>
