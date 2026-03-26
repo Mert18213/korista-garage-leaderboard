@@ -1,289 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Korista Garage League</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* Modern Auth Styles */
-        .auth-box {
-            background: #0f172a;
-            border: 2px solid #ffd700;
-            border-radius: 15px;
-            padding: 25px;
-            max-width: 400px;
-            margin: 40px auto;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.15);
-        }
-
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #334155;
-        }
-
-        .auth-tabs button {
-            flex: 1;
-            background: none;
-            border: none;
-            color: #94a3b8;
-            padding: 12px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-        }
-
-        .auth-tabs button.active {
-            color: #ffd700;
-            border-bottom: 3px solid #ffd700;
-        }
-
-        .auth-form input {
-            width: 100%;
-            padding: 14px;
-            margin: 10px 0;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 10px;
-            color: white;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        .auth-form input:focus {
-            outline: none;
-            border-color: #ffd700;
-            background: #0f172a;
-        }
-
-        .auth-form button#mainAuthBtn {
-            width: 100%;
-            padding: 16px;
-            margin-top: 20px;
-            background: #ffd700;
-            border: none;
-            border-radius: 10px;
-            color: #000;
-            font-weight: 800;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: transform 0.2s;
-        }
-
-        .auth-form button#mainAuthBtn:hover {
-            background: #facc15;
-            transform: translateY(-2px);
-        }
-
-        .auth-info {
-            text-align: center;
-            font-size: 13px;
-            color: #94a3b8;
-            margin-top: 15px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Otomata Quiz</title>
+<style>
+body { font-family: Arial; padding: 20px; background:#f4f4f4; }
+.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
+button { margin-top:10px; padding:8px 12px; cursor:pointer; }
+.correct { color: green; font-weight:bold; }
+.wrong { color: red; font-weight:bold; }
+#score { font-size:20px; font-weight:bold; margin-top:20px; }
+</style>
 </head>
+
 <body>
 
-<div id="authBox" class="auth-box">
-    <div class="auth-tabs">
-        <button id="tabLogin" class="active" onclick="toggleAuth('login')">Login</button>
-        <button id="tabRegister" onclick="toggleAuth('register')">Register</button>
-    </div>
+<h2>🧠 Otomata Quiz (30 Soru)</h2>
 
-    <div class="auth-form">
-        <div id="usernameField" style="display:none;">
-            <input id="regUsername" placeholder="Username">
-        </div>
-        
-        <input id="email" type="email" placeholder="Email Address">
-        <input id="password" type="password" placeholder="Password">
-        
-        <div id="confirmPasswordField" style="display:none;">
-            <input id="confirmPassword" type="password" placeholder="Confirm Password">
-        </div>
+<div id="quiz"></div>
 
-        <button id="mainAuthBtn" onclick="handleAuth()">Login</button>
-    </div>
-    
-    <p class="auth-info">
-        Leaderboard is public. Login to place bets.
-    </p>
-</div>
-
-<div id="userBar" class="user-bar" style="display:none;">
-    <span id="userInfo"></span>
-
-    <button id="adminUpdateBtn" class="admin-btn" style="display:none; background:#ef4444;" onclick="calculateRace()">
-        ⚙️ CALCULATE
-    </button>
-
-    <button onclick="logout()">Logout</button>
-</div>
-
-<div class="container">
-    <h2 class="subtitle">KORISTA GARAGE HYPERCARS</h2>
-    <h1>A LEAGUE TABLE</h1>
-
-    <div class="season-info">
-        SEASON 1 • 2026 • CURRENT RACE ACTIVE
-    </div>
-
-    <div class="table active">
-        <div class="table-header">
-            <span>POS</span>
-            <span>CAR</span>
-            <span>PTS</span>
-        </div>
-        <div class="row"><span>1</span><span>KOENIGSEGG JESKO ABSOLUT</span><span>25</span></div>
-        <div class="row"><span>2</span><span>MERCEDES-MAYBACH EXELERO</span><span>18</span></div>
-        <div class="row"><span>3</span><span>FERRARI P80/C</span><span>15</span></div>
-        <div class="row"><span>4</span><span>PAGANI ZONDA HP BARCHETTA</span><span>12</span></div>
-        <div class="row"><span>5</span><span>MERCEDES-BENZ 300 SLR</span><span>10</span></div>
-        <div class="row"><span>6</span><span>PAGANI HUAYRA R</span><span>8</span></div>
-        <div class="row"><span>7</span><span>FERRARI 812 SUPERFAST</span><span>6</span></div>
-        <div class="row"><span>8</span><span>KOENIGSEGG CCXR TREVITA</span><span>4</span></div>
-    </div>
-
-    <h2 style="margin-top:40px;">TOP 10 PLAYERS</h2>
-    <div class="table active">
-        <div class="table-header">
-            <span>#</span>
-            <span>USER</span>
-            <span>PTS</span>
-        </div>
-        <div id="top10List"></div>
-    </div>
-
-    <button class="bet-btn" onclick="goToBet()">🎰 GO TO BETTING PAGE</button>
-
-    <div class="social-container">
-        <a class="youtube-btn" href="https://www.youtube.com/@KORISTAGARAGE" target="_blank">▶ YOUTUBE</a>
-        <a class="instagram-btn" href="https://www.instagram.com/koristagarage" target="_blank">📸 INSTAGRAM</a>
-        <a class="tiktok-btn" href="https://www.tiktok.com/@korista.garage" target="_blank">🎵 TIKTOK</a>
-    </div>
-
-    <div class="footer">koristagarage.online</div>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-<script src="firebase.js"></script>
-<script src="auth.js"></script>
+<button onclick="showScore()">📊 Skoru Göster</button>
+<p id="score"></p>
 
 <script>
-/* 🔄 AUTH TOGGLE LOGIC */
-let currentMode = 'login';
 
-function toggleAuth(mode) {
-    currentMode = mode;
-    const userField = document.getElementById('usernameField');
-    const confirmField = document.getElementById('confirmPasswordField');
-    const mainBtn = document.getElementById('mainAuthBtn');
-    const tabLogin = document.getElementById('tabLogin');
-    const tabRegister = document.getElementById('tabRegister');
+const questions = [
+{q:"Alfabe nedir?", options:["Sonsuz küme","Sonlu semboller kümesi","Sayılar kümesi","Kelimeler kümesi"], a:1},
+{q:"Boş kelimenin uzunluğu?", options:["1","0","Sonsuz","Tanımsız"], a:1},
+{q:"|w| neyi ifade eder?", options:["Değer","Uzunluk","Tür","Dil"], a:1},
+{q:"Dil tanımı için gerekli?", options:["Kelimeler","Alfabe","Alfabe+kurallar","Semboller"], a:2},
+{q:"Concatenation nedir?", options:["Ters çevirme","Birleştirme","Silme","Bölme"], a:1},
+{q:"Palindrome nedir?", options:["Farklı okunan","Aynı okunan","Sayı","Çift uzunluk"], a:1},
+{q:"Σ* nedir?", options:["Tek kelime","Tüm kelimeler","Boş küme","Sayı"], a:1},
+{q:"Prefix nedir?", options:["Orta","Son","Baş","Tüm"], a:2},
+{q:"Suffix nedir?", options:["Baş","Son","Orta","Uzunluk"], a:1},
+{q:"Subword nedir?", options:["Baş","Son","Alt dizi","Tüm"], a:2},
 
-    if (mode === 'register') {
-        userField.style.display = 'block';
-        confirmField.style.display = 'block';
-        mainBtn.innerText = 'Create Account';
-        tabRegister.classList.add('active');
-        tabLogin.classList.remove('active');
+{q:"DFA’da geçiş sayısı?", options:["0","1","2","Sonsuz"], a:1},
+{q:"NFA özelliği?", options:["Tek yol","Çok yol","Geçiş yok","Deterministik"], a:1},
+{q:"DFA’da olmayan?", options:["Q","Σ","Γ","f"], a:2},
+{q:"Başlangıç durumu?", options:["F","Q","s","Σ"], a:2},
+{q:"Kabul durumları?", options:["Σ","Q","F","f"], a:2},
+{q:"Kabul şartı?", options:["Döngü","Başlangıç","Final state","Kısa yol"], a:2},
+{q:"ε geçişi?", options:["DFA","NFA","ε-NFA","TG"], a:2},
+{q:"Her NFA için?", options:["DFA yok","DFA vardır","Daha güçlü","Çalışmaz"], a:1},
+{q:"TG özelliği?", options:["Tek sembol","Çok sembol","Sayı","Deterministik"], a:1},
+{q:"Geçersiz FA?", options:["Çok state","Final yok","Alfabe var","Döngü"], a:1},
+
+{q:"RE neyi tanımlar?", options:["Sayı","Dil","Grafik","Kod"], a:1},
+{q:"x* nedir?", options:["1","0+","Sonsuz","Yok"], a:1},
+{q:"ab* nedir?", options:["a+ b","ab","a + 0+ b","b"], a:2},
+{q:"(ab)* nedir?", options:["a+b","ab tekrar","a","b"], a:1},
+{q:"Özyineli tanım kaç adım?", options:["1","2","3","4"], a:2},
+{q:"Basis nedir?", options:["Son","İlk","Orta","Tanım"], a:1},
+{q:"Inductive nedir?", options:["Başlangıç","Kural","Sonuç","Tanım"], a:1},
+{q:"Tümdengelim?", options:["Özel→genel","Genel→özel","Rastgele","Sayısal"], a:1},
+{q:"Çelişki ispatı?", options:["Doğru","Yanlış varsay","Rastgele","Hesap"], a:1},
+{q:"(a+b)* nedir?", options:["a","b","Tüm kombinasyon","Boş"], a:2}
+];
+
+let score = 0;
+
+const quizDiv = document.getElementById("quiz");
+
+questions.forEach((item, index) => {
+    let html = `<div class="question">
+    <p>${index+1}) ${item.q}</p>`;
+    
+    item.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+    });
+
+    html += `<button onclick="check(${index})">Kontrol Et</button>
+    <p id="r${index}"></p>
+    </div>`;
+
+    quizDiv.innerHTML += html;
+});
+
+function check(i){
+    let opts = document.getElementsByName("q"+i);
+    let selected = -1;
+
+    for(let j=0;j<opts.length;j++){
+        if(opts[j].checked) selected = j;
+    }
+
+    let res = document.getElementById("r"+i);
+
+    if(selected === -1){
+        res.innerHTML="⚠️ Seçim yap!";
+        return;
+    }
+
+    if(selected === questions[i].a){
+        res.innerHTML="✅ Doğru!";
+        res.className="correct";
     } else {
-        userField.style.display = 'none';
-        confirmField.style.display = 'none';
-        mainBtn.innerText = 'Login';
-        tabLogin.classList.add('active');
-        tabRegister.classList.remove('active');
+        res.innerHTML="❌ Yanlış!";
+        res.className="wrong";
     }
 }
 
-async function handleAuth() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    if (currentMode === 'login') {
-        if(!email || !password) return alert("Please fill all fields.");
-        login(email, password); 
-    } else {
-        const username = document.getElementById('regUsername').value;
-        const confirmPass = document.getElementById('confirmPassword').value;
-
-        if (!username || !email || !password) {
-            return alert("Please fill all fields.");
-        }
-        if (password !== confirmPass) {
-            return alert("Passwords do not match!");
-        }
-        if (password.length < 6) {
-            return alert("Password must be at least 6 characters.");
-        }
-        register(username, email, password);
-    }
-}
-
-/* 🏆 TOP 10 PLAYERS */
-async function loadTop10() {
-    const list = document.getElementById("top10List");
-    list.innerHTML = "Loading leaderboard...";
-    try {
-        const snap = await db.collection("users").orderBy("points", "desc").limit(10).get();
-        list.innerHTML = "";
-        let rank = 1;
-        snap.forEach(doc => {
-            const user = doc.data();
-            list.innerHTML += `
-                <div class="row">
-                    <span>${rank}</span>
-                    <span>${user.username}</span>
-                    <span>${user.points}</span>
-                </div>`;
-            rank++;
-        });
-    } catch (e) { list.innerHTML = "Error loading players."; }
-}
-loadTop10();
-
-/* ⚙️ ADMIN CALCULATION */
-async function calculateRace() {
-    const raceId = prompt("Enter Race ID to calculate (e.g., race1):");
-    if (!raceId) return;
-
-    try {
-        const raceRef = db.collection("races").doc(raceId);
-        const raceSnap = await raceRef.get();
-        if (!raceSnap.exists) return alert("Race not found.");
-
-        const race = raceSnap.data();
-        if (race.calculated) return alert("Already calculated.");
-        if (race.status !== "finished") return alert("Race is not finished yet.");
-
-        const betsSnap = await db.collection("bets").doc(raceId).collection("players").get();
-        let winners = 0;
-
-        for (const betDoc of betsSnap.docs) {
-            const bet = betDoc.data();
-            if (bet.car === race.winner) {
-                await db.collection("users").doc(betDoc.id).update({
-                    points: firebase.firestore.FieldValue.increment(bet.stake * 2)
-                });
-                winners++;
+function showScore(){
+    score = 0;
+    questions.forEach((q,i)=>{
+        let opts = document.getElementsByName("q"+i);
+        for(let j=0;j<opts.length;j++){
+            if(opts[j].checked && j===q.a){
+                score++;
             }
-            await betDoc.ref.update({ paid: true });
         }
-        await raceRef.update({ calculated: true });
-        alert(`Calculated! Winners: ${winners}`);
-        loadTop10();
-    } catch (e) { alert("Error: " + e.message); }
+    });
+
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 30";
 }
 
-function goToBet() { window.location.href = "bet.html"; }
 </script>
 
 </body>
