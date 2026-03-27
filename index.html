@@ -10,6 +10,7 @@ button { margin-top:10px; padding:8px 12px; cursor:pointer; }
 .correct { color: green; font-weight:bold; }
 .wrong { color: red; font-weight:bold; }
 h3 { background:#ddd; padding:10px; border-radius:8px; }
+.nav-btn { background:#333; color:white; border:none; margin-right:10px; }
 </style>
 </head>
 
@@ -17,12 +18,20 @@ h3 { background:#ddd; padding:10px; border-radius:8px; }
 
 <h2>🧠 Otomata Quiz (20 Soru - Vize Tarzı)</h2>
 
+<!-- 🔁 SAYFA GEÇİŞ BUTONU -->
+<button class="nav-btn" onclick="goToPage2()">➡️ İleri Quiz (index2.html)</button>
+
 <div id="quiz"></div>
 
 <button onclick="showScore()">📊 Skoru Göster</button>
 <p id="score"></p>
 
 <script>
+
+// 🔁 SAYFA GEÇİŞ
+function goToPage2(){
+    window.location.href = "index2.html";
+}
 
 const questions = [
 
