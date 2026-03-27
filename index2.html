@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Otomata İleri Quiz</title>
+<style>
+body { font-family: Arial; padding: 20px; background:#f4f4f4; }
+.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
+button { margin-top:10px; padding:8px 12px; cursor:pointer; }
+.correct { color: green; font-weight:bold; }
+.wrong { color: red; font-weight:bold; }
+.nav-btn { margin-right:10px; background:#333; color:white; border:none; }
+</style>
+</head>
+
+<body>
+
+<h2>🧠 Otomata İleri Seviye Quiz (18 Soru)</h2>
+
+<!-- 🔁 SAYFA GEÇİŞ BUTONLARI -->
+<button class="nav-btn" onclick="goToPage1()">⬅️ Ana Quiz (index.html)</button>
+
+<div id="quiz"></div>
+
+<button onclick="showScore()">📊 Skoru Göster</button>
+<p id="score"></p>
+
+<script>
+
+// 🔁 SAYFA GEÇİŞ FONKSİYONU
+function goToPage1(){
+    window.location.href = "index.html";
+}
+
+const questions = [
+
+{q:"Bir NFA’da aynı durumdan aynı sembol ile birden fazla geçiş olması neyi ifade eder?",
+options:["Hata","Deterministiklik","Non-deterministik yapı","Geçersiz model"], a:2},
+
+{q:"ε-NFA’da ε geçişi ne sağlar?",
+options:["Daha az durum","Sembol okumadan geçiş","Deterministiklik","Hız artışı"], a:1},
+
+{q:"Her NFA için hangisi doğrudur?",
+options:["DFA yoktur","DFA ile eşdeğer değildir","Aynı dili tanıyan DFA vardır","Daha güçlüdür"], a:2},
+
+{q:"Bir DFA’da her durum için ne zorunludur?",
+options:["Final state","Her sembol için tek geçiş","ε geçişi","Çoklu geçiş"], a:1},
+
+{q:"ε-NFA → NFA dönüşümünde ne yapılır?",
+options:["Durum silinir","ε geçişleri kaldırılır","Alfabe değişir","Final silinir"], a:1},
+
+{q:"NFA → DFA dönüşümünde oluşan durumlar nedir?",
+options:["Tek durum","Alt kümeler","Rastgele","Yeni alfabe"], a:1},
+
+{q:"Aşağıdakilerden hangisi DFA’da bulunamaz?",
+options:["Tek geçiş","Deterministik yapı","ε geçişi","Sonlu durum"], a:2},
+
+{q:"Bir kelimenin NFA tarafından kabul edilmesi için ne yeterlidir?",
+options:["Tüm yolların kabul etmesi","En az bir yolun kabul etmesi","Hiç yol olmaması","Başlangıçta kalması"], a:1},
+
+{q:"TG ile FA arasındaki fark nedir?",
+options:["TG deterministik","TG birden fazla sembol okuyabilir","FA daha güçlü","TG alfabe kullanmaz"], a:1},
+
+{q:"RE → NFA dönüşümünde hangi yapı kullanılır?",
+options:["Doğrudan DFA","ε-NFA","TG","Moore"], a:1},
+
+{q:"Bir NFA’da boş küme (Ø) geçiş neyi ifade eder?",
+options:["Tüm durumlar","Hiçbir geçiş yok","Final","Loop"], a:1},
+
+{q:"DFA’da 'ölü durum' nedir?",
+options:["Final","Başlangıç","Hiçbir yere gitmeyen durum","Çok geçişli"], a:2},
+
+{q:"ε kapanışı neyi ifade eder?",
+options:["Tüm durumlar","ε ile ulaşılabilen durumlar","Final","Alfabe"], a:1},
+
+{q:"NFA neden tercih edilir?",
+options:["Daha hızlı","Daha kolay tasarlanır","Daha az güçlü","Zor"], a:1},
+
+{q:"DFA neden tercih edilir?",
+options:["Kolay tasarım","Belirsizlik içerir","Deterministik çalışır","ε içerir"], a:2},
+
+{q:"RE: (0+1)*10 ifadesi neyi ifade eder?",
+options:["10 ile başlayan","10 ile biten","Sadece 10","10 içermez"], a:1},
+
+{q:"Bir NFA’da birden fazla başlangıç durumu olabilir mi?",
+options:["Evet","Hayır","Sadece DFA’da","Sadece TG’de"], a:0},
+
+{q:"ε-NFA kullanmanın avantajı nedir?",
+options:["Daha az durum","Kolay birleşim","Hızlı çalışma","Deterministiklik"], a:1}
+
+];
+
+let score = 0;
+const quizDiv = document.getElementById("quiz");
+
+questions.forEach((item, index) => {
+    let html = `<div class="question">
+    <p>${index+1}) ${item.q}</p>`;
+    
+    item.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+    });
+
+    html += `<button onclick="check(${index})">Kontrol Et</button>
+    <p id="r${index}"></p>
+    </div>`;
+
+    quizDiv.innerHTML += html;
+});
+
+function check(i){
+    let opts = document.getElementsByName("q"+i);
+    let selected = -1;
+
+    for(let j=0;j<opts.length;j++){
+        if(opts[j].checked) selected = j;
+    }
+
+    let res = document.getElementById("r"+i);
+
+    if(selected === -1){
+        res.innerHTML="⚠️ Seçim yap!";
+        return;
+    }
+
+    if(selected === questions[i].a){
+        res.innerHTML="✅ Doğru!";
+        res.className="correct";
+    } else {
+        res.innerHTML="❌ Yanlış!";
+        res.className="wrong";
+    }
+}
+
+function showScore(){
+    score = 0;
+    questions.forEach((q,i)=>{
+        let opts = document.getElementsByName("q"+i);
+        for(let j=0;j<opts.length;j++){
+            if(opts[j].checked && j===q.a){
+                score++;
+            }
+        }
+    });
+
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 18";
+}
+
+</script>
+
+</body>
+</html>
