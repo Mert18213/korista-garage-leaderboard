@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Otomata Quiz Pro - 9. Hafta</title>
+<style>
+body { font-family: Arial; padding: 20px; background:#f4f4f4; }
+.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
+button { margin-top:10px; padding:8px 12px; cursor:pointer; }
+.correct { color: green; font-weight:bold; }
+.wrong { color: red; font-weight:bold; }
+h3 { background:#ddd; padding:10px; border-radius:8px; }
+
+.week-btn{
+    padding:8px 12px;
+    margin:3px;
+    background:#333;
+    color:white;
+    border:none;
+    border-radius:5px;
+}
+.week-btn:hover{ background:#555; }
+.active{ background:#e74c3c !important; }
+</style>
+</head>
+
+<body>
+
+<h2>🧠 Otomata Quiz - 9. Hafta (Moore & Mealy)</h2>
+
+<div>
+<button class="week-btn" onclick="goWeek(1)">1</button>
+<button class="week-btn" onclick="goWeek(2)">2</button>
+<button class="week-btn" onclick="goWeek(3)">3</button>
+<button class="week-btn" onclick="goWeek(4)">4</button>
+<button class="week-btn" onclick="goWeek(5)">5</button>
+<button class="week-btn" onclick="goWeek(6)">6</button>
+<button class="week-btn" onclick="goWeek(7)">7</button>
+<button class="week-btn active" onclick="goWeek(8)">8</button>
+<button class="week-btn" onclick="goWeek(9)">9</button>
+<button class="week-btn" onclick="goWeek(10)">10</button>
+</div>
+
+<div id="quiz"></div>
+
+<button onclick="showScore()">📊 Skoru Göster</button>
+<p id="score"></p>
+
+<script>
+
+function goWeek(w){
+    if(w === 1){
+        window.location.href = "index.html";
+    } else {
+        window.location.href = "index" + w + ".html";
+    }
+}
+
+const questions = [
+
+{q:"Çıktılı sonlu otomata nedir?",
+options:[
+"Sadece giriş okur",
+"Girişe göre çıktı üreten otomata",
+"Sayı üretir",
+"Fonksiyon"
+], a:1},
+
+{q:"Moore makinesinde çıktı neye bağlıdır?",
+options:[
+"Girişe",
+"Duruma",
+"Fonksiyona",
+"Sayıya"
+], a:1},
+
+{q:"Mealy makinesinde çıktı neye bağlıdır?",
+options:[
+"Sadece duruma",
+"Giriş ve geçişe",
+"Sadece başlangıca",
+"Hiçbiri"
+], a:1},
+
+{q:"Moore makinesinde final state var mı?",
+options:[
+"Evet",
+"Hayır",
+"Bazen",
+"Bilinmez"
+], a:1},
+
+{q:"Mealy makinesinde final state var mı?",
+options:[
+"Evet",
+"Hayır",
+"Sadece bir tane",
+"Bilinmez"
+], a:1},
+
+{q:"Moore makinesinde çıktı dizisi nasıldır?",
+options:[
+"Girişten kısa",
+"Girişten 1 fazla",
+"Aynı",
+"Boş"
+], a:1},
+
+{q:"Mealy makinesinde çıktı dizisi nasıldır?",
+options:[
+"Girişten uzun",
+"Girişle aynı uzunlukta",
+"Boş",
+"Sabit"
+], a:1},
+
+{q:"Mealy makinesinde geçişler nasıl gösterilir?",
+options:[
+"Sadece harf",
+"i/o şeklinde",
+"Sayı",
+"Fonksiyon"
+], a:1},
+
+{q:"Γ (gamma) neyi ifade eder?",
+options:[
+"Girdi alfabesi",
+"Durumlar",
+"Çıktı alfabesi",
+"Fonksiyon"
+], a:2},
+
+{q:"Σ (sigma) neyi ifade eder?",
+options:[
+"Girdi alfabesi",
+"Çıktı",
+"Durum",
+"Fonksiyon"
+], a:0},
+
+{q:"Moore makinesi kaç bileşenden oluşur?",
+options:[
+"3",
+"4",
+"5",
+"6"
+], a:2},
+
+{q:"Mealy makinesi kaç bileşenden oluşur?",
+options:[
+"3",
+"4",
+"5",
+"6"
+], a:1},
+
+{q:"Hangisi doğrudur?",
+options:[
+"Moore çıktı geçişe bağlı",
+"Mealy çıktı duruma bağlı",
+"Moore çıktı duruma bağlı",
+"Hiçbiri"
+], a:2},
+
+{q:"Mealy makinesi neden tercih edilir?",
+options:[
+"Daha uzun çıktı üretir",
+"Daha hızlı tepki verir",
+"Daha karmaşık",
+"Gereksiz"
+], a:1},
+
+{q:"Moore ve Mealy için hangisi doğrudur?",
+options:[
+"Aynıdır",
+"İkisi de çıktı üretir",
+"Sadece Moore üretir",
+"Sadece Mealy üretir"
+], a:1}
+
+];
+
+let score = 0;
+const quizDiv = document.getElementById("quiz");
+
+quizDiv.innerHTML += "<h3>📙 9. Hafta - Output Automata</h3>";
+
+questions.forEach((item, index) => {
+    let html = `<div class="question">
+    <p>${index+1}) ${item.q}</p>`;
+    
+    item.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+    });
+
+    html += `<button onclick="check(${index})">Kontrol Et</button>
+    <p id="r${index}"></p>
+    </div>`;
+
+    quizDiv.innerHTML += html;
+});
+
+function check(i){
+    let opts = document.getElementsByName("q"+i);
+    let selected = -1;
+
+    for(let j=0;j<opts.length;j++){
+        if(opts[j].checked) selected = j;
+    }
+
+    let res = document.getElementById("r"+i);
+
+    if(selected === -1){
+        res.innerHTML="⚠️ Seçim yap!";
+        return;
+    }
+
+    if(selected === questions[i].a){
+        res.innerHTML="✅ Doğru!";
+        res.className="correct";
+    } else {
+        res.innerHTML="❌ Yanlış!";
+        res.className="wrong";
+    }
+}
+
+function showScore(){
+    score = 0;
+    questions.forEach((q,i)=>{
+        let opts = document.getElementsByName("q"+i);
+        for(let j=0;j<opts.length;j++){
+            if(opts[j].checked && j===q.a){
+                score++;
+            }
+        }
+    });
+
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 15";
+}
+
+</script>
+
+</body>
+</html>
