@@ -1,1 +1,251 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Otomata Quiz Pro - 5. Hafta</title>
+<style>
+body { font-family: Arial; padding: 20px; background:#f4f4f4; }
+.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
+button { margin-top:10px; padding:8px 12px; cursor:pointer; }
+.correct { color: green; font-weight:bold; }
+.wrong { color: red; font-weight:bold; }
+h3 { background:#ddd; padding:10px; border-radius:8px; }
 
+/* 🔥 HAFTA MENÜ */
+.week-btn{
+    padding:8px 12px;
+    margin:3px;
+    background:#333;
+    color:white;
+    border:none;
+    border-radius:5px;
+}
+.week-btn:hover{
+    background:#555;
+}
+.active{
+    background:#e74c3c !important;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🧠 Otomata Quiz - 5. Hafta (Regular Expressions)</h2>
+
+<!-- 🔥 HAFTA MENÜ -->
+<div>
+<button class="week-btn" onclick="goWeek(1)">1</button>
+<button class="week-btn" onclick="goWeek(2)">2</button>
+<button class="week-btn" onclick="goWeek(3)">3</button>
+<button class="week-btn" onclick="goWeek(4)">4</button>
+<button class="week-btn active" onclick="goWeek(5)">5</button> <!-- 🔥 DOĞRU -->
+<button class="week-btn" onclick="goWeek(6)">6</button>
+<button class="week-btn" onclick="goWeek(7)">7</button>
+<button class="week-btn" onclick="goWeek(8)">8</button>
+<button class="week-btn" onclick="goWeek(9)">9</button>
+<button class="week-btn" onclick="goWeek(10)">10</button>
+</div>
+
+<div id="quiz"></div>
+
+<button onclick="showScore()">📊 Skoru Göster</button>
+<p id="score"></p>
+
+<script>
+
+// 🔁 GEÇİŞ (AYNI KALIYOR)
+function goWeek(w){
+    if(w === 1){
+        window.location.href = "index.html";
+    } else {
+        window.location.href = "index" + w + ".html";
+    }
+}
+
+const questions = [
+
+{q:"Düzenli ifade (RE) nedir?",
+options:[
+"Programlama dili",
+"Dil tanımlayıcı ifade",
+"Sayı kümesi",
+"Fonksiyon"
+], a:1},
+
+{q:"x* ifadesi neyi temsil eder?",
+options:[
+"Sadece x",
+"En az bir x",
+"0 veya daha fazla x",
+"Sadece boş kelime"
+], a:2},
+
+{q:"x+ ifadesi neyi temsil eder?",
+options:[
+"0 veya daha fazla",
+"En az 1 x",
+"Sadece boş kelime",
+"Sonsuzluk"
+], a:1},
+
+{q:"ab* ifadesi neyi üretir?",
+options:[
+"Sadece ab",
+"a, ab, abb, abbb...",
+"Sadece b",
+"a ve b karışık"
+], a:1},
+
+{q:"(ab)* ifadesi neyi temsil eder?",
+options:[
+"ab tekrarları",
+"Sadece ab",
+"Sadece a",
+"Sadece b"
+], a:0},
+
+{q:"ab* ile (ab)* arasındaki fark nedir?",
+options:[
+"Aynıdır",
+"Biri tekrar yapar biri yapmaz",
+"ab* a ile başlar, (ab)* blok tekrar eder",
+"Hiçbiri"
+], a:2},
+
+{q:"(a+b) neyi ifade eder?",
+options:[
+"a ve b birlikte",
+"a veya b",
+"Sadece a",
+"Sadece b"
+], a:1},
+
+{q:"(a+b)* neyi ifade eder?",
+options:[
+"Sadece a",
+"Sadece b",
+"a ve b’den oluşan tüm kelimeler",
+"Sadece boş"
+], a:2},
+
+{q:"a*b* dili nasıldır?",
+options:[
+"a ve b karışık",
+"Önce a sonra b",
+"Sadece a",
+"Sadece b"
+], a:1},
+
+{q:"a(a+b)*b neyi tanımlar?",
+options:[
+"a ile başlayıp b ile biten kelimeler",
+"Sadece ab",
+"Sadece a",
+"Sadece b"
+], a:0},
+
+{q:"(a+b)*a(a+b)* neyi ifade eder?",
+options:[
+"Hiç a olmayan",
+"En az bir a içeren",
+"Sadece b",
+"Sadece a"
+], a:1},
+
+{q:"b*ab*ab* neyi ifade eder?",
+options:[
+"En az iki a",
+"Sadece b",
+"Sadece a",
+"Hiç a yok"
+], a:0},
+
+{q:"(00+01+10+11)* neyi ifade eder?",
+options:[
+"Tek uzunluk",
+"Çift uzunluk",
+"Sadece 0",
+"Sadece 1"
+], a:1},
+
+{q:"(a+b)*(aa+bb)(a+b)* neyi ifade eder?",
+options:[
+"aa veya bb içeren",
+"Sadece aa",
+"Sadece bb",
+"Hiçbiri"
+], a:0},
+
+{q:"Bir düzenli ifade ne yapar?",
+options:[
+"Sayı üretir",
+"Dil tanımlar",
+"Program çalıştırır",
+"Grafik çizer"
+], a:1}
+
+];
+
+let score = 0;
+const quizDiv = document.getElementById("quiz");
+
+quizDiv.innerHTML += "<h3>📙 5. Hafta - Regular Expressions</h3>";
+
+questions.forEach((item, index) => {
+    let html = `<div class="question">
+    <p>${index+1}) ${item.q}</p>`;
+    
+    item.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+    });
+
+    html += `<button onclick="check(${index})">Kontrol Et</button>
+    <p id="r${index}"></p>
+    </div>`;
+
+    quizDiv.innerHTML += html;
+});
+
+function check(i){
+    let opts = document.getElementsByName("q"+i);
+    let selected = -1;
+
+    for(let j=0;j<opts.length;j++){
+        if(opts[j].checked) selected = j;
+    }
+
+    let res = document.getElementById("r"+i);
+
+    if(selected === -1){
+        res.innerHTML="⚠️ Seçim yap!";
+        return;
+    }
+
+    if(selected === questions[i].a){
+        res.innerHTML="✅ Doğru!";
+        res.className="correct";
+    } else {
+        res.innerHTML="❌ Yanlış!";
+        res.className="wrong";
+    }
+}
+
+function showScore(){
+    score = 0;
+    questions.forEach((q,i)=>{
+        let opts = document.getElementsByName("q"+i);
+        for(let j=0;j<opts.length;j++){
+            if(opts[j].checked && j===q.a){
+                score++;
+            }
+        }
+    });
+
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 15";
+}
+
+</script>
+
+</body>
+</html>
