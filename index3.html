@@ -56,8 +56,11 @@ h3 { background:#ddd; padding:10px; border-radius:8px; }
 
 // 🔁 HAFTA GEÇİŞ (1–11 DESTEKLİ)
 function goWeek(w){
-    if(w === 1) window.location.href = "index.html";
-    else window.location.href = "index" + w + ".html";
+    if(w === 1){
+        window.location.href = "index.html";
+    } else {
+        window.location.href = "index" + w + ".html";
+    }
 }
 
 const questions = [
