@@ -1,1 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Otomata Quiz Pro - 8. Hafta</title>
+<style>
+body { font-family: Arial; padding: 20px; background:#f4f4f4; }
+.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
+button { margin-top:10px; padding:8px 12px; cursor:pointer; }
+.correct { color: green; font-weight:bold; }
+.wrong { color: red; font-weight:bold; }
+h3 { background:#ddd; padding:10px; border-radius:8px; }
 
+.week-btn{
+    padding:8px 12px;
+    margin:3px;
+    background:#333;
+    color:white;
+    border:none;
+    border-radius:5px;
+}
+.week-btn:hover{ background:#555; }
+.active{ background:#e74c3c !important; }
+</style>
+</head>
+
+<body>
+
+<h2>🧠 Otomata Quiz - 8. Hafta (NFA)</h2>
+
+<div>
+<button class="week-btn" onclick="goWeek(1)">1</button>
+<button class="week-btn" onclick="goWeek(2)">2</button>
+<button class="week-btn" onclick="goWeek(3)">3</button>
+<button class="week-btn" onclick="goWeek(4)">4</button>
+<button class="week-btn" onclick="goWeek(5)">5</button>
+<button class="week-btn" onclick="goWeek(6)">6</button>
+<button class="week-btn active" onclick="goWeek(7)">7</button>
+<button class="week-btn" onclick="goWeek(8)">8</button>
+<button class="week-btn" onclick="goWeek(9)">9</button>
+<button class="week-btn" onclick="goWeek(10)">10</button>
+</div>
+
+<div id="quiz"></div>
+
+<button onclick="showScore()">📊 Skoru Göster</button>
+<p id="score"></p>
+
+<script>
+
+function goWeek(w){
+    if(w === 1){
+        window.location.href = "index.html";
+    } else {
+        window.location.href = "index" + w + ".html";
+    }
+}
+
+const questions = [
+
+{q:"Non-deterministic (NFA) ne demektir?",
+options:[
+"Tek yol vardır",
+"Birden fazla yol olabilir",
+"Sabit sistem",
+"Fonksiyon"
+], a:1},
+
+{q:"NFA’da karar nasıl verilir?",
+options:[
+"Her zaman tek yol",
+"Birden fazla olası yol vardır",
+"Hiç yol yok",
+"Sabit yol"
+], a:1},
+
+{q:"NFA kaç bileşenden oluşur?",
+options:[
+"2",
+"3",
+"4",
+"5"
+], a:1},
+
+{q:"NFA’da durumlar ne olabilir?",
+options:[
+"Sadece bir başlangıç",
+"Bir başlangıç, birden fazla final",
+"Hiç durum yok",
+"Sadece final"
+], a:1},
+
+{q:"NFA’da NULL geçiş var mı?",
+options:[
+"Var",
+"Yok",
+"Her zaman var",
+"Bilinmez"
+], a:1},
+
+{q:"NFA’nın DFA’ya dönüşümü mümkün mü?",
+options:[
+"Hayır",
+"Evet",
+"Bazen",
+"Tanımsız"
+], a:1},
+
+{q:"NFA neden tercih edilir?",
+options:[
+"Daha zor olduğu için",
+"Daha kolay modelleme sağladığı için",
+"Daha yavaş olduğu için",
+"Gereksiz olduğu için"
+], a:1},
+
+{q:"Bir kelime ne zaman kabul edilir?",
+options:[
+"Her zaman",
+"Bir yol final duruma ulaşıyorsa",
+"Hiçbir zaman",
+"Sadece başlangıçta"
+], a:1},
+
+{q:"NFA’da aynı giriş için ne olabilir?",
+options:[
+"Tek geçiş",
+"Birden fazla geçiş",
+"Hiç geçiş yok",
+"Sabit geçiş"
+], a:1},
+
+{q:"DFA ile NFA farkı nedir?",
+options:[
+"Aynıdır",
+"NFA çoklu yol içerir",
+"DFA daha karmaşıktır",
+"Hiçbiri"
+], a:1},
+
+{q:"NFA hangi dili kabul eder?",
+options:[
+"Sayı",
+"Dil",
+"Grafik",
+"Fonksiyon"
+], a:1},
+
+{q:"Labirent örneği neyi anlatır?",
+options:[
+"DFA",
+"NFA mantığı",
+"Sayı sistemi",
+"Fonksiyon"
+], a:1},
+
+{q:"Her NFA için ne doğrudur?",
+options:[
+"DFA yoktur",
+"Aynı dili kabul eden DFA vardır",
+"Hiçbir şey yoktur",
+"Sadece sayı üretir"
+], a:1},
+
+{q:"NFA’da path ne demektir?",
+options:[
+"Sabit yol",
+"Olası geçiş yolları",
+"Sayı",
+"Fonksiyon"
+], a:1},
+
+{q:"Birden fazla final durumu olabilir mi?",
+options:[
+"Hayır",
+"Evet",
+"Sadece bir",
+"Tanımsız"
+], a:1}
+
+];
+
+let score = 0;
+const quizDiv = document.getElementById("quiz");
+
+quizDiv.innerHTML += "<h3>📘 8. Hafta - NFA</h3>";
+
+questions.forEach((item, index) => {
+    let html = `<div class="question">
+    <p>${index+1}) ${item.q}</p>`;
+    
+    item.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+    });
+
+    html += `<button onclick="check(${index})">Kontrol Et</button>
+    <p id="r${index}"></p>
+    </div>`;
+
+    quizDiv.innerHTML += html;
+});
+
+function check(i){
+    let opts = document.getElementsByName("q"+i);
+    let selected = -1;
+
+    for(let j=0;j<opts.length;j++){
+        if(opts[j].checked) selected = j;
+    }
+
+    let res = document.getElementById("r"+i);
+
+    if(selected === -1){
+        res.innerHTML="⚠️ Seçim yap!";
+        return;
+    }
+
+    if(selected === questions[i].a){
+        res.innerHTML="✅ Doğru!";
+        res.className="correct";
+    } else {
+        res.innerHTML="❌ Yanlış!";
+        res.className="wrong";
+    }
+}
+
+function showScore(){
+    score = 0;
+    questions.forEach((q,i)=>{
+        let opts = document.getElementsByName("q"+i);
+        for(let j=0;j<opts.length;j++){
+            if(opts[j].checked && j===q.a){
+                score++;
+            }
+        }
+    });
+
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 15";
+}
+
+</script>
+
+</body>
+</html>
