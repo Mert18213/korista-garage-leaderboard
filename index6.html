@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Otomata Quiz Pro - 7. Hafta</title>
+<style>
+body { font-family: Arial; padding: 20px; background:#f4f4f4; }
+.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
+button { margin-top:10px; padding:8px 12px; cursor:pointer; }
+.correct { color: green; font-weight:bold; }
+.wrong { color: red; font-weight:bold; }
+h3 { background:#ddd; padding:10px; border-radius:8px; }
+
+.week-btn{
+    padding:8px 12px;
+    margin:3px;
+    background:#333;
+    color:white;
+    border:none;
+    border-radius:5px;
+}
+.week-btn:hover{ background:#555; }
+.active{ background:#e74c3c !important; }
+</style>
+</head>
+
+<body>
+
+<h2>🧠 Otomata Quiz - 7. Hafta (Geçiş Çizgeleri)</h2>
+
+<div>
+<button class="week-btn" onclick="goWeek(1)">1</button>
+<button class="week-btn" onclick="goWeek(2)">2</button>
+<button class="week-btn" onclick="goWeek(3)">3</button>
+<button class="week-btn" onclick="goWeek(4)">4</button>
+<button class="week-btn" onclick="goWeek(5)">5</button>
+<button class="week-btn" onclick="goWeek(6)">6</button>
+<button class="week-btn active" onclick="goWeek(7)">7</button>
+<button class="week-btn" onclick="goWeek(8)">8</button>
+<button class="week-btn" onclick="goWeek(9)">9</button>
+<button class="week-btn" onclick="goWeek(10)">10</button>
+</div>
+
+<div id="quiz"></div>
+
+<button onclick="showScore()">📊 Skoru Göster</button>
+<p id="score"></p>
+
+<script>
+
+function goWeek(w){
+    if(w === 1){
+        window.location.href = "index.html";
+    } else {
+        window.location.href = "index" + w + ".html";
+    }
+}
+
+const questions = [
+
+{q:"Geçiş çizgeleri (TG) nedir?",
+options:[
+"Sayı sistemi",
+"Birden fazla sembol okuyabilen model",
+"Sadece tek sembol okuyan sistem",
+"Fonksiyon"
+], a:1},
+
+{q:"TG ile FA arasındaki fark nedir?",
+options:[
+"Aynıdır",
+"TG daha güçlüdür",
+"FA daha güçlüdür",
+"Hiçbiri"
+], a:1},
+
+{q:"TG’de NULL geçiş ne demektir?",
+options:[
+"Geçiş yok",
+"Sembol olmadan geçiş",
+"Sadece sayı",
+"Fonksiyon"
+], a:1},
+
+{q:"TG kaç bileşenden oluşur?",
+options:[
+"2",
+"3",
+"4",
+"5"
+], a:1},
+
+{q:"TG’de alfabe neyi ifade eder?",
+options:[
+"Durum",
+"Girdi sembolleri",
+"Fonksiyon",
+"Sonuç"
+], a:1},
+
+{q:"TG’de durumlar neyi ifade eder?",
+options:[
+"Sayı",
+"Makinenin durumları",
+"Girdi",
+"Fonksiyon"
+], a:1},
+
+{q:"Successful path nedir?",
+options:[
+"Başlangıçtan başlayıp finale giden yol",
+"Herhangi bir yol",
+"Sonsuz yol",
+"Boş yol"
+], a:0},
+
+{q:"Bir kelime ne zaman kabul edilir?",
+options:[
+"Ortadaysa",
+"Başlangıçta",
+"Final duruma ulaşıyorsa",
+"Her zaman"
+], a:2},
+
+{q:"TG deterministik midir?",
+options:[
+"Evet",
+"Hayır (non-deterministic)",
+"Her zaman değil",
+"Bilinmez"
+], a:1},
+
+{q:"TG’de birden fazla başlangıç olabilir mi?",
+options:[
+"Hayır",
+"Evet",
+"Sadece bir tane",
+"Tanımsız"
+], a:1},
+
+{q:"TG’de substring geçişi ne demektir?",
+options:[
+"Tek harf",
+"Birden fazla harf ile geçiş",
+"Sayı ile geçiş",
+"Fonksiyon"
+], a:1},
+
+{q:"FA ile TG ilişkisi nedir?",
+options:[
+"Her TG FA’dır",
+"Her FA TG’dir ama her TG FA değildir",
+"Aynıdır",
+"Bağımsızdır"
+], a:1},
+
+{q:"Final durum ne demektir?",
+options:[
+"Başlangıç",
+"Kabul durumu",
+"Fonksiyon",
+"Girdi"
+], a:1},
+
+{q:"Bir TG hiçbir şey kabul etmiyorsa sebep nedir?",
+options:[
+"Başlangıç yok",
+"Final durum yok",
+"Fonksiyon yok",
+"Girdi yok"
+], a:1},
+
+{q:"TG neyi modellemek için kullanılır?",
+options:[
+"Sayı",
+"Dil ve kelimeler",
+"Grafik",
+"Program"
+], a:1}
+
+];
+
+let score = 0;
+const quizDiv = document.getElementById("quiz");
+
+quizDiv.innerHTML += "<h3>📗 7. Hafta - Transition Graphs</h3>";
+
+questions.forEach((item, index) => {
+    let html = `<div class="question">
+    <p>${index+1}) ${item.q}</p>`;
+    
+    item.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+    });
+
+    html += `<button onclick="check(${index})">Kontrol Et</button>
+    <p id="r${index}"></p>
+    </div>`;
+
+    quizDiv.innerHTML += html;
+});
+
+function check(i){
+    let opts = document.getElementsByName("q"+i);
+    let selected = -1;
+
+    for(let j=0;j<opts.length;j++){
+        if(opts[j].checked) selected = j;
+    }
+
+    let res = document.getElementById("r"+i);
+
+    if(selected === -1){
+        res.innerHTML="⚠️ Seçim yap!";
+        return;
+    }
+
+    if(selected === questions[i].a){
+        res.innerHTML="✅ Doğru!";
+        res.className="correct";
+    } else {
+        res.innerHTML="❌ Yanlış!";
+        res.className="wrong";
+    }
+}
+
+function showScore(){
+    score = 0;
+    questions.forEach((q,i)=>{
+        let opts = document.getElementsByName("q"+i);
+        for(let j=0;j<opts.length;j++){
+            if(opts[j].checked && j===q.a){
+                score++;
+            }
+        }
+    });
+
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 15";
+}
+
+</script>
+
+</body>
+</html>
