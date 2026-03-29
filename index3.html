@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Otomata Quiz Pro - 4. Hafta</title>
+<style>
+body { font-family: Arial; padding: 20px; background:#f4f4f4; }
+.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
+button { margin-top:10px; padding:8px 12px; cursor:pointer; }
+.correct { color: green; font-weight:bold; }
+.wrong { color: red; font-weight:bold; }
+h3 { background:#ddd; padding:10px; border-radius:8px; }
+.nav-btn { background:#333; color:white; border:none; margin-right:10px; }
+</style>
+</head>
+
+<body>
+
+<h2>🧠 Otomata Quiz - 4. Hafta (Özyineli Tanımlar)</h2>
+
+<!-- 🔁 GEÇİŞ -->
+<button class="nav-btn" onclick="goWeek2()">2. Hafta</button>
+<button class="nav-btn" onclick="goWeek3()">3. Hafta</button>
+<button class="nav-btn" onclick="goWeek4()">🔄 4. Hafta</button>
+
+<div id="quiz"></div>
+
+<button onclick="showScore()">📊 Skoru Göster</button>
+<p id="score"></p>
+
+<script>
+
+function goWeek2(){
+    window.location.href = "index.html";
+}
+
+function goWeek3(){
+    window.location.href = "index2.html";
+}
+
+function goWeek4(){
+    window.location.href = "index3.html";
+}
+
+const questions = [
+
+{q:"Özyineli (recursive) tanım kaç adımdan oluşur?",
+options:[
+"2",
+"3",
+"4",
+"5"
+], a:1},
+
+{q:"Recursive tanımın ilk adımı nedir?",
+options:[
+"Sonuç",
+"Tümevarım",
+"Taban (basis)",
+"Çelişki"
+], a:2},
+
+{q:"İkinci adım neyi içerir?",
+options:[
+"Sonuç",
+"Yeni eleman üretme kuralları",
+"Grafik çizme",
+"Deney"
+], a:1},
+
+{q:"Basis (taban adımı) neyi ifade eder?",
+options:[
+"Tüm sonuçlar",
+"Başlangıçta doğru kabul edilen elemanlar",
+"Son adım",
+"Yanlış varsayım"
+], a:1},
+
+{q:"İnductive (tümevarım) adımı ne yapar?",
+options:[
+"Yeni eleman üretir",
+"Tanımı siler",
+"Sonucu değiştirir",
+"Grafik oluşturur"
+], a:0},
+
+{q:"ÇİFT_SAYI kümesinde aşağıdakilerden hangisi doğrudur?",
+options:[
+"2 başlangıç elemanıdır",
+"1 başlangıçtır",
+"3 başlangıçtır",
+"Hiçbiri"
+], a:0},
+
+{q:"Eğer x çift ise x+2 için ne söylenir?",
+options:[
+"Tek olur",
+"Tanımsızdır",
+"Yine çifttir",
+"Sabit kalır"
+], a:2},
+
+{q:"Polinom için aşağıdakilerden hangisi doğrudur?",
+options:[
+"Üsler negatif olabilir",
+"Üsler kesirli olabilir",
+"Üsler doğal sayı olmalıdır",
+"Hiçbiri"
+], a:2},
+
+{q:"Aşağıdakilerden hangisi polinom DEĞİLDİR?",
+options:[
+"x² + 3x",
+"x² - 4/x",
+"3x + 5",
+"7"
+], a:1},
+
+{q:"Palindrome recursive tanımında hangisi doğrudur?",
+options:[
+"Sadece uzun kelimeler",
+"Boş kelime dahil değildir",
+"axa ve bxb kuralı vardır",
+"Sadece sayılar"
+], a:2},
+
+{q:"Aritmetik ifadeler için aşağıdakilerden hangisi doğrudur?",
+options:[
+"Sadece sayılar",
+"Sadece harfler",
+"Toplama, çıkarma, çarpma, bölme içerir",
+"Hiçbiri"
+], a:2},
+
+{q:"(-E) ifadesi recursive tanımda neyi gösterir?",
+options:[
+"Hata",
+"Aritmetik ifade değildir",
+"Aritmetik ifade olabilir",
+"Boş"
+], a:2},
+
+{q:"gcd fonksiyonu recursive olarak nasıl çalışır?",
+options:[
+"Sabit döner",
+"Kalan varsa tekrar çağırır",
+"Durur",
+"Sadece toplama yapar"
+], a:1},
+
+{q:"Palindrome için başlangıç kümesine hangisi dahildir?",
+options:[
+"Sadece a",
+"Sadece b",
+"λ, a, b",
+"Hiçbiri"
+], a:2},
+
+{q:"Recursive tanımın son adımı neyi belirtir?",
+options:[
+"Sadece başlangıç",
+"Başka eleman yoktur",
+"Yeni eleman üretir",
+"Grafik çizer"
+], a:1}
+
+];
+
+let score = 0;
+const quizDiv = document.getElementById("quiz");
+
+quizDiv.innerHTML += "<h3>📕 4. Hafta - Recursive</h3>";
+
+questions.forEach((item, index) => {
+
+    let html = `<div class="question">
+    <p>${index+1}) ${item.q}</p>`;
+    
+    item.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+    });
+
+    html += `<button onclick="check(${index})">Kontrol Et</button>
+    <p id="r${index}"></p>
+    </div>`;
+
+    quizDiv.innerHTML += html;
+});
+
+function check(i){
+    let opts = document.getElementsByName("q"+i);
+    let selected = -1;
+
+    for(let j=0;j<opts.length;j++){
+        if(opts[j].checked) selected = j;
+    }
+
+    let res = document.getElementById("r"+i);
+
+    if(selected === -1){
+        res.innerHTML="⚠️ Seçim yap!";
+        return;
+    }
+
+    if(selected === questions[i].a){
+        res.innerHTML="✅ Doğru!";
+        res.className="correct";
+    } else {
+        res.innerHTML="❌ Yanlış!";
+        res.className="wrong";
+    }
+}
+
+function showScore(){
+    score = 0;
+    questions.forEach((q,i)=>{
+        let opts = document.getElementsByName("q"+i);
+        for(let j=0;j<opts.length;j++){
+            if(opts[j].checked && j===q.a){
+                score++;
+            }
+        }
+    });
+
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 15";
+}
+
+</script>
+
+</body>
+</html>
