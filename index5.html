@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Otomata Quiz Pro - 6. Hafta</title>
+<style>
+body { font-family: Arial; padding: 20px; background:#f4f4f4; }
+.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
+button { margin-top:10px; padding:8px 12px; cursor:pointer; }
+.correct { color: green; font-weight:bold; }
+.wrong { color: red; font-weight:bold; }
+h3 { background:#ddd; padding:10px; border-radius:8px; }
+
+.week-btn{
+    padding:8px 12px;
+    margin:3px;
+    background:#333;
+    color:white;
+    border:none;
+    border-radius:5px;
+}
+.week-btn:hover{ background:#555; }
+.active{ background:#e74c3c !important; }
+</style>
+</head>
+
+<body>
+
+<h2>🧠 Otomata Quiz - 6. Hafta (Sonlu Otomata)</h2>
+
+<div>
+<button class="week-btn" onclick="goWeek(1)">1</button>
+<button class="week-btn" onclick="goWeek(2)">2</button>
+<button class="week-btn" onclick="goWeek(3)">3</button>
+<button class="week-btn" onclick="goWeek(4)">4</button>
+<button class="week-btn" onclick="goWeek(5)">5</button>
+<button class="week-btn active" onclick="goWeek(6)">6</button>
+<button class="week-btn" onclick="goWeek(7)">7</button>
+<button class="week-btn" onclick="goWeek(8)">8</button>
+<button class="week-btn" onclick="goWeek(9)">9</button>
+<button class="week-btn" onclick="goWeek(10)">10</button>
+</div>
+
+<div id="quiz"></div>
+
+<button onclick="showScore()">📊 Skoru Göster</button>
+<p id="score"></p>
+
+<script>
+
+function goWeek(w){
+    if(w === 1){
+        window.location.href = "index.html";
+    } else {
+        window.location.href = "index" + w + ".html";
+    }
+}
+
+const questions = [
+
+{q:"Sonlu otomata (FA) nedir?",
+options:[
+"Programlama dili",
+"Durumlar ve geçişlerden oluşan model",
+"Sayı kümesi",
+"Fonksiyon"
+], a:1},
+
+{q:"FA ne yapar?",
+options:[
+"Sayı üretir",
+"Kelimeleri kabul veya reddeder",
+"Sadece toplama yapar",
+"Grafik çizer"
+], a:1},
+
+{q:"Deterministik FA (DFA) nedir?",
+options:[
+"Birden fazla çıkışlı sistem",
+"Her giriş için tek geçiş olan sistem",
+"Rastgele çalışan sistem",
+"Tanımsız sistem"
+], a:1},
+
+{q:"DFA’nın 5’li gösterimi hangisidir?",
+options:[
+"(Q, Σ, f, s, F)",
+"(A, B, C)",
+"(x, y, z)",
+"(1,2,3)"
+], a:0},
+
+{q:"Q neyi ifade eder?",
+options:[
+"Girdi",
+"Durumlar kümesi",
+"Fonksiyon",
+"Sonuç"
+], a:1},
+
+{q:"Σ neyi ifade eder?",
+options:[
+"Durum",
+"Girdi alfabesi",
+"Fonksiyon",
+"Sonuç"
+], a:1},
+
+{q:"f neyi ifade eder?",
+options:[
+"Geçiş fonksiyonu",
+"Durum kümesi",
+"Girdi",
+"Sonuç"
+], a:0},
+
+{q:"s neyi ifade eder?",
+options:[
+"Son durum",
+"Başlangıç durumu",
+"Fonksiyon",
+"Alfabe"
+], a:1},
+
+{q:"F neyi ifade eder?",
+options:[
+"Fonksiyon",
+"Girdi",
+"Kabul durumları",
+"Durum sayısı"
+], a:2},
+
+{q:"Bir kelime ne zaman kabul edilir?",
+options:[
+"Her zaman",
+"Başlangıçta",
+"Final durumda bitiyorsa",
+"Ortadaysa"
+], a:2},
+
+{q:"Geçiş diyagramı nedir?",
+options:[
+"Grafik",
+"Durumlar arası geçişlerin görseli",
+"Sayı listesi",
+"Fonksiyon"
+], a:1},
+
+{q:"Geçiş tablosu nedir?",
+options:[
+"Grafik",
+"Tablo halinde geçişler",
+"Sayı kümesi",
+"Fonksiyon"
+], a:1},
+
+{q:"Non-deterministic FA nedir?",
+options:[
+"Tek çıkışlı",
+"Birden fazla çıkışlı",
+"Hiç çıkış yok",
+"Sabit sistem"
+], a:1},
+
+{q:"FA neyi temsil eder?",
+options:[
+"Dil",
+"Sayı",
+"Grafik",
+"Program"
+], a:0},
+
+{q:"Final state ne demektir?",
+options:[
+"Başlangıç",
+"Kabul durumu",
+"Fonksiyon",
+"Girdi"
+], a:1}
+
+];
+
+let score = 0;
+const quizDiv = document.getElementById("quiz");
+
+quizDiv.innerHTML += "<h3>📘 6. Hafta - Sonlu Otomata</h3>";
+
+questions.forEach((item, index) => {
+    let html = `<div class="question">
+    <p>${index+1}) ${item.q}</p>`;
+    
+    item.options.forEach((opt, i) => {
+        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+    });
+
+    html += `<button onclick="check(${index})">Kontrol Et</button>
+    <p id="r${index}"></p>
+    </div>`;
+
+    quizDiv.innerHTML += html;
+});
+
+function check(i){
+    let opts = document.getElementsByName("q"+i);
+    let selected = -1;
+
+    for(let j=0;j<opts.length;j++){
+        if(opts[j].checked) selected = j;
+    }
+
+    let res = document.getElementById("r"+i);
+
+    if(selected === -1){
+        res.innerHTML="⚠️ Seçim yap!";
+        return;
+    }
+
+    if(selected === questions[i].a){
+        res.innerHTML="✅ Doğru!";
+        res.className="correct";
+    } else {
+        res.innerHTML="❌ Yanlış!";
+        res.className="wrong";
+    }
+}
+
+function showScore(){
+    score = 0;
+    questions.forEach((q,i)=>{
+        let opts = document.getElementsByName("q"+i);
+        for(let j=0;j<opts.length;j++){
+            if(opts[j].checked && j===q.a){
+                score++;
+            }
+        }
+    });
+
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 15";
+}
+
+</script>
+
+</body>
+</html>
