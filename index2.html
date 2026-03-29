@@ -2,23 +2,25 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Otomata İleri Quiz</title>
+<title>Otomata Quiz Pro - 3. Hafta</title>
 <style>
 body { font-family: Arial; padding: 20px; background:#f4f4f4; }
 .question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
 button { margin-top:10px; padding:8px 12px; cursor:pointer; }
 .correct { color: green; font-weight:bold; }
 .wrong { color: red; font-weight:bold; }
-.nav-btn { margin-right:10px; background:#333; color:white; border:none; }
+h3 { background:#ddd; padding:10px; border-radius:8px; }
+.nav-btn { background:#333; color:white; border:none; margin-right:10px; }
 </style>
 </head>
 
 <body>
 
-<h2>🧠 Otomata İleri Seviye Quiz (18 Soru)</h2>
+<h2>🧠 Otomata Quiz - 3. Hafta (Temel Kavramlar)</h2>
 
-<!-- 🔁 SAYFA GEÇİŞ BUTONLARI -->
-<button class="nav-btn" onclick="goToPage1()">⬅️ Ana Quiz (index.html)</button>
+<!-- 🔁 SAYFA SEÇİM -->
+<button class="nav-btn" onclick="goWeek2()">⬅️ 2. Hafta</button>
+<button class="nav-btn" onclick="goWeek3()">🔄 3. Hafta Yenile</button>
 
 <div id="quiz"></div>
 
@@ -27,73 +29,146 @@ button { margin-top:10px; padding:8px 12px; cursor:pointer; }
 
 <script>
 
-// 🔁 SAYFA GEÇİŞ FONKSİYONU
-function goToPage1(){
+// SAYFA GEÇİŞ
+function goWeek2(){
     window.location.href = "index.html";
+}
+
+function goWeek3(){
+    window.location.href = "index2.html";
 }
 
 const questions = [
 
-{q:"Bir NFA’da aynı durumdan aynı sembol ile birden fazla geçiş olması neyi ifade eder?",
-options:["Hata","Deterministiklik","Non-deterministik yapı","Geçersiz model"], a:2},
+{q:"Alfabe (Σ) nedir?",
+options:[
+"Sonsuz sembol kümesi",
+"Kelimeler kümesi",
+"Sınırlı (sonlu) semboller kümesi",
+"Sadece sayılar kümesi"
+], a:2},
 
-{q:"ε-NFA’da ε geçişi ne sağlar?",
-options:["Daha az durum","Sembol okumadan geçiş","Deterministiklik","Hız artışı"], a:1},
+{q:"Bir kelime (string) nedir?",
+options:[
+"Sadece tek sembol",
+"Sonsuz dizi",
+"Alfabeden seçilen sonlu sembol dizisi",
+"Sadece sayılar"
+], a:2},
 
-{q:"Her NFA için hangisi doğrudur?",
-options:["DFA yoktur","DFA ile eşdeğer değildir","Aynı dili tanıyan DFA vardır","Daha güçlüdür"], a:2},
+{q:"Boş kelime (λ) için hangisi doğrudur?",
+options:[
+"Alfabenin elemanıdır",
+"Uzunluğu 1’dir",
+"Uzunluğu 0’dır ve alfabenin elemanı değildir",
+"Sadece sayılarda vardır"
+], a:2},
 
-{q:"Bir DFA’da her durum için ne zorunludur?",
-options:["Final state","Her sembol için tek geçiş","ε geçişi","Çoklu geçiş"], a:1},
+{q:"Dil (language) nedir?",
+options:[
+"Sadece semboller",
+"Kelimelerin kümesi",
+"Sayılar kümesi",
+"Fonksiyonlar kümesi"
+], a:1},
 
-{q:"ε-NFA → NFA dönüşümünde ne yapılır?",
-options:["Durum silinir","ε geçişleri kaldırılır","Alfabe değişir","Final silinir"], a:1},
+{q:"Bir dilin tanımlanması için ne gerekir?",
+options:[
+"Sadece alfabe",
+"Sadece kelimeler",
+"Alfabe ve kurallar",
+"Sadece semboller"
+], a:2},
 
-{q:"NFA → DFA dönüşümünde oluşan durumlar nedir?",
-options:["Tek durum","Alt kümeler","Rastgele","Yeni alfabe"], a:1},
+{q:"Σ* ifadesi neyi temsil eder?",
+options:[
+"Sadece boş kelime",
+"Alfabenin alt kümesi",
+"Tüm mümkün kelimeler",
+"Sadece tek harfli kelimeler"
+], a:2},
 
-{q:"Aşağıdakilerden hangisi DFA’da bulunamaz?",
-options:["Tek geçiş","Deterministik yapı","ε geçişi","Sonlu durum"], a:2},
+{q:"|w| = 4 ifadesi neyi gösterir?",
+options:[
+"Kelimenin değeri",
+"Kelimenin uzunluğu",
+"Kelimenin tipi",
+"Kelimenin dili"
+], a:1},
 
-{q:"Bir kelimenin NFA tarafından kabul edilmesi için ne yeterlidir?",
-options:["Tüm yolların kabul etmesi","En az bir yolun kabul etmesi","Hiç yol olmaması","Başlangıçta kalması"], a:1},
+{q:"Concatenation (birleştirme) nedir?",
+options:[
+"Kelimeyi ters çevirme",
+"İki kelimeyi birleştirme",
+"Kelimeyi silme",
+"Kelimeyi bölme"
+], a:1},
 
-{q:"TG ile FA arasındaki fark nedir?",
-options:["TG deterministik","TG birden fazla sembol okuyabilir","FA daha güçlü","TG alfabe kullanmaz"], a:1},
+{q:"Prefix (önek) neyi ifade eder?",
+options:[
+"Kelimenin ortası",
+"Kelimenin başı",
+"Kelimenin sonu",
+"Kelimenin tamamı"
+], a:1},
 
-{q:"RE → NFA dönüşümünde hangi yapı kullanılır?",
-options:["Doğrudan DFA","ε-NFA","TG","Moore"], a:1},
+{q:"Suffix (sonek) neyi ifade eder?",
+options:[
+"Kelimenin başı",
+"Kelimenin ortası",
+"Kelimenin sonu",
+"Kelimenin uzunluğu"
+], a:2},
 
-{q:"Bir NFA’da boş küme (Ø) geçiş neyi ifade eder?",
-options:["Tüm durumlar","Hiçbir geçiş yok","Final","Loop"], a:1},
+{q:"Subword (alt kelime) nedir?",
+options:[
+"Sadece ilk harf",
+"Ardışık sembollerden oluşan parça",
+"Sadece son harf",
+"Kelimenin uzunluğu"
+], a:1},
 
-{q:"DFA’da 'ölü durum' nedir?",
-options:["Final","Başlangıç","Hiçbir yere gitmeyen durum","Çok geçişli"], a:2},
+{q:"Palindrome nedir?",
+options:[
+"Sadece sayılar",
+"Ters çevrildiğinde değişen kelime",
+"Baştan ve sondan aynı okunan kelime",
+"Sadece uzun kelimeler"
+], a:2},
 
-{q:"ε kapanışı neyi ifade eder?",
-options:["Tüm durumlar","ε ile ulaşılabilen durumlar","Final","Alfabe"], a:1},
+{q:"Σ={0,1} için Σ² ne olabilir?",
+options:[
+"{0,1}",
+"{00,01,10,11}",
+"{000}",
+"{λ}"
+], a:1},
 
-{q:"NFA neden tercih edilir?",
-options:["Daha hızlı","Daha kolay tasarlanır","Daha az güçlü","Zor"], a:1},
+{q:"Σ* kümesi nasıldır?",
+options:[
+"Sonlu",
+"Sadece tek elemanlı",
+"Sonsuz",
+"Boş"
+], a:2},
 
-{q:"DFA neden tercih edilir?",
-options:["Kolay tasarım","Belirsizlik içerir","Deterministik çalışır","ε içerir"], a:2},
-
-{q:"RE: (0+1)*10 ifadesi neyi ifade eder?",
-options:["10 ile başlayan","10 ile biten","Sadece 10","10 içermez"], a:1},
-
-{q:"Bir NFA’da birden fazla başlangıç durumu olabilir mi?",
-options:["Evet","Hayır","Sadece DFA’da","Sadece TG’de"], a:0},
-
-{q:"ε-NFA kullanmanın avantajı nedir?",
-options:["Daha az durum","Kolay birleşim","Hızlı çalışma","Deterministiklik"], a:1}
+{q:"wλ sonucu nedir?",
+options:[
+"w",
+"λ",
+"0",
+"Tanımsız"
+], a:0}
 
 ];
 
 let score = 0;
 const quizDiv = document.getElementById("quiz");
 
+quizDiv.innerHTML += "<h3>📗 3. Hafta - Temel Kavramlar</h3>";
+
 questions.forEach((item, index) => {
+
     let html = `<div class="question">
     <p>${index+1}) ${item.q}</p>`;
     
@@ -143,7 +218,7 @@ function showScore(){
         }
     });
 
-    document.getElementById("score").innerHTML = "Skor: " + score + " / 18";
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 15";
 }
 
 </script>
