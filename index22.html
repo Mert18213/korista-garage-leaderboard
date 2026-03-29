@@ -36,8 +36,8 @@ h3 { background:#ddd; padding:10px; border-radius:8px; }
 <!-- 🔥 HAFTA MENÜ -->
 <div>
 <button class="week-btn" onclick="goWeek(1)">1</button>
-<button class="week-btn" onclick="goWeek(2)">2</button>
-<button class="week-btn active" onclick="goWeek(3)">3</button>
+<button class="week-btn active" onclick="goWeek(2)">2</button>
+<button class="week-btn" onclick="goWeek(3)">3</button>
 <button class="week-btn" onclick="goWeek(4)">4</button>
 <button class="week-btn" onclick="goWeek(5)">5</button>
 <button class="week-btn" onclick="goWeek(6)">6</button>
@@ -45,7 +45,6 @@ h3 { background:#ddd; padding:10px; border-radius:8px; }
 <button class="week-btn" onclick="goWeek(8)">8</button>
 <button class="week-btn" onclick="goWeek(9)">9</button>
 <button class="week-btn" onclick="goWeek(10)">10</button>
-<button class="week-btn" onclick="goWeek(11)">11</button>
 </div>
 
 <div id="quiz"></div>
@@ -57,8 +56,13 @@ h3 { background:#ddd; padding:10px; border-radius:8px; }
 
 // 🔁 HAFTA GEÇİŞ
 function goWeek(w){
-    if(w === 1) window.location.href = "index.html";
-    else window.location.href = "index" + w + ".html";
+    if(w === 1){
+        window.location.href = "index.html"; // 2. hafta
+    } else {
+        window.location.href = "index" + w + ".html"; 
+        // 2 → index2 (3. hafta)
+        // 3 → index3 (4. hafta)
+    }
 }
 
 const questions = [
