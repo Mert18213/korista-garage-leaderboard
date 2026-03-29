@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Otomata Quiz Pro</title>
+<title>Otomata Quiz Pro - 2. Hafta</title>
 <style>
 body { font-family: Arial; padding: 20px; background:#f4f4f4; }
 .question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
@@ -16,9 +16,8 @@ h3 { background:#ddd; padding:10px; border-radius:8px; }
 
 <body>
 
-<h2>🧠 Otomata Quiz (20 Soru - Vize Tarzı)</h2>
+<h2>🧠 Otomata Quiz - 2. Hafta (İspat Yöntemleri)</h2>
 
-<!-- 🔁 SAYFA GEÇİŞ BUTONU -->
 <button class="nav-btn" onclick="goToPage2()">➡️ İleri Quiz (index2.html)</button>
 
 <div id="quiz"></div>
@@ -28,183 +27,100 @@ h3 { background:#ddd; padding:10px; border-radius:8px; }
 
 <script>
 
-// 🔁 SAYFA GEÇİŞ
 function goToPage2(){
     window.location.href = "index2.html";
 }
 
 const questions = [
 
-/////// SET 1 ///////
-{q:"Σ = {a,b} alfabesi için tanımlanan bir dilde, 'kelime' kavramı aşağıdakilerden hangisini ifade eder?",
+{q:"Tümdengelim (deductive proof) aşağıdakilerden hangisidir?",
 options:[
-"Alfabedeki tüm sembollerin birleşimi",
-"Alfabeden seçilen sonlu sembol dizisi",
-"Sadece tek karakterli ifadeler",
-"Sonsuz uzunlukta diziler"
+"Özelden genele gitme yöntemidir",
+"Genel öncüllerden özel sonuç çıkarma yöntemidir",
+"Deney yaparak sonuca ulaşmadır",
+"Çelişki kurarak sonuca ulaşmadır"
 ], a:1},
 
-{q:"Boş kelime (λ) ile ilgili aşağıdakilerden hangisi doğrudur?",
+{q:"“If A then B” ifadesini ispatlamak için hangi yöntem uygulanır?",
 options:[
-"Uzunluğu 1’dir ve alfabenin elemanıdır",
-"Hiçbir dilde bulunamaz",
-"Uzunluğu 0’dır ve alfabenin elemanı değildir",
-"Sadece sayısal alfabelerde bulunur"
+"A yanlış kabul edilir",
+"B yanlış kabul edilir",
+"A doğru kabul edilip B’nin doğru olduğu gösterilir",
+"A ve B birlikte yanlış kabul edilir"
 ], a:2},
 
-{q:"Bir dilin biçimsel olarak tanımlanabilmesi için hangi iki unsur mutlaka gereklidir?",
+{q:"Çelişki ile ispat (proof by contradiction) yönteminde ilk adım nedir?",
 options:[
-"Alfabe ve dilin kuralları",
-"Sadece semboller",
-"Durumlar ve geçişler",
-"Fonksiyonlar ve grafikler"
-], a:0},
-
-{q:"Σ* ifadesi aşağıdakilerden hangisini temsil eder?",
-options:[
-"Alfabedeki sembollerin sadece tekli halleri",
-"Alfabenin alt kümeleri",
-"Alfabeden üretilebilecek tüm olası kelimeler",
-"Sadece boş kelime"
+"Teorem doğru kabul edilir",
+"Sonuç doğru kabul edilir",
+"Teorem yanlış kabul edilir",
+"Hipotez yanlış kabul edilir"
 ], a:2},
 
-{q:"w1 ve w2 iki kelime ise w1w2 ifadesi neyi gösterir?",
+{q:"Aşağıdakilerden hangisi çelişki ile ispata örnektir?",
 options:[
-"w1’in tersini",
-"w1 ve w2’nin birleşimini",
-"w2’nin uzunluğunu",
-"İki kelimenin farkını"
+"x ≥ 4 ise 2x ≥ x²",
+"2 asal sayıdır",
+"Bir kümenin tümleyeni sonsuzdur varsayımından çelişki elde etmek",
+"x + y = y + x"
+], a:2},
+
+{q:"“A ancak ve ancak B” ifadesinin ispatı için ne yapılmalıdır?",
+options:[
+"Sadece A → B ispatlanır",
+"Sadece B → A ispatlanır",
+"A → B ve B → A ayrı ayrı ispatlanır",
+"Sadece örnek verilmesi yeterlidir"
+], a:2},
+
+{q:"Aşağıdakilerden hangisi karşı örnek (counterexample) yöntemidir?",
+options:[
+"Tüm durumları incelemek",
+"En az bir yanlış örnek bulmak",
+"Sonsuz örnek üretmek",
+"Deney yapmak"
 ], a:1},
 
-{q:"Palindrome bir dil için neyi ifade eder?",
+{q:"“Tüm asal sayılar tektir” önermesinin yanlış olduğunu nasıl gösteririz?",
 options:[
-"Sadece çift uzunluklu kelimeleri",
-"Baştan ve sondan okunduğunda farklı olan kelimeleri",
-"Sadece sayısal dizileri",
-"Baştan ve sondan aynı okunan kelimeleri"
-], a:3},
-
-{q:"Bir kelimenin prefix’i (önek) neyi ifade eder?",
-options:[
-"Kelimenin ortasındaki parça",
-"Kelimenin baş kısmı",
-"Kelimenin son kısmı",
-"Kelimenin ters hali"
-], a:1},
-
-{q:"Bir kelimenin suffix’i (sonek) neyi ifade eder?",
-options:[
-"Kelimenin son kısmı",
-"Kelimenin başı",
-"Kelimenin tamamı",
-"Kelimenin ortası"
-], a:0},
-
-{q:"Subword (alt kelime) kavramı aşağıdakilerden hangisidir?",
-options:[
-"Sadece ilk karakter",
-"Kelimenin son karakteri",
-"Ardışık sembollerden oluşan herhangi bir alt dizi",
-"Kelimenin uzunluğu"
+"Tümevarım ile",
+"Tümdengelim ile",
+"Karşı örnek ile (2 sayısı)",
+"Çelişki ile"
 ], a:2},
 
-{q:"|w| = 5 ifadesi neyi gösterir?",
+{q:"Tümevarım (induction) yöntemi hangi yapılarla ilgilidir?",
 options:[
-"Kelimenin değeri",
-"Kelimenin uzunluğu 5’tir",
-"Kelime geçersizdir",
-"Kelime sonsuzdur"
-], a:1},
-
-/////// SET 2 ///////
-{q:"Deterministik sonlu otomata (DFA) için aşağıdakilerden hangisi doğrudur?",
-options:[
-"Bir giriş için birden fazla geçiş olabilir",
-"Hiç geçiş olmayabilir",
-"Her durum ve her sembol için tam olarak bir geçiş vardır",
-"Boşluk geçişleri içerir"
+"Rastgele sayılar",
+"Deneysel veriler",
+"Özyineli (recursive) tanımlar",
+"Grafikler"
 ], a:2},
 
-{q:"NFA ile DFA arasındaki temel fark nedir?",
+{q:"Tümevarım yönteminde aşağıdakilerden hangisi bulunmaz?",
 options:[
-"NFA daha az durum içerir",
-"NFA deterministiktir",
-"NFA’da bir durumdan aynı sembolle birden fazla geçiş olabilir",
-"DFA boşluk geçişi içerir"
+"Başlangıç (basis) adımı",
+"Tümevarım adımı",
+"Karşı örnek",
+"Genelleme"
 ], a:2},
 
-{q:"Bir kelimenin otomata tarafından kabul edilmesi ne anlama gelir?",
+{q:"Aşağıdakilerden hangisi tümevarım adımıdır?",
 options:[
-"Başlangıç durumunda kalması",
-"Rastgele bir duruma gitmesi",
-"En kısa yolu izlemesi",
-"Kabul (final) durumuna ulaşması"
-], a:3},
-
-{q:"Aşağıdakilerden hangisi DFA’nın bileşenlerinden biri değildir?",
-options:[
-"Q (durumlar kümesi)",
-"Σ (alfabe)",
-"Γ (çıktı alfabesi)",
-"f (geçiş fonksiyonu)"
-], a:2},
-
-{q:"ε (lambda) geçişi hangi modelde kullanılabilir?",
-options:[
-"Sadece DFA",
-"NFA",
-"ε-NFA",
-"Tüm modeller"
-], a:2},
-
-{q:"Her NFA için aşağıdakilerden hangisi doğrudur?",
-options:[
-"Eşdeğer bir DFA yoktur",
-"Aynı dili tanıyan bir DFA oluşturulabilir",
-"NFA daha güçlüdür",
-"NFA her zaman başarısız olur"
-], a:1},
-
-{q:"Geçiş çizgeleri (TG) için hangisi doğrudur?",
-options:[
-"Sadece tek sembol okunur",
-"Birden fazla sembol aynı anda okunabilir",
-"Hiç geçiş yoktur",
-"Sadece sayılarla çalışır"
-], a:1},
-
-{q:"Bir sonlu otomata modelinin geçerli sayılabilmesi için aşağıdakilerden hangisi zorunludur?",
-options:[
-"En az 10 durum olması",
-"Final (kabul) durumunun bulunması",
-"Döngü içermesi",
-"Sonsuz alfabe"
-], a:1},
-
-{q:"RE: a(a+b)*b ifadesi hangi kelimeleri tanımlar?",
-options:[
-"a ile başlayıp b ile biten kelimeler",
-"Sadece a içeren kelimeler",
-"b ile başlayıp a ile biten kelimeler",
-"Sadece ab kelimesi"
-], a:0},
-
-{q:"Kleene yıldızı (*) operatörü neyi ifade eder?",
-options:[
-"En az bir tekrar",
-"Sadece bir tekrar",
-"0 veya daha fazla tekrar",
-"Sonsuzluk"
-], a:2}
+"İlk durumun doğru olduğunu göstermek",
+"n doğruysa n+1’in de doğru olduğunu göstermek",
+"Tüm durumları tek tek denemek",
+"Çelişki kurmak"
+], a:1}
 
 ];
 
 let score = 0;
 const quizDiv = document.getElementById("quiz");
 
+quizDiv.innerHTML += "<h3>📘 2. Hafta - İspat Yöntemleri</h3>";
+
 questions.forEach((item, index) => {
-    if(index === 0) quizDiv.innerHTML += "<h3>📘 Bölüm 1</h3>";
-    if(index === 10) quizDiv.innerHTML += "<h3>📗 Bölüm 2</h3>";
 
     let html = `<div class="question">
     <p>${index+1}) ${item.q}</p>`;
@@ -255,7 +171,7 @@ function showScore(){
         }
     });
 
-    document.getElementById("score").innerHTML = "Skor: " + score + " / 20";
+    document.getElementById("score").innerHTML = "Skor: " + score + " / 10";
 }
 
 </script>
