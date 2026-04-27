@@ -2,210 +2,126 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Otomata Quiz Pro - 2. Hafta</title>
+<title>Hash Collision Lab</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <style>
-body { font-family: Arial; padding: 20px; background:#f4f4f4; }
-.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
-button { margin-top:10px; padding:8px 12px; cursor:pointer; }
-.correct { color: green; font-weight:bold; }
-.wrong { color: red; font-weight:bold; }
-h3 { background:#ddd; padding:10px; border-radius:8px; }
-
-/* 🔥 HAFTA MENÜ */
-.week-btn{
-    padding:8px 12px;
-    margin:3px;
-    background:#333;
-    color:white;
-    border:none;
-    border-radius:5px;
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    padding: 20px;
 }
-.week-btn:hover{
-    background:#555;
+input, select, button {
+    padding: 10px;
+    margin: 10px;
 }
-.active{
-    background:#e74c3c !important;
+.box {
+    border: 1px solid #444;
+    padding: 20px;
+    margin-top: 20px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>🧠 Otomata Quiz - 2. Hafta (İspat Yöntemleri)</h2>
+<h1>🔐 Hash Collision Lab</h1>
 
-<!-- 🔥 HAFTA SEÇİM MENÜ -->
-<div>
-<button class="week-btn active" onclick="goWeek(1)">1</button>
-<button class="week-btn" onclick="goWeek(2)">2</button>
-<button class="week-btn" onclick="goWeek(3)">3</button>
-<button class="week-btn" onclick="goWeek(4)">4</button>
-<button class="week-btn" onclick="goWeek(5)">5</button>
-<button class="week-btn" onclick="goWeek(6)">6</button>
-<button class="week-btn" onclick="goWeek(7)">7</button>
-<button class="week-btn" onclick="goWeek(8)">8</button>
-<button class="week-btn" onclick="goWeek(9)">9</button>
-<button class="week-btn" onclick="goWeek(10)">10</button>
+<div class="box">
+<h2>Hash Hesapla</h2>
+<input id="text" placeholder="Metin gir">
+<select id="algo">
+    <option value="MD5">MD5</option>
+    <option value="SHA1">SHA1</option>
+    <option value="SHA256">SHA256</option>
+</select>
+<button onclick="calculateHash()">Hesapla</button>
+
+<p id="result"></p>
 </div>
 
-<div id="quiz"></div>
+<div class="box">
+<h2>Avalanche Effect</h2>
+<button onclick="avalanche()">1 Harf Değiştir</button>
+<p id="avalancheResult"></p>
+</div>
 
-<button onclick="showScore()">📊 Skoru Göster</button>
-<p id="score"></p>
+<div class="box">
+<h2>Collision Deneyi (Kısaltılmış Hash)</h2>
+<select id="length">
+    <option value="4">4 karakter</option>
+    <option value="6">6 karakter</option>
+    <option value="8">8 karakter</option>
+</select>
+<button onclick="collision()">Başlat</button>
+
+<p id="collisionResult"></p>
+</div>
 
 <script>
 
-// 🔁 HAFTA GEÇİŞ
-function goWeek(w){
-    if(w === 1){
-        window.location.href = "index.html"; // 2. hafta
-    } else {
-        window.location.href = "index" + w + ".html"; 
-        // 2 → index2 (3. hafta)
-        // 3 → index3 (4. hafta)
-    }
+function getHash(text, algo){
+    if(algo === "MD5") return CryptoJS.MD5(text).toString();
+    if(algo === "SHA1") return CryptoJS.SHA1(text).toString();
+    if(algo === "SHA256") return CryptoJS.SHA256(text).toString();
 }
 
-const questions = [
+function calculateHash(){
+    let text = document.getElementById("text").value;
+    let algo = document.getElementById("algo").value;
 
-{q:"Tümdengelim (deductive proof) aşağıdakilerden hangisidir?",
-options:[
-"Özelden genele gitme yöntemidir",
-"Genel öncüllerden özel sonuç çıkarma yöntemidir",
-"Deney yaparak sonuca ulaşmadır",
-"Çelişki kurarak sonuca ulaşmadır"
-], a:1},
+    let hash = getHash(text, algo);
 
-{q:"“If A then B” ifadesini ispatlamak için hangi yöntem uygulanır?",
-options:[
-"A yanlış kabul edilir",
-"B yanlış kabul edilir",
-"A doğru kabul edilip B’nin doğru olduğu gösterilir",
-"A ve B birlikte yanlış kabul edilir"
-], a:2},
-
-{q:"Çelişki ile ispat (proof by contradiction) yönteminde ilk adım nedir?",
-options:[
-"Teorem doğru kabul edilir",
-"Sonuç doğru kabul edilir",
-"Teorem yanlış kabul edilir",
-"Hipotez yanlış kabul edilir"
-], a:2},
-
-{q:"Aşağıdakilerden hangisi çelişki ile ispata örnektir?",
-options:[
-"x ≥ 4 ise 2x ≥ x²",
-"2 asal sayıdır",
-"Bir kümenin tümleyeni sonsuzdur varsayımından çelişki elde etmek",
-"x + y = y + x"
-], a:2},
-
-{q:"“A ancak ve ancak B” ifadesinin ispatı için ne yapılmalıdır?",
-options:[
-"Sadece A → B ispatlanır",
-"Sadece B → A ispatlanır",
-"A → B ve B → A ayrı ayrı ispatlanır",
-"Sadece örnek verilmesi yeterlidir"
-], a:2},
-
-{q:"Aşağıdakilerden hangisi karşı örnek (counterexample) yöntemidir?",
-options:[
-"Tüm durumları incelemek",
-"En az bir yanlış örnek bulmak",
-"Sonsuz örnek üretmek",
-"Deney yapmak"
-], a:1},
-
-{q:"“Tüm asal sayılar tektir” önermesinin yanlış olduğunu nasıl gösteririz?",
-options:[
-"Tümevarım ile",
-"Tümdengelim ile",
-"Karşı örnek ile (2 sayısı)",
-"Çelişki ile"
-], a:2},
-
-{q:"Tümevarım (induction) yöntemi hangi yapılarla ilgilidir?",
-options:[
-"Rastgele sayılar",
-"Deneysel veriler",
-"Özyineli (recursive) tanımlar",
-"Grafikler"
-], a:2},
-
-{q:"Tümevarım yönteminde aşağıdakilerden hangisi bulunmaz?",
-options:[
-"Başlangıç (basis) adımı",
-"Tümevarım adımı",
-"Karşı örnek",
-"Genelleme"
-], a:2},
-
-{q:"Aşağıdakilerden hangisi tümevarım adımıdır?",
-options:[
-"İlk durumun doğru olduğunu göstermek",
-"n doğruysa n+1’in de doğru olduğunu göstermek",
-"Tüm durumları tek tek denemek",
-"Çelişki kurmak"
-], a:1}
-
-];
-
-let score = 0;
-const quizDiv = document.getElementById("quiz");
-
-quizDiv.innerHTML += "<h3>📘 2. Hafta - İspat Yöntemleri</h3>";
-
-questions.forEach((item, index) => {
-
-    let html = `<div class="question">
-    <p>${index+1}) ${item.q}</p>`;
-    
-    item.options.forEach((opt, i) => {
-        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
-    });
-
-    html += `<button onclick="check(${index})">Kontrol Et</button>
-    <p id="r${index}"></p>
-    </div>`;
-
-    quizDiv.innerHTML += html;
-});
-
-function check(i){
-    let opts = document.getElementsByName("q"+i);
-    let selected = -1;
-
-    for(let j=0;j<opts.length;j++){
-        if(opts[j].checked) selected = j;
-    }
-
-    let res = document.getElementById("r"+i);
-
-    if(selected === -1){
-        res.innerHTML="⚠️ Seçim yap!";
-        return;
-    }
-
-    if(selected === questions[i].a){
-        res.innerHTML="✅ Doğru!";
-        res.className="correct";
-    } else {
-        res.innerHTML="❌ Yanlış!";
-        res.className="wrong";
-    }
+    document.getElementById("result").innerText =
+        "Hash: " + hash;
 }
 
-function showScore(){
-    score = 0;
-    questions.forEach((q,i)=>{
-        let opts = document.getElementsByName("q"+i);
-        for(let j=0;j<opts.length;j++){
-            if(opts[j].checked && j===q.a){
-                score++;
-            }
+function avalanche(){
+    let text = document.getElementById("text").value;
+    if(text.length < 2) return alert("En az 2 karakter gir");
+
+    let changed = text.slice(0, -1) + "X";
+
+    let h1 = getHash(text, "SHA256");
+    let h2 = getHash(changed, "SHA256");
+
+    document.getElementById("avalancheResult").innerText =
+        "Orijinal: " + h1 + "\nDeğişmiş: " + h2;
+}
+
+function randomString(){
+    return Math.random().toString(36).substring(2, 10);
+}
+
+function collision(){
+    let len = document.getElementById("length").value;
+    let seen = {};
+    let count = 0;
+
+    while(true){
+        let str = randomString();
+        let hash = CryptoJS.SHA256(str).toString().substring(0, len);
+
+        if(seen[hash]){
+            document.getElementById("collisionResult").innerText =
+                "Collision bulundu!\n" +
+                seen[hash] + " == " + str +
+                "\nHash: " + hash +
+                "\nDeneme: " + count;
+            break;
+        } else {
+            seen[hash] = str;
         }
-    });
 
-    document.getElementById("score").innerHTML = "Skor: " + score + " / 10";
+        count++;
+
+        if(count > 1000000){
+            document.getElementById("collisionResult").innerText =
+                "Bulunamadı (limit aşıldı)";
+            break;
+        }
+    }
 }
 
 </script>
