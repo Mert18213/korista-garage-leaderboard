@@ -13,87 +13,147 @@ body {
     text-align: center;
     padding: 20px;
 }
-input, select, button {
-    padding: 10px;
-    margin: 10px;
+
+/* SLIDES */
+.slide {
+    display: none;
 }
+.active {
+    display: block;
+}
+
+/* TOOLTIP */
+.tooltip {
+    position: relative;
+    cursor: pointer;
+    color: #38bdf8;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 250px;
+    background: #1e293b;
+    color: #fff;
+    text-align: left;
+    padding: 10px;
+    border-radius: 8px;
+    position: absolute;
+    z-index: 1;
+    top: 25px;
+    left: 0;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+/* BOX */
 .box {
     border: 1px solid #444;
     padding: 20px;
     margin-top: 20px;
     border-radius: 10px;
 }
-.info {
-    background: #1e293b;
+
+button, input, select {
     padding: 10px;
-    margin-top: 10px;
-    font-size: 14px;
-    border-left: 4px solid #38bdf8;
+    margin: 10px;
 }
+
 </style>
 </head>
 
 <body>
 
-<h1>🔐 Hash Collision Lab</h1>
+<h1>🔐 Hash Learning Lab</h1>
+<p>⬅️ ➡️ tuşları ile geçiş yap</p>
 
-<!-- HASH -->
+<!-- SLIDE 1 -->
+<div class="slide active" id="slide1">
 <div class="box">
-<h2>Hash Hesapla</h2>
+<h2>1️⃣ Hash Nedir 
+<span class="tooltip">❓
+<span class="tooltiptext">
+Hash fonksiyonları girdiyi sabit uzunlukta bir çıktıya dönüştürür.
+Geri dönüş yoktur (one-way).
+</span>
+</span>
+</h2>
 
 <input id="text" placeholder="Metin gir">
-
 <select id="algo">
-    <option value="MD5">MD5</option>
-    <option value="SHA1">SHA-1</option>
-    <option value="SHA256">SHA-256</option>
+<option value="MD5">MD5</option>
+<option value="SHA1">SHA-1</option>
+<option value="SHA256">SHA-256</option>
 </select>
 
 <button onclick="calculateHash()">Hesapla</button>
 
 <p id="result"></p>
-
-<div class="info">
-Girilen metnin hash değeri hesaplanır.
 </div>
 </div>
 
-<!-- AVALANCHE -->
+<!-- SLIDE 2 -->
+<div class="slide" id="slide2">
 <div class="box">
-<h2>Avalanche Effect</h2>
+<h2>2️⃣ Avalanche Effect 
+<span class="tooltip">❓
+<span class="tooltiptext">
+Küçük değişiklik → büyük fark.
+Güçlü hash fonksiyonlarının temel özelliği.
+</span>
+</span>
+</h2>
 
-<button onclick="avalanche()">1 Harf Değiştir</button>
-
+<button onclick="avalanche()">Test Et</button>
 <p id="avalancheResult"></p>
-
-<div class="info">
-Girdide küçük değişiklik → hash tamamen değişir.
 </div>
 </div>
 
-<!-- COLLISION -->
+<!-- SLIDE 3 -->
+<div class="slide" id="slide3">
 <div class="box">
-<h2>Collision Deneyi (Kısaltılmış Hash)</h2>
+<h2>3️⃣ Collision Deneyi 
+<span class="tooltip">❓
+<span class="tooltiptext">
+İki farklı veri aynı hash üretirse collision oluşur.
+Bu deney birthday paradox simülasyonudur.
+</span>
+</span>
+</h2>
 
 <select id="length">
-    <option value="4">4 karakter (çok hızlı)</option>
-    <option value="6">6 karakter (hızlı)</option>
-    <option value="8">8 karakter (orta)</option>
-    <option value="10">10 karakter (zor)</option>
-    <option value="12">12 karakter (çok zor)</option>
+<option value="4">4 (çok hızlı)</option>
+<option value="8">8 (orta)</option>
+<option value="12">12 (zor)</option>
 </select>
 
 <button onclick="collision()">Başlat</button>
 
 <p id="collisionResult"></p>
-
-<div class="info">
-Rastgele veriler üretilir ve aynı hash bulunana kadar denenir.
 </div>
-
 </div>
 
 <script>
+
+// SLIDE CONTROL
+let currentSlide = 0;
+let slides = document.querySelectorAll(".slide");
+
+document.addEventListener("keydown", function(e){
+    if(e.key === "ArrowRight"){
+        currentSlide++;
+    }
+    if(e.key === "ArrowLeft"){
+        currentSlide--;
+    }
+
+    if(currentSlide < 0) currentSlide = 0;
+    if(currentSlide > slides.length - 1) currentSlide = slides.length - 1;
+
+    slides.forEach(s => s.classList.remove("active"));
+    slides[currentSlide].classList.add("active");
+});
 
 // HASH
 function getHash(text, algo){
@@ -102,7 +162,6 @@ function getHash(text, algo){
     if(algo === "SHA256") return CryptoJS.SHA256(text).toString();
 }
 
-// HASH HESAPLA
 function calculateHash(){
     let text = document.getElementById("text").value;
     let algo = document.getElementById("algo").value;
@@ -117,30 +176,16 @@ function calculateHash(){
 function avalanche(){
     let text = document.getElementById("text").value;
 
-    if(text.length < 2){
-        alert("En az 2 karakter gir!");
-        return;
-    }
-
     let changed = text.slice(0, -1) + "X";
 
     let h1 = getHash(text, "SHA256");
     let h2 = getHash(changed, "SHA256");
 
-    let diff = 0;
-    for(let i = 0; i < h1.length; i++){
-        if(h1[i] !== h2[i]) diff++;
-    }
-
-    let percent = ((diff / h1.length) * 100).toFixed(2);
-
     document.getElementById("avalancheResult").innerText =
-        "Orijinal Hash:\n" + h1 + "\n\n" +
-        "Değişmiş Hash:\n" + h2 + "\n\n" +
-        "Fark: %" + percent;
+        "Orijinal: " + h1 + "\n\nDeğişmiş: " + h2;
 }
 
-// RANDOM STRING
+// RANDOM
 function randomString(){
     return Math.random().toString(36).substring(2, 10);
 }
@@ -151,23 +196,8 @@ function collision(){
     let len = parseInt(document.getElementById("length").value);
     let seen = {};
     let count = 0;
-
     let startTime = performance.now();
     let resultBox = document.getElementById("collisionResult");
-
-    // Ortalama hesap (hex olduğu için 4 bit * len)
-    let bits = len * 4;
-    let expected = Math.pow(2, bits / 2);
-
-    function getLuckStatus(count, expected){
-        let ratio = count / expected;
-
-        if(ratio < 0.2) return "😎 Çok şanslı!";
-        if(ratio < 0.7) return "👍 Normal (erken)";
-        if(ratio < 1.5) return "👌 Tam beklenen";
-        if(ratio < 3) return "😐 Biraz geç";
-        return "😵 Çok geç (şanssız)";
-    }
 
     function step(){
 
@@ -178,20 +208,14 @@ function collision(){
 
             if(seen[hash] && seen[hash] !== str){
 
-                let endTime = performance.now();
-                let time = ((endTime - startTime)/1000).toFixed(2);
-
-                let luck = getLuckStatus(count, expected);
+                let time = ((performance.now() - startTime)/1000).toFixed(2);
 
                 resultBox.innerText =
-                    "🎉 COLLISION BULUNDU!\n\n" +
-                    "1. Veri: " + seen[hash] + "\n" +
-                    "2. Veri: " + str + "\n\n" +
-                    "Ortak Hash: " + hash + "\n\n" +
-                    "Deneme: " + count.toLocaleString() + "\n" +
-                    "Süre: " + time + " sn\n\n" +
-                    "Beklenen Ortalama: " + Math.round(expected).toLocaleString() + "\n" +
-                    "Durum: " + luck;
+                    "🎉 Collision!\n" +
+                    seen[hash] + " ≠ " + str +
+                    "\nHash: " + hash +
+                    "\nDeneme: " + count +
+                    "\nSüre: " + time + " sn";
 
                 return;
             }
@@ -200,13 +224,8 @@ function collision(){
             count++;
         }
 
-        let currentTime = ((performance.now() - startTime)/1000).toFixed(2);
-
         resultBox.innerText =
-            "⏳ Çalışıyor...\n" +
-            "Deneme: " + count.toLocaleString() + "\n" +
-            "Süre: " + currentTime + " sn\n\n" +
-            "Beklenen Ortalama: " + Math.round(expected).toLocaleString();
+            "⏳ Deneme: " + count;
 
         requestAnimationFrame(step);
     }
