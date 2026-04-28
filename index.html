@@ -85,7 +85,7 @@
 
         .nav-btn:hover {
             background: var(--accent-color);
-            color: var(--bg-color);
+            color: black; /* Ok işareti siyah */
             box-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
         }
 
@@ -122,10 +122,9 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        /* HELP TOOLTIP */
         .help {
             position: absolute; top: 20px; left: 20px;
-            background: var(--accent-color); color: white;
+            background: var(--accent-color); color: black;
             width: 30px; height: 30px; border-radius: 50%;
             cursor: pointer; font-weight: bold; line-height: 30px;
         }
@@ -144,8 +143,10 @@
         input, select, button { padding: 12px; margin: 10px; border-radius: 8px; border: none; font-size: 16px; outline: none; }
         input { background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); width: 70%; }
         select { background: var(--border-color); color: var(--text-color); cursor: pointer; }
-        button { background: var(--accent-color); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        button:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        
+        /* BUTON YAZILARI SİYAH YAPILDI */
+        button { background: var(--accent-color); color: black; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0ea5e9; transform: translateY(-2px); }
 
         pre { background: var(--input-bg); padding: 15px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; font-family: 'Courier New', monospace; border: 1px solid var(--border-color); color: var(--text-color); }
         
@@ -157,6 +158,14 @@
             font-size: 13px;
             color: var(--sub-text);
             border: 1px dashed var(--border-color);
+        }
+
+        /* GEÇMİŞ LİSTESİ STİLLERİ */
+        #historyList {
+            list-style: none; padding: 0; margin-top: 20px; max-height: 300px; overflow-y: auto; text-align: left;
+        }
+        .history-item {
+            background: var(--input-bg); padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid var(--accent-color); font-size: 13px;
         }
 
         .indicator { position: absolute; bottom: 20px; left: 0; right: 0; color: var(--sub-text); font-size: 11px; letter-spacing: 2px; }
@@ -221,12 +230,11 @@
             <div class="helpText">
                 <b>Çakışma (Collision):</b><br>
                 Matematiksel olarak farklı iki verinin aynı hash sonucunu vermesidir. <br>
-                <b>Doğum Günü Paradoksu:</b> Bir odada 23 kişi varsa, iki kişinin doğum gününün aynı olma ihtimali %50'dir. Hash dünyasında da her hane (hex) 4 bit olduğu için, hane sayısı arttıkça gereken deneme sayısı katlanarak artar.<br>
+                <b>Doğum Günü Paradoksu:</b> Bir odada 23 kişi varsa, iki kişinin doğum gününün aynı olma ihtimali %50'dir. Hash dünyasında da her hane (hex) 4 bit olduğu için, hane sayısı arttıkça gereken deneme sayısı katlanarak artar.<br><br>
                 <b>Ortalama Deneme Sayısı Nasıl Hesaplanır?</b><br>
                 Hesaplama, kriptografideki <b>Doğum Günü Paradoksu</b> (Birthday Attack) mantığına dayanır:<br>
                 1. <b>Hane Başına İhtimal:</b> Hash karakterleri 16'lık (hex) sistemde olduğu için her hane 16 farklı değer alabilir. $n$ hane için toplam ihtimal $16^n$ kadardır.<br>
-                2. <b>Karekök Kuralı:</b> İki farklı verinin aynı sonucu (çakışma) vermesi için tüm ihtimalleri denemenize gerek yoktur. İstatistiksel olarak toplam ihtimalin <b>karekökü</b> ($\sqrt{16^n}$) kadar deneme yapıldığında bir çakışma bulma ihtimali %50'ye ulaşır.<br>
-                3. <b>Örnek:</b> 4 hane için toplam ihtimal $16^4 = 65.536$'dır. Ancak karekök kuralı sayesinde sadece <b>256</b> denemede çakışma bulunabilir. 12 hanede ise 281 Trilyon ihtimal varken, yaklaşık <b>16-20 Milyon</b> denemede sonuca ulaşılır.
+                2. <b>Karekök Kuralı:</b> İki farklı verinin aynı sonucu (çakışma) vermesi için tüm ihtimalleri denemenize gerek yoktur. İstatistiksel olarak toplam ihtimalin <b>karekökü</b> ($\sqrt{16^n}$) kadar deneme yapıldığında bir çakışma bulma ihtimali %50'ye ulaşır.
             </div>
             <h2>3. Collision (Çakışma)</h2>
             <p style="font-size: 14px; color: var(--sub-text);">Hash başlangıcında kaç hane eşleşmeli?</p>
@@ -239,35 +247,34 @@
             </select>
             <br>
             <button onclick="runCollision()">Aramayı Başlat</button>
-            
             <div id="statsArea" class="stats-panel" style="display: none;">
                 <div id="expectedVal"></div>
                 <div id="liveSpeed"></div>
             </div>
-
             <div id="colResult" style="margin-top: 20px; font-family: monospace;"></div>
-            <div class="indicator">MODÜL 03: COLLİSİON (ÇAKIŞMA) ANALİZ İŞLEMLERİ </div>
+            <div class="indicator">MODÜL 03: COLLİSİON ANALİZ İŞLEMLERİ </div>
+        </div>
+
+        <div id="section3" class="box">
+            <h2>4. Deney Geçmişi</h2>
+            <p style="font-size: 14px; color: var(--sub-text);">Son yapılan 20 çakışma deneyi:</p>
+            <ul id="historyList"></ul>
+            <div class="indicator">MODÜL 04: PERSISTENT HISTORY</div>
         </div>
     </div>
 
     <script>
         let currentIdx = 0;
-        const totalIdx = 3;
+        const totalIdx = 4; // Sayfa sayısını 4 yaptık
         let collisionActive = false;
 
-        // TEMA DEĞİŞTİRME FONKSİYONU
         function toggleTheme() {
             const body = document.body;
-            if (body.getAttribute('data-theme') === 'light') {
-                body.setAttribute('data-theme', 'dark');
-            } else {
-                body.setAttribute('data-theme', 'light');
-            }
+            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
         }
 
-        // NAVİGASYON
-        function goNext() { change( (currentIdx + 1) % totalIdx ); }
-        function goPrev() { change( (currentIdx - 1 + totalIdx) % totalIdx ); }
+        function goNext() { change((currentIdx + 1) % totalIdx); }
+        function goPrev() { change((currentIdx - 1 + totalIdx) % totalIdx); }
 
         window.addEventListener('keydown', (e) => {
             if (e.key === "ArrowRight") goNext();
@@ -278,6 +285,7 @@
             document.querySelectorAll('.box').forEach(b => b.classList.remove('active'));
             document.getElementById('section' + i).classList.add('active');
             currentIdx = i;
+            if (i === 3) renderHistory(); // Geçmiş sayfasına gelince listeyi yenile
         }
 
         function syncData() {
@@ -302,82 +310,94 @@
             const t = document.getElementById("avText").value;
             const a = document.getElementById("avAlgo").value;
             if(!t) return alert("Önce metin gir!");
-
             const changed = t.slice(0,-1) + String.fromCharCode(t.charCodeAt(t.length-1)+1);
             const h1 = getHash(t, a);
             const h2 = getHash(changed, a);
-
             const b1 = h1.split('').map(h=>parseInt(h,16).toString(2).padStart(4,'0')).join('');
             const b2 = h2.split('').map(h=>parseInt(h,16).toString(2).padStart(4,'0')).join('');
-
             let diff = 0;
             for(let i=0; i<b1.length; i++) if(b1[i]!==b2[i]) diff++;
-                const pct = ((diff/b1.length)*100).toFixed(2);
-
+            const pct = ((diff/b1.length)*100).toFixed(2);
             document.getElementById("avResult").innerHTML = `
-            <p><b>Giriş 1:</b> ${t} <br><b>Giriş 2:</b> ${changed}</p>
-            <p>Hash 1: <small>${h1.substring(0,30)}...</small></p>
-            <p>Hash 2: <small>${h2.substring(0,30)}...</small></p>
-            <hr style="border:1px solid var(--border-color)">
-            <p>Farklı Bit: <b>${diff} / ${b1.length}</b> - Oran: <b style="color:var(--accent-color)">%${pct}</b></p>
+                <p>Giriş 1: ${t} <br>Giriş 2: ${changed}</p>
+                <hr style="border:1px solid var(--border-color)">
+                <p>Farklı Bit: <b>${diff} / ${b1.length}</b> - Oran: <b style="color:var(--accent-color)">%${pct}</b></p>
             `;
+        }
+
+        // GEÇMİŞE KAYDETME FONKSİYONU
+        function saveToHistory(len, count, time) {
+            let history = JSON.parse(localStorage.getItem('hashHistory') || '[]');
+            const newEntry = {
+                date: new Date().toLocaleString('tr-TR'),
+                len: len,
+                count: count.toLocaleString(),
+                time: time
+            };
+            history.unshift(newEntry); // Yeni kaydı başa ekle
+            history = history.slice(0, 20); // Sadece son 20 kaydı tut
+            localStorage.setItem('hashHistory', JSON.stringify(history));
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            const history = JSON.parse(localStorage.getItem('hashHistory') || '[]');
+            if (history.length === 0) {
+                list.innerHTML = '<p style="color:var(--sub-text)">Henüz kayıtlı deney yok.</p>';
+                return;
+            }
+            list.innerHTML = history.map(item => `
+                <li class="history-item">
+                    <b>${item.date}</b><br>
+                    ${item.len} Hane Arandı | ${item.count} Deneme | <b>${item.time} sn</b>
+                </li>
+            `).join('');
         }
 
         function runCollision() {
             if(collisionActive) return; 
-            
             const length = parseInt(document.getElementById("len").value);
             const resBox = document.getElementById("colResult");
             const statsArea = document.getElementById("statsArea");
             const expectedBox = document.getElementById("expectedVal");
             const speedBox = document.getElementById("liveSpeed");
-            
             const seen = new Map();
             let count = 0;
             const start = performance.now();
             collisionActive = true;
             statsArea.style.display = "block";
-
             const bits = length * 4;
             const expectedAttempts = Math.round(1.25 * Math.pow(2, bits / 2));
             expectedBox.innerHTML = `🎯 Beklenen Ortalama Deneme: <b>${expectedAttempts.toLocaleString()}</b>`;
 
             function find() {
                 if(!collisionActive) return;
-
                 for(let i=0; i<2500; i++) {
                     const rand = Math.random().toString(36).substring(2,12);
                     const hash = CryptoJS.SHA256(rand).toString().substring(0, length);
-
                     if(seen.has(hash)) {
                         const old = seen.get(hash);
                         if(old !== rand) {
                             const time = ((performance.now() - start)/1000).toFixed(2);
                             collisionActive = false;
                             resBox.innerHTML = `
-                            <b style="color:#4ade80">🎉 ÇAKIŞMA BULUNDU!</b><br>
-                            <div style="font-size:12px; margin:10px 0;">
-                            "${old}"<br>=<br>"${rand}"
-                            </div>
-                            <pre style="color:var(--accent-color)">Ortak Başlangıç: ${hash}</pre>
-                            <b>Toplam Deneme:</b> ${count.toLocaleString()}<br>
-                            <b>Harcanan Süre:</b> ${time} sn
+                                <b style="color:#4ade80">🎉 ÇAKIŞMA BULUNDU!</b><br>
+                                <div style="font-size:12px; margin:10px 0;">"${old}" = "${rand}"</div>
+                                <pre style="color:var(--accent-color)">Ortak: ${hash}</pre>
+                                <b>Deneme:</b> ${count.toLocaleString()} | <b>Süre:</b> ${time} sn
                             `;
+                            saveToHistory(length, count, time); // Geçmişe kaydet
                             return;
                         }
                     }
                     seen.set(hash, rand);
                     count++;
                 }
-
                 const elapsed = (performance.now() - start) / 1000;
                 const hps = Math.round(count / elapsed);
-                const estTotalTime = expectedAttempts / hps;
-                const remaining = Math.max(0, estTotalTime - elapsed).toFixed(1);
-
+                const remaining = Math.max(0, (expectedAttempts / hps) - elapsed).toFixed(1);
                 resBox.innerText = `🔍 Deneniyor: ${count.toLocaleString()}`;
-                speedBox.innerHTML = `⚡ Hız: ${hps.toLocaleString()} hash/sn | ⏳ Tahmini Kalan: ~${remaining} sn`;
-                
+                speedBox.innerHTML = `⚡ Hız: ${hps.toLocaleString()} hash/sn | ⏳ Tahmini: ~${remaining} sn`;
                 requestAnimationFrame(find);
             }
             find();
