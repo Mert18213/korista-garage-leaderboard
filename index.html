@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Hash Collision Lab</title>
+<title>Hash Learning Lab</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 <style>
@@ -15,36 +15,18 @@ body {
 }
 
 /* SLIDES */
-.slide {
-    display: none;
-}
-.active {
-    display: block;
-}
+.slide { display: none; }
+.active { display: block; }
 
-/* TOOLTIP */
-.tooltip {
-    position: relative;
+/* NAV BUTTONS */
+.nav {
+    margin-top: 20px;
+}
+.nav button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
     cursor: pointer;
-    color: #38bdf8;
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 250px;
-    background: #1e293b;
-    color: #fff;
-    text-align: left;
-    padding: 10px;
-    border-radius: 8px;
-    position: absolute;
-    z-index: 1;
-    top: 25px;
-    left: 0;
-}
-
-.tooltip:hover .tooltiptext {
-    visibility: visible;
 }
 
 /* BOX */
@@ -53,9 +35,42 @@ body {
     padding: 20px;
     margin-top: 20px;
     border-radius: 10px;
+    position: relative;
 }
 
-button, input, select {
+/* TOOLTIP ICON */
+.help {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #38bdf8;
+    color: black;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 14px;
+    line-height: 20px;
+    cursor: pointer;
+}
+
+/* TOOLTIP TEXT */
+.helpText {
+    display: none;
+    position: absolute;
+    top: 10px;
+    left: 40px;
+    background: #1e293b;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.help:hover + .helpText {
+    display: block;
+}
+
+input, select, button {
     padding: 10px;
     margin: 10px;
 }
@@ -66,19 +81,15 @@ button, input, select {
 <body>
 
 <h1>🔐 Hash Learning Lab</h1>
-<p>⬅️ ➡️ tuşları ile geçiş yap</p>
 
 <!-- SLIDE 1 -->
-<div class="slide active" id="slide1">
+<div class="slide active">
 <div class="box">
-<h2>1️⃣ Hash Nedir 
-<span class="tooltip">❓
-<span class="tooltiptext">
-Hash fonksiyonları girdiyi sabit uzunlukta bir çıktıya dönüştürür.
-Geri dönüş yoktur (one-way).
-</span>
-</span>
-</h2>
+
+<div class="help">?</div>
+<div class="helpText">Hash fonksiyonları veriyi sabit uzunlukta çıktıya çevirir. Geri dönüş yoktur.</div>
+
+<h2>Hash</h2>
 
 <input id="text" placeholder="Metin gir">
 <select id="algo">
@@ -90,70 +101,76 @@ Geri dönüş yoktur (one-way).
 <button onclick="calculateHash()">Hesapla</button>
 
 <p id="result"></p>
+
 </div>
 </div>
 
 <!-- SLIDE 2 -->
-<div class="slide" id="slide2">
+<div class="slide">
 <div class="box">
-<h2>2️⃣ Avalanche Effect 
-<span class="tooltip">❓
-<span class="tooltiptext">
-Küçük değişiklik → büyük fark.
-Güçlü hash fonksiyonlarının temel özelliği.
-</span>
-</span>
-</h2>
+
+<div class="help">?</div>
+<div class="helpText">Küçük değişiklik büyük fark yaratır (Avalanche Effect).</div>
+
+<h2>Avalanche Effect</h2>
 
 <button onclick="avalanche()">Test Et</button>
 <p id="avalancheResult"></p>
+
 </div>
 </div>
 
 <!-- SLIDE 3 -->
-<div class="slide" id="slide3">
+<div class="slide">
 <div class="box">
-<h2>3️⃣ Collision Deneyi 
-<span class="tooltip">❓
-<span class="tooltiptext">
-İki farklı veri aynı hash üretirse collision oluşur.
-Bu deney birthday paradox simülasyonudur.
-</span>
-</span>
-</h2>
+
+<div class="help">?</div>
+<div class="helpText">Collision: iki farklı veri aynı hash üretirse oluşur.</div>
+
+<h2>Collision</h2>
 
 <select id="length">
-<option value="4">4 (çok hızlı)</option>
-<option value="8">8 (orta)</option>
-<option value="12">12 (zor)</option>
+<option value="4">4</option>
+<option value="8">8</option>
+<option value="12">12</option>
 </select>
 
 <button onclick="collision()">Başlat</button>
 
 <p id="collisionResult"></p>
+
 </div>
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav">
+<button onclick="prevSlide()">⬅️ Geri</button>
+<button onclick="nextSlide()">İleri ➡️</button>
 </div>
 
 <script>
 
-// SLIDE CONTROL
-let currentSlide = 0;
 let slides = document.querySelectorAll(".slide");
+let current = 0;
 
-document.addEventListener("keydown", function(e){
-    if(e.key === "ArrowRight"){
-        currentSlide++;
-    }
-    if(e.key === "ArrowLeft"){
-        currentSlide--;
-    }
-
-    if(currentSlide < 0) currentSlide = 0;
-    if(currentSlide > slides.length - 1) currentSlide = slides.length - 1;
-
+function showSlide(index){
     slides.forEach(s => s.classList.remove("active"));
-    slides[currentSlide].classList.add("active");
-});
+    slides[index].classList.add("active");
+}
+
+function nextSlide(){
+    if(current < slides.length - 1){
+        current++;
+        showSlide(current);
+    }
+}
+
+function prevSlide(){
+    if(current > 0){
+        current--;
+        showSlide(current);
+    }
+}
 
 // HASH
 function getHash(text, algo){
@@ -166,23 +183,20 @@ function calculateHash(){
     let text = document.getElementById("text").value;
     let algo = document.getElementById("algo").value;
 
-    let hash = getHash(text, algo);
-
     document.getElementById("result").innerText =
-        "Hash: " + hash;
+        "Hash: " + getHash(text, algo);
 }
 
 // AVALANCHE
 function avalanche(){
     let text = document.getElementById("text").value;
-
     let changed = text.slice(0, -1) + "X";
 
     let h1 = getHash(text, "SHA256");
     let h2 = getHash(changed, "SHA256");
 
     document.getElementById("avalancheResult").innerText =
-        "Orijinal: " + h1 + "\n\nDeğişmiş: " + h2;
+        "Orijinal:\n" + h1 + "\n\nDeğişmiş:\n" + h2;
 }
 
 // RANDOM
@@ -196,8 +210,9 @@ function collision(){
     let len = parseInt(document.getElementById("length").value);
     let seen = {};
     let count = 0;
-    let startTime = performance.now();
-    let resultBox = document.getElementById("collisionResult");
+    let start = performance.now();
+
+    let box = document.getElementById("collisionResult");
 
     function step(){
 
@@ -208,9 +223,9 @@ function collision(){
 
             if(seen[hash] && seen[hash] !== str){
 
-                let time = ((performance.now() - startTime)/1000).toFixed(2);
+                let time = ((performance.now() - start)/1000).toFixed(2);
 
-                resultBox.innerText =
+                box.innerText =
                     "🎉 Collision!\n" +
                     seen[hash] + " ≠ " + str +
                     "\nHash: " + hash +
@@ -224,9 +239,7 @@ function collision(){
             count++;
         }
 
-        resultBox.innerText =
-            "⏳ Deneme: " + count;
-
+        box.innerText = "⏳ Deneme: " + count;
         requestAnimationFrame(step);
     }
 
