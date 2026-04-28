@@ -220,12 +220,12 @@
             <div class="help">?</div>
             <div class="helpText">
                 <b>Çakışma (Collision):</b><br>
-                Matematiksel olarak farklı iki verinin aynı hash sonucunu vermesidir. <br><br>
-                <b>Doğum Günü Paradoksu:</b> Bir odada 23 kişi varsa, iki kişinin doğum gününün aynı olma ihtimali %50'dir. Hash dünyasında da her hane (hex) 4 bit olduğu için, hane sayısı arttıkça gereken deneme sayısı katlanarak artar.
-                <b>Ortalama Deneme Sayısı Nasıl Hesaplanır?</b><br><br>
-                Hesaplama, kriptografideki <b>Doğum Günü Paradoksu</b> (Birthday Attack) mantığına dayanır:<br><br>
-                1. <b>Hane Başına İhtimal:</b> Hash karakterleri 16'lık (hex) sistemde olduğu için her hane 16 farklı değer alabilir. $n$ hane için toplam ihtimal $16^n$ kadardır.<br><br>
-                2. <b>Karekök Kuralı:</b> İki farklı verinin aynı sonucu (çakışma) vermesi için tüm ihtimalleri denemenize gerek yoktur. İstatistiksel olarak toplam ihtimalin <b>karekökü</b> ($\sqrt{16^n}$) kadar deneme yapıldığında bir çakışma bulma ihtimali %50'ye ulaşır.<br><br>
+                Matematiksel olarak farklı iki verinin aynı hash sonucunu vermesidir. <br>
+                <b>Doğum Günü Paradoksu:</b> Bir odada 23 kişi varsa, iki kişinin doğum gününün aynı olma ihtimali %50'dir. Hash dünyasında da her hane (hex) 4 bit olduğu için, hane sayısı arttıkça gereken deneme sayısı katlanarak artar.<br>
+                <b>Ortalama Deneme Sayısı Nasıl Hesaplanır?</b><br>
+                Hesaplama, kriptografideki <b>Doğum Günü Paradoksu</b> (Birthday Attack) mantığına dayanır:<br>
+                1. <b>Hane Başına İhtimal:</b> Hash karakterleri 16'lık (hex) sistemde olduğu için her hane 16 farklı değer alabilir. $n$ hane için toplam ihtimal $16^n$ kadardır.<br>
+                2. <b>Karekök Kuralı:</b> İki farklı verinin aynı sonucu (çakışma) vermesi için tüm ihtimalleri denemenize gerek yoktur. İstatistiksel olarak toplam ihtimalin <b>karekökü</b> ($\sqrt{16^n}$) kadar deneme yapıldığında bir çakışma bulma ihtimali %50'ye ulaşır.<br>
                 3. <b>Örnek:</b> 4 hane için toplam ihtimal $16^4 = 65.536$'dır. Ancak karekök kuralı sayesinde sadece <b>256</b> denemede çakışma bulunabilir. 12 hanede ise 281 Trilyon ihtimal varken, yaklaşık <b>16-20 Milyon</b> denemede sonuca ulaşılır.
             </div>
             <h2>3. Collision (Çakışma)</h2>
