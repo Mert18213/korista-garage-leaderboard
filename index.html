@@ -176,10 +176,12 @@
         <div id="section0" class="box active">
             <div class="help">?</div>
             <div class="helpText">
-                <b>Hash Hesaplama:</b><br>
-                Girdiğiniz metin, seçtiğiniz algoritma tarafından karıştırılarak sabit uzunlukta bir özete dönüştürülür. <br><br>
-                - <b>MD5:</b> Eski, hızlı ama güvensiz (128 bit).<br>
-                - <b>SHA-256:</b> Modern standart, çok güvenli (256 bit).
+                <b>Hash Algoritmaları ve Çıktı Uzunlukları:</b><br><br>
+                Girdiğiniz metnin boyutu ne olursa olsun, sonuç her zaman sabit bir uzunlukta olur:<br><br>
+                • <b>MD5:</b> 128-bit uzunluğundadır. Sonuç her zaman <b>32 karakter</b> (onaltılık) sürer.<br>
+                • <b>SHA-1:</b> 160-bit uzunluğundadır. Sonuç her zaman <b>40 karakter</b> (onaltılık) sürer.<br>
+                • <b>SHA-256:</b> 256-bit uzunluğundadır. Sonuç her zaman <b>64 karakter</b> (onaltılık) sürer.<br><br>
+                <i>Not: Karakter sayısı arttıkça şifreleme daha karmaşık ve güvenli hale gelir.</i>
             </div>
             <h2>1. Hash Hesapla</h2>
             <input id="text" placeholder="Metni buraya yaz..." oninput="syncData()">
@@ -305,14 +307,14 @@
 
             let diff = 0;
             for(let i=0; i<b1.length; i++) if(b1[i]!==b2[i]) diff++;
-            const pct = ((diff/b1.length)*100).toFixed(2);
+                const pct = ((diff/b1.length)*100).toFixed(2);
 
             document.getElementById("avResult").innerHTML = `
-                <p><b>Giriş 1:</b> ${t} <br><b>Giriş 2:</b> ${changed}</p>
-                <p>Hash 1: <small>${h1.substring(0,30)}...</small></p>
-                <p>Hash 2: <small>${h2.substring(0,30)}...</small></p>
-                <hr style="border:1px solid var(--border-color)">
-                <p>Farklı Bit: <b>${diff} / ${b1.length}</b> - Oran: <b style="color:var(--accent-color)">%${pct}</b></p>
+            <p><b>Giriş 1:</b> ${t} <br><b>Giriş 2:</b> ${changed}</p>
+            <p>Hash 1: <small>${h1.substring(0,30)}...</small></p>
+            <p>Hash 2: <small>${h2.substring(0,30)}...</small></p>
+            <hr style="border:1px solid var(--border-color)">
+            <p>Farklı Bit: <b>${diff} / ${b1.length}</b> - Oran: <b style="color:var(--accent-color)">%${pct}</b></p>
             `;
         }
 
@@ -348,13 +350,13 @@
                             const time = ((performance.now() - start)/1000).toFixed(2);
                             collisionActive = false;
                             resBox.innerHTML = `
-                                <b style="color:#4ade80">🎉 ÇAKIŞMA BULUNDU!</b><br>
-                                <div style="font-size:12px; margin:10px 0;">
-                                    "${old}"<br>=<br>"${rand}"
-                                </div>
-                                <pre style="color:var(--accent-color)">Ortak Başlangıç: ${hash}</pre>
-                                <b>Toplam Deneme:</b> ${count.toLocaleString()}<br>
-                                <b>Harcanan Süre:</b> ${time} sn
+                            <b style="color:#4ade80">🎉 ÇAKIŞMA BULUNDU!</b><br>
+                            <div style="font-size:12px; margin:10px 0;">
+                            "${old}"<br>=<br>"${rand}"
+                            </div>
+                            <pre style="color:var(--accent-color)">Ortak Başlangıç: ${hash}</pre>
+                            <b>Toplam Deneme:</b> ${count.toLocaleString()}<br>
+                            <b>Harcanan Süre:</b> ${time} sn
                             `;
                             return;
                         }
