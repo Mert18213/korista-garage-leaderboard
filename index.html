@@ -2,19 +2,64 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Hash Lab - Necmettin Erbakan Üniversitesi</title>
+    <title>Hash Lab - Pro Edition</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
     <style>
+        /* TEMA DEĞİŞKENLERİ */
+        :root {
+            --bg-color: #0f172a;
+            --box-bg: #1e293b;
+            --text-color: #ffffff;
+            --sub-text: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #38bdf8;
+            --help-bg: #020617;
+            --input-bg: #0f172a;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --box-bg: #ffffff;
+            --text-color: #0f172a;
+            --sub-text: #475569;
+            --border-color: #cbd5e1;
+            --accent-color: #0ea5e9;
+            --help-bg: #f8fafc;
+            --input-bg: #e2e8f0;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0f172a;
-            color: white;
+            background: var(--bg-color);
+            color: var(--text-color);
             text-align: center;
             padding: 20px;
             overflow: hidden;
             margin: 0;
             height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* TEMA DEĞİŞTİRME BUTONU */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--box-bg);
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 10px;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            z-index: 10001;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         /* NAV BUTONLARI */
@@ -22,13 +67,13 @@
             position: fixed;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(56, 189, 248, 0.2);
-            color: #38bdf8;
-            border: 2px solid #38bdf8;
-            width: 70px;
-            height: 70px;
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            font-size: 35px;
+            font-size: 30px;
             cursor: pointer;
             transition: all 0.2s ease;
             z-index: 9999;
@@ -38,31 +83,31 @@
         }
 
         .nav-btn:hover {
-            background: #38bdf8;
-            color: #0f172a;
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
+            background: var(--accent-color);
+            color: var(--bg-color);
         }
 
-        .prev-btn { left: 50px; }
-        .next-btn { right: 50px; }
+        .prev-btn { left: 40px; }
+        .next-btn { right: 40px; }
 
         .container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 90vh;
+            height: 85vh;
         }
 
         .box {
             display: none;
-            border: 2px solid #334155;
+            border: 2px solid var(--border-color);
             padding: 40px;
             border-radius: 20px;
-            background: #1e293b;
+            background: var(--box-bg);
             width: 550px;
             min-height: 520px;
             position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transition: background 0.3s, border 0.3s;
         }
 
         .box.active {
@@ -71,58 +116,58 @@
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* HELP TOOLTIP */
         .help {
             position: absolute; top: 20px; left: 20px;
-            background: #38bdf8; color: black;
+            background: var(--accent-color); color: white;
             width: 30px; height: 30px; border-radius: 50%;
             cursor: pointer; font-weight: bold; line-height: 30px;
         }
 
         .helpText {
             display: none; position: absolute; top: 60px; left: 20px;
-            background: #020617; color: #f1f5f9; padding: 20px;
+            background: var(--help-bg); color: var(--text-color); padding: 20px;
             border-radius: 12px; font-size: 14px; width: 400px;
-            text-align: left; border: 1px solid #38bdf8; z-index: 10000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
-            line-height: 1.5;
+            text-align: left; border: 1px solid var(--accent-color); z-index: 10000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         .help:hover + .helpText { display: block; }
 
         input, select, button { padding: 12px; margin: 10px; border-radius: 8px; border: none; font-size: 16px; outline: none; }
-        input { background: #0f172a; color: white; border: 1px solid #475569; width: 70%; }
-        select { background: #334155; color: white; cursor: pointer; }
-        button { background: #38bdf8; color: #0f172a; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #0ea5e9; transform: translateY(-2px); }
+        input { background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); width: 70%; }
+        select { background: var(--border-color); color: var(--text-color); cursor: pointer; }
+        button { background: var(--accent-color); color: white; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        button:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
-        pre { background: #020617; padding: 15px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; font-family: 'Courier New', monospace; border: 1px solid #334155; }
+        pre { background: var(--input-bg); padding: 15px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; font-family: 'Courier New', monospace; border: 1px solid var(--border-color); color: var(--text-color); }
         
-        /* COLLISION STATS */
         .stats-panel {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(120, 120, 120, 0.1);
             border-radius: 10px;
             padding: 10px;
             margin-top: 15px;
             font-size: 13px;
-            color: #94a3b8;
-            border: 1px dashed #334155;
+            color: var(--sub-text);
+            border: 1px dashed var(--border-color);
         }
 
-        .indicator { position: absolute; bottom: 20px; left: 0; right: 0; color: #64748b; font-size: 11px; letter-spacing: 2px; }
+        .indicator { position: absolute; bottom: 20px; left: 0; right: 0; color: var(--sub-text); font-size: 11px; letter-spacing: 2px; }
     </style>
 </head>
 
 <body>
 
+    <button class="theme-toggle" onclick="toggleTheme()" title="Temayı Değiştir">🌓</button>
+
     <button class="nav-btn prev-btn" onclick="goPrev()">❮</button>
     <button class="nav-btn next-btn" onclick="goNext()">❯</button>
 
-    <h1>🔐Hash Lab - Necmettin Erbakan Üniversitesi </h1>
+    <h1>🔐 Hash Learning Lab Pro</h1>
 
     <div class="container">
         <div id="section0" class="box active">
@@ -143,7 +188,7 @@
             <br>
             <button onclick="calculateHash()">Şifrele</button>
             <div id="hashResult" style="margin-top: 15px;"></div>
-            <div class="indicator">MODÜL 01: HASH İŞLEMLERİ</div>
+            <div class="indicator">MODÜL 01: KRİPTOGRAFİK ÖZET</div>
         </div>
 
         <div id="section1" class="box">
@@ -163,7 +208,7 @@
             <br>
             <button onclick="runAvalanche()">Analiz Et</button>
             <div id="avResult" style="text-align: left; font-size: 13px; margin-top: 10px;"></div>
-            <div class="indicator">MODÜL 02: AVALANCHE EFFECT İŞLEMİ</div>
+            <div class="indicator">MODÜL 02: DEĞİŞİM ANALİZİ</div>
         </div>
 
         <div id="section2" class="box">
@@ -171,16 +216,16 @@
             <div class="helpText">
                 <b>Çakışma (Collision):</b><br>
                 Matematiksel olarak farklı iki verinin aynı hash sonucunu vermesidir. <br><br>
-                <b>Doğum Günü Paradoksu:</b> Bir odada 23 kişi varsa, iki kişinin doğum gününün aynı olma ihtimali %50'dir. Hash dünyasında da her hane (hex) 4 bit olduğu için, hane sayısı arttıkça gereken deneme sayısı katlanarak artar.
+                <b>Simülasyon:</b> Hane sayısı arttıkça gereken deneme sayısı katlanarak artar.
             </div>
             <h2>3. Collision (Çakışma)</h2>
-            <p style="font-size: 14px; color: #94a3b8;">Hash başlangıcında kaç hane eşleşmeli?</p>
+            <p style="font-size: 14px; color: var(--sub-text);">Hash başlangıcında kaç hane eşleşmeli?</p>
             <select id="len">
-                <option value="4">4 Karakter (Çok Hızlı)</option>
-                <option value="6">6 Karakter (Hızlı)</option>
-                <option value="8">8 Karakter (Ortalama)</option>
-                <option value="10">10 Karakter (Yavaş)</option>
-                <option value="12">12 Karakter (Çok Yavaş)</option>
+                <option value="4">4 Karakter</option>
+                <option value="6">6 Karakter</option>
+                <option value="8">8 Karakter</option>
+                <option value="10">10 Karakter</option>
+                <option value="12">12 Karakter</option>
             </select>
             <br>
             <button onclick="runCollision()">Aramayı Başlat</button>
@@ -191,7 +236,7 @@
             </div>
 
             <div id="colResult" style="margin-top: 20px; font-family: monospace;"></div>
-            <div class="indicator">MODÜL 03: COLLİSİON (ÇAKIŞMA) ANALİZ İŞLEMLERİ </div>
+            <div class="indicator">MODÜL 03: BRUTE FORCE SİMÜLASYONU</div>
         </div>
     </div>
 
@@ -199,6 +244,17 @@
         let currentIdx = 0;
         const totalIdx = 3;
         let collisionActive = false;
+
+        // TEMA DEĞİŞTİRME
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                body.setAttribute('data-theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+            }
+        }
 
         // NAVİGASYON
         function goNext() { change( (currentIdx + 1) % totalIdx ); }
@@ -253,15 +309,13 @@
                 <p><b>Giriş 1:</b> ${t} <br><b>Giriş 2:</b> ${changed}</p>
                 <p>Hash 1: <small>${h1.substring(0,30)}...</small></p>
                 <p>Hash 2: <small>${h2.substring(0,30)}...</small></p>
-                <hr style="border:1px solid #334155">
-                <p>Farklı Bit: <b>${diff} / ${b1.length}</b> - Oran: <b style="color:#38bdf8">%${pct}</b></p>
+                <hr style="border:1px solid var(--border-color)">
+                <p>Farklı Bit: <b>${diff} / ${b1.length}</b> - Oran: <b style="color:var(--accent-color)">%${pct}</b></p>
             `;
         }
 
-        // 3. BÖLÜM: COLLISION (İSTATİSTİK DESTEKLİ)
         function runCollision() {
-            if(collisionActive) return; // Çakışma araması zaten çalışıyorsa tekrar başlatma
-            
+            if(collisionActive) return;
             const length = parseInt(document.getElementById("len").value);
             const resBox = document.getElementById("colResult");
             const statsArea = document.getElementById("statsArea");
@@ -274,19 +328,15 @@
             collisionActive = true;
             statsArea.style.display = "block";
 
-            // MATEMATİKSEL BEKLENTİ HESABI
-            // Her hex karakter 4 bit. Olasılık: 2^(bit/2)
             const bits = length * 4;
             const expectedAttempts = Math.round(1.25 * Math.pow(2, bits / 2));
-            expectedBox.innerHTML = `🎯 Beklenen Ortalama Deneme: <b>${expectedAttempts.toLocaleString()}</b>`;
+            expectedBox.innerHTML = `🎯 Beklenen Deneme: <b>${expectedAttempts.toLocaleString()}</b>`;
 
             function find() {
                 if(!collisionActive) return;
-
                 for(let i=0; i<2500; i++) {
                     const rand = Math.random().toString(36).substring(2,12);
                     const hash = CryptoJS.SHA256(rand).toString().substring(0, length);
-
                     if(seen.has(hash)) {
                         const old = seen.get(hash);
                         if(old !== rand) {
@@ -294,12 +344,9 @@
                             collisionActive = false;
                             resBox.innerHTML = `
                                 <b style="color:#4ade80">🎉 ÇAKIŞMA BULUNDU!</b><br>
-                                <div style="font-size:12px; margin:10px 0;">
-                                    "${old}"<br>=<br>"${rand}"
-                                </div>
-                                <pre style="color:#38bdf8">Ortak Başlangıç: ${hash}</pre>
-                                <b>Toplam Deneme:</b> ${count.toLocaleString()}<br>
-                                <b>Harcanan Süre:</b> ${time} sn
+                                <div style="font-size:12px; margin:10px 0;">"${old}" = "${rand}"</div>
+                                <pre style="color:var(--accent-color)">Ortak: ${hash}</pre>
+                                <b>Deneme:</b> ${count.toLocaleString()} | <b>Süre:</b> ${time} sn
                             `;
                             return;
                         }
@@ -307,16 +354,11 @@
                     seen.set(hash, rand);
                     count++;
                 }
-
-                // CANLI İSTATİSTİK GÜNCELLEME
                 const elapsed = (performance.now() - start) / 1000;
-                const hps = Math.round(count / elapsed); // Hashes Per Second
-                const estTotalTime = expectedAttempts / hps;
-                const remaining = Math.max(0, estTotalTime - elapsed).toFixed(1);
-
+                const hps = Math.round(count / elapsed);
+                const remaining = Math.max(0, (expectedAttempts / hps) - elapsed).toFixed(1);
                 resBox.innerText = `🔍 Deneniyor: ${count.toLocaleString()}`;
-                speedBox.innerHTML = `⚡ Hız: ${hps.toLocaleString()} hash/sn | ⏳ Tahmini Kalan: ~${remaining} sn`;
-                
+                speedBox.innerHTML = `⚡ Hız: ${hps.toLocaleString()} hash/sn | ⏳ Tahmini: ~${remaining} sn`;
                 requestAnimationFrame(find);
             }
             find();
