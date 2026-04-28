@@ -14,22 +14,9 @@ body {
     padding: 20px;
 }
 
-/* SLIDES */
 .slide { display: none; }
 .active { display: block; }
 
-/* NAV BUTTONS */
-.nav {
-    margin-top: 20px;
-}
-.nav button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-/* BOX */
 .box {
     border: 1px solid #444;
     padding: 20px;
@@ -38,7 +25,6 @@ body {
     position: relative;
 }
 
-/* TOOLTIP ICON */
 .help {
     position: absolute;
     top: 10px;
@@ -53,21 +39,26 @@ body {
     cursor: pointer;
 }
 
-/* TOOLTIP TEXT */
 .helpText {
     display: none;
     position: absolute;
     top: 10px;
     left: 40px;
     background: #1e293b;
-    padding: 8px 12px;
+    padding: 10px;
     border-radius: 6px;
     font-size: 13px;
-    white-space: nowrap;
+    width: 300px;
 }
 
 .help:hover + .helpText {
     display: block;
+}
+
+.nav button {
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
 }
 
 input, select, button {
@@ -82,57 +73,60 @@ input, select, button {
 
 <h1>🔐 Hash Learning Lab</h1>
 
-<!-- SLIDE 1 -->
+<!-- SLIDE 1: HASH + AVALANCHE -->
 <div class="slide active">
 <div class="box">
 
+<!-- HASH HELP -->
 <div class="help">?</div>
-<div class="helpText">Hash fonksiyonları veriyi sabit uzunlukta çıktıya çevirir. Geri dönüş yoktur.</div>
+<div class="helpText">
+Hash fonksiyonları veriyi sabit uzunlukta bir çıktıya çevirir.  
+Aynı veri her zaman aynı sonucu verir (deterministik).  
+Ancak hash'ten geri dönüş yoktur (one-way).
+</div>
 
-<h2>Hash</h2>
+<h2>Hash + Avalanche</h2>
 
-<input id="text" placeholder="Metin gir">
+<!-- AVALANCHE HELP -->
+<div class="help" style="left:50px;">?</div>
+<div class="helpText" style="left:80px;">
+Avalanche effect: Girdide yapılan küçük bir değişiklik bile hash çıktısını tamamen değiştirir.  
+Bu özellik güçlü hash fonksiyonlarının temelidir.
+</div>
+
+<input id="text" placeholder="Metin gir (örn: mert)">
 <select id="algo">
 <option value="MD5">MD5</option>
 <option value="SHA1">SHA-1</option>
 <option value="SHA256">SHA-256</option>
 </select>
 
-<button onclick="calculateHash()">Hesapla</button>
+<button onclick="runHash()">Hesapla + Avalanche</button>
 
-<p id="result"></p>
-
-</div>
-</div>
-
-<!-- SLIDE 2 -->
-<div class="slide">
-<div class="box">
-
-<div class="help">?</div>
-<div class="helpText">Küçük değişiklik büyük fark yaratır (Avalanche Effect).</div>
-
-<h2>Avalanche Effect</h2>
-
-<button onclick="avalanche()">Test Et</button>
+<p id="hashResult"></p>
 <p id="avalancheResult"></p>
 
 </div>
 </div>
 
-<!-- SLIDE 3 -->
+<!-- SLIDE 2: COLLISION -->
 <div class="slide">
 <div class="box">
 
 <div class="help">?</div>
-<div class="helpText">Collision: iki farklı veri aynı hash üretirse oluşur.</div>
+<div class="helpText">
+Collision: İki farklı veri aynı hash çıktısını üretirse oluşur.  
+Bu deneyde hash kısaltılarak collision bulunması kolaylaştırılır.
+</div>
 
-<h2>Collision</h2>
+<h2>Collision Deneyi</h2>
 
 <select id="length">
-<option value="4">4</option>
-<option value="8">8</option>
-<option value="12">12</option>
+<option value="4">4 (çok hızlı)</option>
+<option value="6">6 (hızlı)</option>
+<option value="8">8 (orta)</option>
+<option value="10">10 (zor)</option>
+<option value="12">12 (çok zor)</option>
 </select>
 
 <button onclick="collision()">Başlat</button>
@@ -142,10 +136,10 @@ input, select, button {
 </div>
 </div>
 
-<!-- NAVIGATION -->
+<!-- NAV -->
 <div class="nav">
-<button onclick="prevSlide()">⬅️ Geri</button>
-<button onclick="nextSlide()">İleri ➡️</button>
+<button onclick="prev()">⬅️</button>
+<button onclick="next()">➡️</button>
 </div>
 
 <script>
@@ -153,50 +147,47 @@ input, select, button {
 let slides = document.querySelectorAll(".slide");
 let current = 0;
 
-function showSlide(index){
+function showSlide(i){
     slides.forEach(s => s.classList.remove("active"));
-    slides[index].classList.add("active");
+    slides[i].classList.add("active");
 }
 
-function nextSlide(){
-    if(current < slides.length - 1){
+function next(){
+    if(current < slides.length-1){
         current++;
         showSlide(current);
     }
 }
 
-function prevSlide(){
+function prev(){
     if(current > 0){
         current--;
         showSlide(current);
     }
 }
 
-// HASH
+// HASH + AVALANCHE
 function getHash(text, algo){
     if(algo === "MD5") return CryptoJS.MD5(text).toString();
     if(algo === "SHA1") return CryptoJS.SHA1(text).toString();
     if(algo === "SHA256") return CryptoJS.SHA256(text).toString();
 }
 
-function calculateHash(){
+function runHash(){
+
     let text = document.getElementById("text").value;
     let algo = document.getElementById("algo").value;
 
-    document.getElementById("result").innerText =
-        "Hash: " + getHash(text, algo);
-}
+    let hash1 = getHash(text, algo);
 
-// AVALANCHE
-function avalanche(){
-    let text = document.getElementById("text").value;
     let changed = text.slice(0, -1) + "X";
+    let hash2 = getHash(changed, algo);
 
-    let h1 = getHash(text, "SHA256");
-    let h2 = getHash(changed, "SHA256");
+    document.getElementById("hashResult").innerText =
+        "Orijinal ("+text+"):\n" + hash1;
 
     document.getElementById("avalancheResult").innerText =
-        "Orijinal:\n" + h1 + "\n\nDeğişmiş:\n" + h2;
+        "\nDeğişmiş ("+changed+"):\n" + hash2;
 }
 
 // RANDOM
@@ -216,17 +207,17 @@ function collision(){
 
     function step(){
 
-        for(let i = 0; i < 2000; i++){
+        for(let i=0;i<2000;i++){
 
             let str = randomString();
             let hash = CryptoJS.SHA256(str).toString().substring(0, len);
 
             if(seen[hash] && seen[hash] !== str){
 
-                let time = ((performance.now() - start)/1000).toFixed(2);
+                let time = ((performance.now()-start)/1000).toFixed(2);
 
                 box.innerText =
-                    "🎉 Collision!\n" +
+                    "🎉 Collision!\n\n" +
                     seen[hash] + " ≠ " + str +
                     "\nHash: " + hash +
                     "\nDeneme: " + count +
