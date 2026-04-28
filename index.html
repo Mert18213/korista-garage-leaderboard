@@ -1,272 +1,326 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>Hash Lab</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Hash Lab - Pro Edition</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
-<style>
-body {
-    font-family: Arial;
-    background: #0f172a;
-    color: white;
-    text-align: center;
-    padding: 20px;
-}
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+            margin: 0;
+            height: 100vh;
+        }
 
-.slide { display: none; }
-.active { display: block; }
+        /* NAV BUTONLARI */
+        .nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(56, 189, 248, 0.2);
+            color: #38bdf8;
+            border: 2px solid #38bdf8;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            font-size: 35px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.box {
-    border: 1px solid #444;
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 10px;
-    position: relative;
-}
+        .nav-btn:hover {
+            background: #38bdf8;
+            color: #0f172a;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
+        }
 
-/* TOOLTIP FIX */
-.help {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #38bdf8;
-    color: black;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-}
+        .prev-btn { left: 50px; }
+        .next-btn { right: 50px; }
 
-.helpText {
-    display: none;
-    position: absolute;
-    top: 40px;
-    left: 10px;
-    background: #1e293b;
-    padding: 10px;
-    border-radius: 6px;
-    font-size: 13px;
-    width: 280px;
-    z-index: 999;
-}
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+        }
 
-.help:hover + .helpText {
-    display: block;
-}
+        .box {
+            display: none;
+            border: 2px solid #334155;
+            padding: 40px;
+            border-radius: 20px;
+            background: #1e293b;
+            width: 550px;
+            min-height: 520px;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
 
-input, select, button {
-    padding: 10px;
-    margin: 10px;
-}
+        .box.active {
+            display: block;
+            animation: slideIn 0.4s ease-out;
+        }
 
-.nav button {
-    padding: 10px 20px;
-    margin: 10px;
-}
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
-</style>
+        /* HELP TOOLTIP */
+        .help {
+            position: absolute; top: 20px; left: 20px;
+            background: #38bdf8; color: black;
+            width: 30px; height: 30px; border-radius: 50%;
+            cursor: pointer; font-weight: bold; line-height: 30px;
+        }
+
+        .helpText {
+            display: none; position: absolute; top: 60px; left: 20px;
+            background: #020617; color: #f1f5f9; padding: 20px;
+            border-radius: 12px; font-size: 14px; width: 400px;
+            text-align: left; border: 1px solid #38bdf8; z-index: 10000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+            line-height: 1.5;
+        }
+
+        .help:hover + .helpText { display: block; }
+
+        input, select, button { padding: 12px; margin: 10px; border-radius: 8px; border: none; font-size: 16px; outline: none; }
+        input { background: #0f172a; color: white; border: 1px solid #475569; width: 70%; }
+        select { background: #334155; color: white; cursor: pointer; }
+        button { background: #38bdf8; color: #0f172a; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0ea5e9; transform: translateY(-2px); }
+
+        pre { background: #020617; padding: 15px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; font-family: 'Courier New', monospace; border: 1px solid #334155; }
+        
+        /* COLLISION STATS */
+        .stats-panel {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #94a3b8;
+            border: 1px dashed #334155;
+        }
+
+        .indicator { position: absolute; bottom: 20px; left: 0; right: 0; color: #64748b; font-size: 11px; letter-spacing: 2px; }
+    </style>
 </head>
 
 <body>
 
-<h1>🔐 Hash Learning Lab</h1>
+    <button class="nav-btn prev-btn" onclick="goPrev()">❮</button>
+    <button class="nav-btn next-btn" onclick="goNext()">❯</button>
 
-<!-- SLIDE 1 -->
-<div class="slide active">
-<div class="box">
+    <h1>🔐 Hash Learning Lab Pro</h1>
 
-<div class="help">?</div>
-<div class="helpText">
-Hash fonksiyonu girdiyi sabit uzunlukta çıktıya çevirir.  
-Geri dönüş yoktur.
-</div>
+    <div class="container">
+        <div id="section0" class="box active">
+            <div class="help">?</div>
+            <div class="helpText">
+                <b>Hash Hesaplama:</b><br>
+                Girdiğiniz metin, seçtiğiniz algoritma tarafından karıştırılarak sabit uzunlukta bir özete dönüştürülür. <br><br>
+                - <b>MD5:</b> Eski, hızlı ama güvensiz (128 bit).<br>
+                - <b>SHA-256:</b> Modern standart, çok güvenli (256 bit).
+            </div>
+            <h2>1. Hash Hesapla</h2>
+            <input id="text" placeholder="Metni buraya yaz..." oninput="syncData()">
+            <select id="algo">
+                <option value="MD5">MD5</option>
+                <option value="SHA1">SHA-1</option>
+                <option value="SHA256" selected>SHA-256</option>
+            </select>
+            <br>
+            <button onclick="calculateHash()">Şifrele</button>
+            <div id="hashResult" style="margin-top: 15px;"></div>
+            <div class="indicator">MODÜL 01: KRİPTOGRAFİK ÖZET</div>
+        </div>
 
-<h2>Hash Hesaplama</h2>
+        <div id="section1" class="box">
+            <div class="help">?</div>
+            <div class="helpText">
+                <b>Çığ Etkisi:</b><br>
+                Bir algoritmanın kalitesini ölçer. Girdi üzerindeki 1 bitlik farkın, çıktıda %50'lik bir değişime yol açması beklenir. <br><br>
+                Burada metnin son harfini otomatik değiştirerek iki hash arasındaki bit farkını hesaplıyoruz.
+            </div>
+            <h2>2. Avalanche Effect</h2>
+            <input id="avText" placeholder="Önce birinci sekmede metin gir!" readonly>
+            <select id="avAlgo">
+                <option value="MD5">MD5</option>
+                <option value="SHA1">SHA-1</option>
+                <option value="SHA256" selected>SHA-256</option>
+            </select>
+            <br>
+            <button onclick="runAvalanche()">Analiz Et</button>
+            <div id="avResult" style="text-align: left; font-size: 13px; margin-top: 10px;"></div>
+            <div class="indicator">MODÜL 02: DEĞİŞİM ANALİZİ</div>
+        </div>
 
-<input id="text" placeholder="Metin gir">
-<select id="algo">
-<option value="MD5">MD5</option>
-<option value="SHA1">SHA-1</option>
-<option value="SHA256">SHA-256</option>
-</select>
+        <div id="section2" class="box">
+            <div class="help">?</div>
+            <div class="helpText">
+                <b>Çakışma (Collision):</b><br>
+                Matematiksel olarak farklı iki verinin aynı hash sonucunu vermesidir. <br><br>
+                <b>Doğum Günü Paradoksu:</b> Bir odada 23 kişi varsa, iki kişinin doğum gününün aynı olma ihtimali %50'dir. Hash dünyasında da her hane (hex) 4 bit olduğu için, hane sayısı arttıkça gereken deneme sayısı katlanarak artar.
+            </div>
+            <h2>3. Collision (Çakışma)</h2>
+            <p style="font-size: 14px; color: #94a3b8;">Hash başlangıcında kaç hane eşleşmeli?</p>
+            <select id="len">
+                <option value="4">4 Karakter (Çok Hızlı)</option>
+                <option value="6">6 Karakter (Hızlı)</option>
+                <option value="8">8 Karakter (Ortalama)</option>
+                <option value="10">10 Karakter (Yavaş)</option>
+                <option value="12">12 Karakter (Çok Yavaş)</option>
+            </select>
+            <br>
+            <button onclick="runCollision()">Aramayı Başlat</button>
+            
+            <div id="statsArea" class="stats-panel" style="display: none;">
+                <div id="expectedVal"></div>
+                <div id="liveSpeed"></div>
+            </div>
 
-<button onclick="calculateHash()">Hesapla</button>
+            <div id="colResult" style="margin-top: 20px; font-family: monospace;"></div>
+            <div class="indicator">MODÜL 03: BRUTE FORCE SİMÜLASYONU</div>
+        </div>
+    </div>
 
-<p id="hashResult"></p>
+    <script>
+        let currentIdx = 0;
+        const totalIdx = 3;
+        let collisionActive = false;
 
-</div>
-</div>
+        // NAVİGASYON
+        function goNext() { change( (currentIdx + 1) % totalIdx ); }
+        function goPrev() { change( (currentIdx - 1 + totalIdx) % totalIdx ); }
 
-<!-- SLIDE 2 -->
-<div class="slide">
-<div class="box">
+        window.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight") goNext();
+            if (e.key === "ArrowLeft") goPrev();
+        });
 
-<div class="help">?</div>
-<div class="helpText">
-Avalanche effect: girdideki küçük değişiklik hash'in yaklaşık %50'sini değiştirir.
-</div>
-
-<h2>Avalanche Effect</h2>
-
-<button onclick="avalanche()">Test Et</button>
-
-<p id="avalancheResult"></p>
-
-</div>
-</div>
-
-<!-- SLIDE 3 -->
-<div class="slide">
-<div class="box">
-
-<div class="help">?</div>
-<div class="helpText">
-Collision: iki farklı veri aynı hash üretirse oluşur.
-</div>
-
-<h2>Collision</h2>
-
-<select id="length">
-<option value="4">4</option>
-<option value="6">6</option>
-<option value="8">8</option>
-<option value="10">10</option>
-<option value="12">12</option>
-</select>
-
-<button onclick="collision()">Başlat</button>
-
-<p id="collisionResult"></p>
-
-</div>
-</div>
-
-<div class="nav">
-<button onclick="prev()">⬅️</button>
-<button onclick="next()">➡️</button>
-</div>
-
-<script>
-
-let slides = document.querySelectorAll(".slide");
-let current = 0;
-
-function showSlide(i){
-    slides.forEach(s => s.classList.remove("active"));
-    slides[i].classList.add("active");
-}
-
-function next(){ if(current < 2){ current++; showSlide(current);} }
-function prev(){ if(current > 0){ current--; showSlide(current);} }
-
-// HASH
-function getHash(text, algo){
-    if(algo==="MD5") return CryptoJS.MD5(text).toString();
-    if(algo==="SHA1") return CryptoJS.SHA1(text).toString();
-    if(algo==="SHA256") return CryptoJS.SHA256(text).toString();
-}
-
-function calculateHash(){
-    let text = document.getElementById("text").value;
-    let algo = document.getElementById("algo").value;
-
-    let hash = getHash(text, algo);
-
-    document.getElementById("hashResult").innerText =
-        "Hash:\n" + hash;
-}
-
-// HEX → BINARY
-function hexToBinary(hex){
-    return hex.split('').map(h =>
-        parseInt(h,16).toString(2).padStart(4,'0')
-    ).join('');
-}
-
-// AVALANCHE (DOĞRU)
-function avalanche(){
-
-    let text = document.getElementById("text").value;
-    let algo = document.getElementById("algo").value;
-
-    if(text.length < 2){
-        alert("Metin gir!");
-        return;
-    }
-
-    let changed = text.slice(0,-1) + "X";
-
-    let h1 = getHash(text, algo);
-    let h2 = getHash(changed, algo);
-
-    let b1 = hexToBinary(h1);
-    let b2 = hexToBinary(h2);
-
-    let diff = 0;
-
-    for(let i=0;i<b1.length;i++){
-        if(b1[i] !== b2[i]) diff++;
-    }
-
-    let percent = ((diff / b1.length) * 100).toFixed(2);
-
-    document.getElementById("avalancheResult").innerText =
-        "Orijinal:\n"+h1+"\n\n" +
-        "Değişmiş:\n"+h2+"\n\n" +
-        "Değişen bit: "+diff+"\n" +
-        "Toplam bit: "+b1.length+"\n" +
-        "Fark: %"+percent;
-}
-
-// RANDOM
-function randomString(){
-    return Math.random().toString(36).substring(2,10);
-}
-
-// COLLISION
-function collision(){
-
-    let len = parseInt(document.getElementById("length").value);
-    let seen = {};
-    let count = 0;
-    let start = performance.now();
-    let box = document.getElementById("collisionResult");
-
-    function step(){
-
-        for(let i=0;i<2000;i++){
-
-            let str = randomString();
-            let hash = CryptoJS.SHA256(str).toString().substring(0,len);
-
-            if(seen[hash] && seen[hash] !== str){
-
-                let time = ((performance.now()-start)/1000).toFixed(2);
-
-                box.innerText =
-                    "🎉 Collision!\n\n"+
-                    seen[hash]+" ≠ "+str+
-                    "\nHash: "+hash+
-                    "\nDeneme: "+count+
-                    "\nSüre: "+time+" sn";
-
-                return;
-            }
-
-            seen[hash] = str;
-            count++;
+        function change(i) {
+            document.querySelectorAll('.box').forEach(b => b.classList.remove('active'));
+            document.getElementById('section' + i).classList.add('active');
+            currentIdx = i;
         }
 
-        box.innerText = "⏳ Deneme: "+count;
-        requestAnimationFrame(step);
-    }
+        function syncData() {
+            document.getElementById("avText").value = document.getElementById("text").value;
+        }
 
-    step();
-}
+        function getHash(t, a) {
+            if(a==="MD5") return CryptoJS.MD5(t).toString();
+            if(a==="SHA1") return CryptoJS.SHA1(t).toString();
+            return CryptoJS.SHA256(t).toString();
+        }
 
-</script>
+        function calculateHash() {
+            const t = document.getElementById("text").value;
+            const a = document.getElementById("algo").value;
+            const res = getHash(t, a);
+            document.getElementById("hashResult").innerHTML = `<pre>${res}</pre>`;
+            syncData();
+        }
 
+        function runAvalanche() {
+            const t = document.getElementById("avText").value;
+            const a = document.getElementById("avAlgo").value;
+            if(!t) return alert("Önce metin gir!");
+
+            const changed = t.slice(0,-1) + String.fromCharCode(t.charCodeAt(t.length-1)+1);
+            const h1 = getHash(t, a);
+            const h2 = getHash(changed, a);
+
+            const b1 = h1.split('').map(h=>parseInt(h,16).toString(2).padStart(4,'0')).join('');
+            const b2 = h2.split('').map(h=>parseInt(h,16).toString(2).padStart(4,'0')).join('');
+
+            let diff = 0;
+            for(let i=0; i<b1.length; i++) if(b1[i]!==b2[i]) diff++;
+            const pct = ((diff/b1.length)*100).toFixed(2);
+
+            document.getElementById("avResult").innerHTML = `
+                <p><b>Giriş 1:</b> ${t} <br><b>Giriş 2:</b> ${changed}</p>
+                <p>Hash 1: <small>${h1.substring(0,30)}...</small></p>
+                <p>Hash 2: <small>${h2.substring(0,30)}...</small></p>
+                <hr style="border:1px solid #334155">
+                <p>Farklı Bit: <b>${diff} / ${b1.length}</b> - Oran: <b style="color:#38bdf8">%${pct}</b></p>
+            `;
+        }
+
+        // 3. BÖLÜM: COLLISION (İSTATİSTİK DESTEKLİ)
+        function runCollision() {
+            if(collisionActive) return; // Çakışma araması zaten çalışıyorsa tekrar başlatma
+            
+            const length = parseInt(document.getElementById("len").value);
+            const resBox = document.getElementById("colResult");
+            const statsArea = document.getElementById("statsArea");
+            const expectedBox = document.getElementById("expectedVal");
+            const speedBox = document.getElementById("liveSpeed");
+            
+            const seen = new Map();
+            let count = 0;
+            const start = performance.now();
+            collisionActive = true;
+            statsArea.style.display = "block";
+
+            // MATEMATİKSEL BEKLENTİ HESABI
+            // Her hex karakter 4 bit. Olasılık: 2^(bit/2)
+            const bits = length * 4;
+            const expectedAttempts = Math.round(1.25 * Math.pow(2, bits / 2));
+            expectedBox.innerHTML = `🎯 Beklenen Ortalama Deneme: <b>${expectedAttempts.toLocaleString()}</b>`;
+
+            function find() {
+                if(!collisionActive) return;
+
+                for(let i=0; i<2500; i++) {
+                    const rand = Math.random().toString(36).substring(2,12);
+                    const hash = CryptoJS.SHA256(rand).toString().substring(0, length);
+
+                    if(seen.has(hash)) {
+                        const old = seen.get(hash);
+                        if(old !== rand) {
+                            const time = ((performance.now() - start)/1000).toFixed(2);
+                            collisionActive = false;
+                            resBox.innerHTML = `
+                                <b style="color:#4ade80">🎉 ÇAKIŞMA BULUNDU!</b><br>
+                                <div style="font-size:12px; margin:10px 0;">
+                                    "${old}"<br>=<br>"${rand}"
+                                </div>
+                                <pre style="color:#38bdf8">Ortak Başlangıç: ${hash}</pre>
+                                <b>Toplam Deneme:</b> ${count.toLocaleString()}<br>
+                                <b>Harcanan Süre:</b> ${time} sn
+                            `;
+                            return;
+                        }
+                    }
+                    seen.set(hash, rand);
+                    count++;
+                }
+
+                // CANLI İSTATİSTİK GÜNCELLEME
+                const elapsed = (performance.now() - start) / 1000;
+                const hps = Math.round(count / elapsed); // Hashes Per Second
+                const estTotalTime = expectedAttempts / hps;
+                const remaining = Math.max(0, estTotalTime - elapsed).toFixed(1);
+
+                resBox.innerText = `🔍 Deneniyor: ${count.toLocaleString()}`;
+                speedBox.innerHTML = `⚡ Hız: ${hps.toLocaleString()} hash/sn | ⏳ Tahmini Kalan: ~${remaining} sn`;
+                
+                requestAnimationFrame(find);
+            }
+            find();
+        }
+    </script>
 </body>
 </html>
