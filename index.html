@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>Hash Collision Lab</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
 <style>
 body {
     font-family: Arial;
@@ -20,6 +21,14 @@ input, select, button {
     border: 1px solid #444;
     padding: 20px;
     margin-top: 20px;
+    border-radius: 10px;
+}
+.info {
+    background: #1e293b;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+    border-left: 4px solid #38bdf8;
 }
 </style>
 </head>
@@ -28,45 +37,72 @@ input, select, button {
 
 <h1>🔐 Hash Collision Lab</h1>
 
+<!-- HASH -->
 <div class="box">
 <h2>Hash Hesapla</h2>
+
 <input id="text" placeholder="Metin gir">
+
 <select id="algo">
     <option value="MD5">MD5</option>
-    <option value="SHA1">SHA1</option>
-    <option value="SHA256">SHA256</option>
+    <option value="SHA1">SHA-1</option>
+    <option value="SHA256">SHA-256</option>
 </select>
+
 <button onclick="calculateHash()">Hesapla</button>
 
 <p id="result"></p>
+
+<div class="info">
+Girilen metnin hash değeri hesaplanır.
+</div>
 </div>
 
+<!-- AVALANCHE -->
 <div class="box">
 <h2>Avalanche Effect</h2>
+
 <button onclick="avalanche()">1 Harf Değiştir</button>
+
 <p id="avalancheResult"></p>
+
+<div class="info">
+Girdide küçük değişiklik → hash tamamen değişir.
+</div>
 </div>
 
+<!-- COLLISION -->
 <div class="box">
 <h2>Collision Deneyi (Kısaltılmış Hash)</h2>
+
 <select id="length">
-    <option value="4">4 karakter</option>
-    <option value="6">6 karakter</option>
-    <option value="8">8 karakter</option>
+    <option value="4">4 karakter (çok hızlı)</option>
+    <option value="6">6 karakter (hızlı)</option>
+    <option value="8">8 karakter (orta)</option>
+    <option value="10">10 karakter (zor)</option>
+    <option value="12">12 karakter (çok zor)</option>
 </select>
+
 <button onclick="collision()">Başlat</button>
 
 <p id="collisionResult"></p>
+
+<div class="info">
+Rastgele veriler üretilir ve aynı hash bulunana kadar denenir.
+</div>
+
 </div>
 
 <script>
 
+// HASH
 function getHash(text, algo){
     if(algo === "MD5") return CryptoJS.MD5(text).toString();
     if(algo === "SHA1") return CryptoJS.SHA1(text).toString();
     if(algo === "SHA256") return CryptoJS.SHA256(text).toString();
 }
 
+// HASH HESAPLA
 function calculateHash(){
     let text = document.getElementById("text").value;
     let algo = document.getElementById("algo").value;
@@ -77,51 +113,105 @@ function calculateHash(){
         "Hash: " + hash;
 }
 
+// AVALANCHE
 function avalanche(){
     let text = document.getElementById("text").value;
-    if(text.length < 2) return alert("En az 2 karakter gir");
+
+    if(text.length < 2){
+        alert("En az 2 karakter gir!");
+        return;
+    }
 
     let changed = text.slice(0, -1) + "X";
 
     let h1 = getHash(text, "SHA256");
     let h2 = getHash(changed, "SHA256");
 
+    let diff = 0;
+    for(let i = 0; i < h1.length; i++){
+        if(h1[i] !== h2[i]) diff++;
+    }
+
+    let percent = ((diff / h1.length) * 100).toFixed(2);
+
     document.getElementById("avalancheResult").innerText =
-        "Orijinal: " + h1 + "\nDeğişmiş: " + h2;
+        "Orijinal Hash:\n" + h1 + "\n\n" +
+        "Değişmiş Hash:\n" + h2 + "\n\n" +
+        "Fark: %" + percent;
 }
 
+// RANDOM STRING
 function randomString(){
     return Math.random().toString(36).substring(2, 10);
 }
 
+// COLLISION
 function collision(){
-    let len = document.getElementById("length").value;
+
+    let len = parseInt(document.getElementById("length").value);
     let seen = {};
     let count = 0;
 
-    while(true){
-        let str = randomString();
-        let hash = CryptoJS.SHA256(str).toString().substring(0, len);
+    let startTime = performance.now();
+    let resultBox = document.getElementById("collisionResult");
 
-        if(seen[hash]){
-            document.getElementById("collisionResult").innerText =
-                "Collision bulundu!\n" +
-                seen[hash] + " == " + str +
-                "\nHash: " + hash +
-                "\nDeneme: " + count;
-            break;
-        } else {
-            seen[hash] = str;
-        }
+    // Ortalama hesap (hex olduğu için 4 bit * len)
+    let bits = len * 4;
+    let expected = Math.pow(2, bits / 2);
 
-        count++;
+    function getLuckStatus(count, expected){
+        let ratio = count / expected;
 
-        if(count > 1000000){
-            document.getElementById("collisionResult").innerText =
-                "Bulunamadı (limit aşıldı)";
-            break;
-        }
+        if(ratio < 0.2) return "😎 Çok şanslı!";
+        if(ratio < 0.7) return "👍 Normal (erken)";
+        if(ratio < 1.5) return "👌 Tam beklenen";
+        if(ratio < 3) return "😐 Biraz geç";
+        return "😵 Çok geç (şanssız)";
     }
+
+    function step(){
+
+        for(let i = 0; i < 2000; i++){
+
+            let str = randomString();
+            let hash = CryptoJS.SHA256(str).toString().substring(0, len);
+
+            if(seen[hash] && seen[hash] !== str){
+
+                let endTime = performance.now();
+                let time = ((endTime - startTime)/1000).toFixed(2);
+
+                let luck = getLuckStatus(count, expected);
+
+                resultBox.innerText =
+                    "🎉 COLLISION BULUNDU!\n\n" +
+                    "1. Veri: " + seen[hash] + "\n" +
+                    "2. Veri: " + str + "\n\n" +
+                    "Ortak Hash: " + hash + "\n\n" +
+                    "Deneme: " + count.toLocaleString() + "\n" +
+                    "Süre: " + time + " sn\n\n" +
+                    "Beklenen Ortalama: " + Math.round(expected).toLocaleString() + "\n" +
+                    "Durum: " + luck;
+
+                return;
+            }
+
+            seen[hash] = str;
+            count++;
+        }
+
+        let currentTime = ((performance.now() - startTime)/1000).toFixed(2);
+
+        resultBox.innerText =
+            "⏳ Çalışıyor...\n" +
+            "Deneme: " + count.toLocaleString() + "\n" +
+            "Süre: " + currentTime + " sn\n\n" +
+            "Beklenen Ortalama: " + Math.round(expected).toLocaleString();
+
+        requestAnimationFrame(step);
+    }
+
+    step();
 }
 
 </script>
