@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Hash Lab - Necmettin Erbakan Üniversitesi</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
     <style>
         /* TEMA DEĞİŞKENLERİ */
@@ -85,7 +87,7 @@
 
         .nav-btn:hover {
             background: var(--accent-color);
-            color: black; /* Ok işareti siyah */
+            color: black; /* Ok üzerine gelince siyah olur */
             box-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
         }
 
@@ -122,6 +124,7 @@
             to { opacity: 1; transform: scale(1); }
         }
 
+        /* HELP TOOLTIP */
         .help {
             position: absolute; top: 20px; left: 20px;
             background: var(--accent-color); color: black;
@@ -145,7 +148,13 @@
         select { background: var(--border-color); color: var(--text-color); cursor: pointer; }
         
         /* BUTON YAZILARI SİYAH YAPILDI */
-        button { background: var(--accent-color); color: black; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        button { 
+            background: var(--accent-color); 
+            color: black; 
+            font-weight: 800; 
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
         button:hover { background: #0ea5e9; transform: translateY(-2px); }
 
         pre { background: var(--input-bg); padding: 15px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; font-family: 'Courier New', monospace; border: 1px solid var(--border-color); color: var(--text-color); }
@@ -160,12 +169,15 @@
             border: 1px dashed var(--border-color);
         }
 
-        /* GEÇMİŞ LİSTESİ STİLLERİ */
+        /* GLOBAL GEÇMİŞ LİSTESİ */
         #historyList {
-            list-style: none; padding: 0; margin-top: 20px; max-height: 300px; overflow-y: auto; text-align: left;
+            list-style: none; padding: 0; margin-top: 10px; max-height: 300px; overflow-y: auto; text-align: left;
         }
         .history-item {
-            background: var(--input-bg); padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid var(--accent-color); font-size: 13px;
+            background: var(--input-bg); padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 5px solid #4ade80; font-size: 12px;
+        }
+        .global-badge {
+            background: #4ade80; color: black; font-size: 10px; padding: 2px 6px; border-radius: 4px; float: right; font-weight: bold;
         }
 
         .indicator { position: absolute; bottom: 20px; left: 0; right: 0; color: var(--sub-text); font-size: 11px; letter-spacing: 2px; }
@@ -187,10 +199,9 @@
             <div class="helpText">
                 <b>Hash Algoritmaları ve Çıktı Uzunlukları:</b><br><br>
                 Girdiğiniz metnin boyutu ne olursa olsun, sonuç her zaman sabit bir uzunlukta olur:<br><br>
-                • <b>MD5:</b> 128-bit uzunluğundadır. Sonuç her zaman <b>32 karakter</b> (onaltılık) sürer.<br>
-                • <b>SHA-1:</b> 160-bit uzunluğundadır. Sonuç her zaman <b>40 karakter</b> (onaltılık) sürer.<br>
-                • <b>SHA-256:</b> 256-bit uzunluğundadır. Sonuç her zaman <b>64 karakter</b> (onaltılık) sürer.<br><br>
-                <i>Not: Karakter sayısı arttıkça şifreleme daha karmaşık ve güvenli hale gelir.</i>
+                • <b>MD5:</b> 128-bit uzunluğundadır. Sonuç her zaman <b>32 karakter</b> sürer.<br>
+                • <b>SHA-1:</b> 160-bit uzunluğundadır. Sonuç her zaman <b>40 karakter</b> sürer.<br>
+                • <b>SHA-256:</b> 256-bit uzunluğundadır. Sonuç her zaman <b>64 karakter</b> sürer.
             </div>
             <h2>1. Hash Hesapla</h2>
             <input id="text" placeholder="Metni buraya yaz..." oninput="syncData()">
@@ -209,8 +220,7 @@
             <div class="help">?</div>
             <div class="helpText">
                 <b>Çığ Etkisi:</b><br>
-                Bir algoritmanın kalitesini ölçer. Girdi üzerindeki 1 bitlik farkın, çıktıda %50'lik bir değişime yol açması beklenir. <br><br>
-                Burada metnin son harfini otomatik değiştirerek iki hash arasındaki bit farkını hesaplıyoruz.
+                Bir algoritmanın kalitesini ölçer. Girdi üzerindeki 1 bitlik farkın, çıktıda %50'lik bir değişime yol açması beklenir.
             </div>
             <h2>2. Avalanche Effect</h2>
             <input id="avText" placeholder="Önce birinci sekmede metin gir!" readonly>
@@ -230,11 +240,10 @@
             <div class="helpText">
                 <b>Çakışma (Collision):</b><br>
                 Matematiksel olarak farklı iki verinin aynı hash sonucunu vermesidir. <br>
-                <b>Doğum Günü Paradoksu:</b> Bir odada 23 kişi varsa, iki kişinin doğum gününün aynı olma ihtimali %50'dir. Hash dünyasında da her hane (hex) 4 bit olduğu için, hane sayısı arttıkça gereken deneme sayısı katlanarak artar.<br><br>
+                <b>Doğum Günü Paradoksu:</b> Bir odada 23 kişi varsa, iki kişinin doğum gününün aynı olma ihtimali %50'dir.<br><br>
                 <b>Ortalama Deneme Sayısı Nasıl Hesaplanır?</b><br>
-                Hesaplama, kriptografideki <b>Doğum Günü Paradoksu</b> (Birthday Attack) mantığına dayanır:<br>
-                1. <b>Hane Başına İhtimal:</b> Hash karakterleri 16'lık (hex) sistemde olduğu için her hane 16 farklı değer alabilir. $n$ hane için toplam ihtimal $16^n$ kadardır.<br>
-                2. <b>Karekök Kuralı:</b> İki farklı verinin aynı sonucu (çakışma) vermesi için tüm ihtimalleri denemenize gerek yoktur. İstatistiksel olarak toplam ihtimalin <b>karekökü</b> ($\sqrt{16^n}$) kadar deneme yapıldığında bir çakışma bulma ihtimali %50'ye ulaşır.
+                1. <b>Hane Başına İhtimal:</b> Hash onaltılık (hex) sistemdedir. Her hane 16 ihtimaldir. $n$ hane için toplam ihtimal $16^n$ kadardır.<br>
+                2. <b>Karekök Kuralı:</b> İstatistiksel olarak toplam ihtimalin <b>karekökü</b> ($\sqrt{16^n}$) kadar denemede çakışma ihtimali %50'ye ulaşır.
             </div>
             <h2>3. Collision (Çakışma)</h2>
             <p style="font-size: 14px; color: var(--sub-text);">Hash başlangıcında kaç hane eşleşmeli?</p>
@@ -256,16 +265,36 @@
         </div>
 
         <div id="section3" class="box">
-            <h2>4. Deney Geçmişi</h2>
-            <p style="font-size: 14px; color: var(--sub-text);">Son yapılan 20 çakışma deneyi:</p>
-            <ul id="historyList"></ul>
-            <div class="indicator">MODÜL 04: PERSISTENT HISTORY</div>
+            <h2>🌍 Global Deney Kayıtları</h2>
+            <p style="font-size: 13px; color: var(--sub-text);">Diğer kullanıcıların bulduğu son çakışmalar:</p>
+            <ul id="historyList">
+                <p style="color:var(--sub-text)">Bağlanıyor...</p>
+            </ul>
+            <div class="indicator">MODÜL 04: BULUT SENKRONİZASYONU</div>
         </div>
     </div>
 
     <script>
-        let currentIdx = 0;
-        const totalIdx = 4; // Sayfa sayısını 4 yaptık
+        // --- FIREBASE AYARLARI (BURAYA KENDİ BİLGİLERİNİ GİRMELİSİN) ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyDLR3A2jNYvKInLlM9scIAItYpkccDIsFQ",
+          authDomain: "mert-c1351.firebaseapp.com",
+          databaseURL: "https://mert-c1351-default-rtdb.firebaseio.com",
+          projectId: "mert-c1351",
+          storageBucket: "mert-c1351.firebasestorage.app",
+          messagingSenderId: "749774245603",
+          appId: "1:749774245603:web:afb86b1e1fcb4cd8abffd6",
+          measurementId: "G-C08FC4CQVC"
+      };
+
+      let db = null;
+      try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+    } catch(e) { console.warn("Firebase başlatılamadı - Bilgileri kontrol edin."); }
+
+    let currentIdx = 0;
+        const totalIdx = 4; // 4 sayfa
         let collisionActive = false;
 
         function toggleTheme() {
@@ -285,7 +314,7 @@
             document.querySelectorAll('.box').forEach(b => b.classList.remove('active'));
             document.getElementById('section' + i).classList.add('active');
             currentIdx = i;
-            if (i === 3) renderHistory(); // Geçmiş sayfasına gelince listeyi yenile
+            if(i === 3) fetchGlobalHistory();
         }
 
         function syncData() {
@@ -317,45 +346,39 @@
             const b2 = h2.split('').map(h=>parseInt(h,16).toString(2).padStart(4,'0')).join('');
             let diff = 0;
             for(let i=0; i<b1.length; i++) if(b1[i]!==b2[i]) diff++;
-            const pct = ((diff/b1.length)*100).toFixed(2);
-            document.getElementById("avResult").innerHTML = `
-                <p>Giriş 1: ${t} <br>Giriş 2: ${changed}</p>
-                <hr style="border:1px solid var(--border-color)">
-                <p>Farklı Bit: <b>${diff} / ${b1.length}</b> - Oran: <b style="color:var(--accent-color)">%${pct}</b></p>
-            `;
+                const pct = ((diff/b1.length)*100).toFixed(2);
+            document.getElementById("avResult").innerHTML = `<p>Giriş 1: ${t} <br>Giriş 2: ${changed}</p><hr style="border:1px solid var(--border-color)"><p>Fark: <b>%${pct}</b></p>`;
         }
 
-        // GEÇMİŞE KAYDETME FONKSİYONU
-        function saveToHistory(len, count, time) {
-            let history = JSON.parse(localStorage.getItem('hashHistory') || '[]');
-            const newEntry = {
-                date: new Date().toLocaleString('tr-TR'),
+        // GLOBAL KAYIT
+        function saveToGlobal(len, count, time) {
+            if(!db) return;
+            db.ref('history').push({
                 len: len,
                 count: count.toLocaleString(),
-                time: time
-            };
-            history.unshift(newEntry); // Yeni kaydı başa ekle
-            history = history.slice(0, 20); // Sadece son 20 kaydı tut
-            localStorage.setItem('hashHistory', JSON.stringify(history));
+                time: time,
+                timestamp: Date.now()
+            });
         }
 
-        function renderHistory() {
-            const list = document.getElementById('historyList');
-            const history = JSON.parse(localStorage.getItem('hashHistory') || '[]');
-            if (history.length === 0) {
-                list.innerHTML = '<p style="color:var(--sub-text)">Henüz kayıtlı deney yok.</p>';
+        function fetchGlobalHistory() {
+            if(!db) {
+                document.getElementById('historyList').innerHTML = "Firebase ayarları yapılmamış.";
                 return;
             }
-            list.innerHTML = history.map(item => `
-                <li class="history-item">
-                    <b>${item.date}</b><br>
-                    ${item.len} Hane Arandı | ${item.count} Deneme | <b>${item.time} sn</b>
-                </li>
-            `).join('');
+            db.ref('history').orderByChild('timestamp').limitToLast(20).on('value', (snapshot) => {
+                const list = document.getElementById('historyList');
+                list.innerHTML = "";
+                const data = snapshot.val();
+                if(!data) { list.innerHTML = "Henüz kayıt yok."; return; }
+                Object.values(data).reverse().forEach(item => {
+                    list.innerHTML += `<li class="history-item"><span class="global-badge">SİSTEM</span><b>${item.len} Hane Eşleşmesi</b><br>${item.count} deneme | <b>${item.time} sn</b></li>`;
+                });
+            });
         }
 
         function runCollision() {
-            if(collisionActive) return; 
+            if(collisionActive) return;
             const length = parseInt(document.getElementById("len").value);
             const resBox = document.getElementById("colResult");
             const statsArea = document.getElementById("statsArea");
@@ -368,7 +391,7 @@
             statsArea.style.display = "block";
             const bits = length * 4;
             const expectedAttempts = Math.round(1.25 * Math.pow(2, bits / 2));
-            expectedBox.innerHTML = `🎯 Beklenen Ortalama Deneme: <b>${expectedAttempts.toLocaleString()}</b>`;
+            expectedBox.innerHTML = `🎯 Beklenen: <b>${expectedAttempts.toLocaleString()}</b>`;
 
             function find() {
                 if(!collisionActive) return;
@@ -380,13 +403,8 @@
                         if(old !== rand) {
                             const time = ((performance.now() - start)/1000).toFixed(2);
                             collisionActive = false;
-                            resBox.innerHTML = `
-                                <b style="color:#4ade80">🎉 ÇAKIŞMA BULUNDU!</b><br>
-                                <div style="font-size:12px; margin:10px 0;">"${old}" = "${rand}"</div>
-                                <pre style="color:var(--accent-color)">Ortak: ${hash}</pre>
-                                <b>Deneme:</b> ${count.toLocaleString()} | <b>Süre:</b> ${time} sn
-                            `;
-                            saveToHistory(length, count, time); // Geçmişe kaydet
+                            resBox.innerHTML = `<b style="color:#4ade80">🎉 ÇAKIŞMA BULUNDU!</b><br>"${old}" = "${rand}"<br>Süre: ${time} sn`;
+                            saveToGlobal(length, count, time);
                             return;
                         }
                     }
@@ -397,7 +415,7 @@
                 const hps = Math.round(count / elapsed);
                 const remaining = Math.max(0, (expectedAttempts / hps) - elapsed).toFixed(1);
                 resBox.innerText = `🔍 Deneniyor: ${count.toLocaleString()}`;
-                speedBox.innerHTML = `⚡ Hız: ${hps.toLocaleString()} hash/sn | ⏳ Tahmini: ~${remaining} sn`;
+                speedBox.innerHTML = `⚡ Hız: ${hps.toLocaleString()} hash/sn | ⏳ Kalan: ~${remaining} sn`;
                 requestAnimationFrame(find);
             }
             find();
