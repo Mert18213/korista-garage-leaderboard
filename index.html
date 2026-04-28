@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Hash Learning Lab</title>
+<title>Hash Lab</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 <style>
@@ -25,44 +25,44 @@ body {
     position: relative;
 }
 
+/* TOOLTIP FIX */
 .help {
     position: absolute;
     top: 10px;
     left: 10px;
     background: #38bdf8;
     color: black;
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
-    font-size: 14px;
-    line-height: 20px;
     cursor: pointer;
+    z-index: 10;
 }
 
 .helpText {
     display: none;
     position: absolute;
-    top: 10px;
-    left: 40px;
+    top: 40px;
+    left: 10px;
     background: #1e293b;
     padding: 10px;
     border-radius: 6px;
     font-size: 13px;
-    width: 300px;
+    width: 280px;
+    z-index: 999;
 }
 
 .help:hover + .helpText {
     display: block;
 }
 
-.nav button {
-    padding: 10px 20px;
-    margin: 10px;
-    cursor: pointer;
-}
-
 input, select, button {
     padding: 10px;
+    margin: 10px;
+}
+
+.nav button {
+    padding: 10px 20px;
     margin: 10px;
 }
 
@@ -73,60 +73,67 @@ input, select, button {
 
 <h1>🔐 Hash Learning Lab</h1>
 
-<!-- SLIDE 1: HASH + AVALANCHE -->
+<!-- SLIDE 1 -->
 <div class="slide active">
 <div class="box">
 
-<!-- HASH HELP -->
 <div class="help">?</div>
 <div class="helpText">
-Hash fonksiyonları veriyi sabit uzunlukta bir çıktıya çevirir.  
-Aynı veri her zaman aynı sonucu verir (deterministik).  
-Ancak hash'ten geri dönüş yoktur (one-way).
+Hash fonksiyonu girdiyi sabit uzunlukta çıktıya çevirir.  
+Geri dönüş yoktur.
 </div>
 
-<h2>Hash + Avalanche</h2>
+<h2>Hash Hesaplama</h2>
 
-<!-- AVALANCHE HELP -->
-<div class="help" style="left:50px;">?</div>
-<div class="helpText" style="left:80px;">
-Avalanche effect: Girdide yapılan küçük bir değişiklik bile hash çıktısını tamamen değiştirir.  
-Bu özellik güçlü hash fonksiyonlarının temelidir.
-</div>
-
-<input id="text" placeholder="Metin gir (örn: mert)">
+<input id="text" placeholder="Metin gir">
 <select id="algo">
 <option value="MD5">MD5</option>
 <option value="SHA1">SHA-1</option>
 <option value="SHA256">SHA-256</option>
 </select>
 
-<button onclick="runHash()">Hesapla + Avalanche</button>
+<button onclick="calculateHash()">Hesapla</button>
 
 <p id="hashResult"></p>
-<p id="avalancheResult"></p>
 
 </div>
 </div>
 
-<!-- SLIDE 2: COLLISION -->
+<!-- SLIDE 2 -->
 <div class="slide">
 <div class="box">
 
 <div class="help">?</div>
 <div class="helpText">
-Collision: İki farklı veri aynı hash çıktısını üretirse oluşur.  
-Bu deneyde hash kısaltılarak collision bulunması kolaylaştırılır.
+Avalanche effect: girdideki küçük değişiklik hash'in yaklaşık %50'sini değiştirir.
 </div>
 
-<h2>Collision Deneyi</h2>
+<h2>Avalanche Effect</h2>
+
+<button onclick="avalanche()">Test Et</button>
+
+<p id="avalancheResult"></p>
+
+</div>
+</div>
+
+<!-- SLIDE 3 -->
+<div class="slide">
+<div class="box">
+
+<div class="help">?</div>
+<div class="helpText">
+Collision: iki farklı veri aynı hash üretirse oluşur.
+</div>
+
+<h2>Collision</h2>
 
 <select id="length">
-<option value="4">4 (çok hızlı)</option>
-<option value="6">6 (hızlı)</option>
-<option value="8">8 (orta)</option>
-<option value="10">10 (zor)</option>
-<option value="12">12 (çok zor)</option>
+<option value="4">4</option>
+<option value="6">6</option>
+<option value="8">8</option>
+<option value="10">10</option>
+<option value="12">12</option>
 </select>
 
 <button onclick="collision()">Başlat</button>
@@ -136,7 +143,6 @@ Bu deneyde hash kısaltılarak collision bulunması kolaylaştırılır.
 </div>
 </div>
 
-<!-- NAV -->
 <div class="nav">
 <button onclick="prev()">⬅️</button>
 <button onclick="next()">➡️</button>
@@ -152,47 +158,71 @@ function showSlide(i){
     slides[i].classList.add("active");
 }
 
-function next(){
-    if(current < slides.length-1){
-        current++;
-        showSlide(current);
-    }
-}
+function next(){ if(current < 2){ current++; showSlide(current);} }
+function prev(){ if(current > 0){ current--; showSlide(current);} }
 
-function prev(){
-    if(current > 0){
-        current--;
-        showSlide(current);
-    }
-}
-
-// HASH + AVALANCHE
+// HASH
 function getHash(text, algo){
-    if(algo === "MD5") return CryptoJS.MD5(text).toString();
-    if(algo === "SHA1") return CryptoJS.SHA1(text).toString();
-    if(algo === "SHA256") return CryptoJS.SHA256(text).toString();
+    if(algo==="MD5") return CryptoJS.MD5(text).toString();
+    if(algo==="SHA1") return CryptoJS.SHA1(text).toString();
+    if(algo==="SHA256") return CryptoJS.SHA256(text).toString();
 }
 
-function runHash(){
+function calculateHash(){
+    let text = document.getElementById("text").value;
+    let algo = document.getElementById("algo").value;
+
+    let hash = getHash(text, algo);
+
+    document.getElementById("hashResult").innerText =
+        "Hash:\n" + hash;
+}
+
+// HEX → BINARY
+function hexToBinary(hex){
+    return hex.split('').map(h =>
+        parseInt(h,16).toString(2).padStart(4,'0')
+    ).join('');
+}
+
+// AVALANCHE (DOĞRU)
+function avalanche(){
 
     let text = document.getElementById("text").value;
     let algo = document.getElementById("algo").value;
 
-    let hash1 = getHash(text, algo);
+    if(text.length < 2){
+        alert("Metin gir!");
+        return;
+    }
 
-    let changed = text.slice(0, -1) + "X";
-    let hash2 = getHash(changed, algo);
+    let changed = text.slice(0,-1) + "X";
 
-    document.getElementById("hashResult").innerText =
-        "Orijinal ("+text+"):\n" + hash1;
+    let h1 = getHash(text, algo);
+    let h2 = getHash(changed, algo);
+
+    let b1 = hexToBinary(h1);
+    let b2 = hexToBinary(h2);
+
+    let diff = 0;
+
+    for(let i=0;i<b1.length;i++){
+        if(b1[i] !== b2[i]) diff++;
+    }
+
+    let percent = ((diff / b1.length) * 100).toFixed(2);
 
     document.getElementById("avalancheResult").innerText =
-        "\nDeğişmiş ("+changed+"):\n" + hash2;
+        "Orijinal:\n"+h1+"\n\n" +
+        "Değişmiş:\n"+h2+"\n\n" +
+        "Değişen bit: "+diff+"\n" +
+        "Toplam bit: "+b1.length+"\n" +
+        "Fark: %"+percent;
 }
 
 // RANDOM
 function randomString(){
-    return Math.random().toString(36).substring(2, 10);
+    return Math.random().toString(36).substring(2,10);
 }
 
 // COLLISION
@@ -202,7 +232,6 @@ function collision(){
     let seen = {};
     let count = 0;
     let start = performance.now();
-
     let box = document.getElementById("collisionResult");
 
     function step(){
@@ -210,18 +239,18 @@ function collision(){
         for(let i=0;i<2000;i++){
 
             let str = randomString();
-            let hash = CryptoJS.SHA256(str).toString().substring(0, len);
+            let hash = CryptoJS.SHA256(str).toString().substring(0,len);
 
             if(seen[hash] && seen[hash] !== str){
 
                 let time = ((performance.now()-start)/1000).toFixed(2);
 
                 box.innerText =
-                    "🎉 Collision!\n\n" +
-                    seen[hash] + " ≠ " + str +
-                    "\nHash: " + hash +
-                    "\nDeneme: " + count +
-                    "\nSüre: " + time + " sn";
+                    "🎉 Collision!\n\n"+
+                    seen[hash]+" ≠ "+str+
+                    "\nHash: "+hash+
+                    "\nDeneme: "+count+
+                    "\nSüre: "+time+" sn";
 
                 return;
             }
@@ -230,7 +259,7 @@ function collision(){
             count++;
         }
 
-        box.innerText = "⏳ Deneme: " + count;
+        box.innerText = "⏳ Deneme: "+count;
         requestAnimationFrame(step);
     }
 
