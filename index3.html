@@ -2,172 +2,463 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Otomata Quiz Pro - 4. Hafta</title>
-<style>
-body { font-family: Arial; padding: 20px; background:#f4f4f4; }
-.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
-button { margin-top:10px; padding:8px 12px; cursor:pointer; }
-.correct { color: green; font-weight:bold; }
-.wrong { color: red; font-weight:bold; }
-h3 { background:#ddd; padding:10px; border-radius:8px; }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kriptoloji Quiz - Sayfa 3</title>
 
-/* 🔥 HAFTA MENÜ */
-.week-btn{
-    padding:8px 12px;
-    margin:3px;
-    background:#333;
-    color:white;
+<style>
+
+body{
+    font-family: Arial;
+    background:#f4f4f4;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+}
+
+.menu{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.page-btn{
+    padding:10px 15px;
+    margin:5px;
     border:none;
-    border-radius:5px;
+    border-radius:6px;
+    background:#2c3e50;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
 }
-.week-btn:hover{
-    background:#555;
+
+.page-btn:hover{
+    background:#34495e;
 }
+
 .active{
     background:#e74c3c !important;
 }
+
+.question{
+    background:white;
+    padding:15px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+
+.control-btn{
+    margin-top:10px;
+    padding:8px 15px;
+    border:none;
+    border-radius:5px;
+    background:#3498db;
+    color:white;
+    cursor:pointer;
+}
+
+.control-btn:hover{
+    background:#2980b9;
+}
+
+.correct{
+    color:green;
+    font-weight:bold;
+}
+
+.wrong{
+    color:red;
+    font-weight:bold;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<h2>🧠 Otomata Quiz - 4. Hafta (Özyineli Tanımlar)</h2>
+<h1>🛡️ Kriptoloji Quiz - Sayfa 3</h1>
 
-<!-- 🔥 1–11 HAFTA MENÜ -->
-<div>
-<button class="week-btn" onclick="goWeek(1)">1</button>
-<button class="week-btn" onclick="goWeek(2)">2</button>
-<button class="week-btn active" onclick="goWeek(3)">3</button>    
-<button class="week-btn" onclick="goWeek(4)">4</button>
-<button class="week-btn" onclick="goWeek(5)">5</button>
-<button class="week-btn" onclick="goWeek(6)">6</button>
-<button class="week-btn" onclick="goWeek(7)">7</button>
-<button class="week-btn" onclick="goWeek(8)">8</button>
-<button class="week-btn" onclick="goWeek(9)">9</button>
-<button class="week-btn" onclick="goWeek(10)">10</button>
+<div class="menu">
+
+<button class="page-btn" onclick="goPage(1)">1</button>
+<button class="page-btn" onclick="goPage(2)">2</button>
+<button class="page-btn active" onclick="goPage(3)">3</button>
+<button class="page-btn" onclick="goPage(4)">4</button>
+
 </div>
 
 <div id="quiz"></div>
 
-<button onclick="showScore()">📊 Skoru Göster</button>
-<p id="score"></p>
+<button class="control-btn" onclick="showScore()">
+📊 Skoru Göster
+</button>
+
+<h2 id="score"></h2>
 
 <script>
 
-// 🔁 HAFTA GEÇİŞ (1–11 DESTEKLİ)
-function goWeek(w){
-    if(w === 1){
+function goPage(page){
+
+    if(page === 1){
+
         window.location.href = "index.html";
-    } else {
-        window.location.href = "index" + w + ".html";
+
     }
+
+    if(page === 2){
+
+        window.location.href = "index2.html";
+
+    }
+
+    if(page === 3){
+
+        window.location.href = "index3.html";
+
+    }
+
+    if(page === 4){
+
+        window.location.href = "index4.html";
+
+    }
+
 }
 
 const questions = [
 
-{q:"Özyineli (recursive) tanım kaç adımdan oluşur?",
-options:["2","3","4","5"], a:1},
+{
+q:"Blockchain’de değiştirilemezlik (immutability) hangi mekanizma sayesinde sağlanır?",
+options:[
+"A) Sadece kripto para kullanımı",
+"B) Merkezi sunucu kontrolü",
+"C) Blokların hash ile birbirine bağlanması",
+"D) İnternet bağlantısı",
+"E) Kullanıcı şifreleri"
+],
+a:2
+},
 
-{q:"Recursive tanımın ilk adımı nedir?",
-options:["Sonuç","Tümevarım","Taban (basis)","Çelişki"], a:2},
+{
+q:"Aşağıdakilerden hangisi Proof of Work sisteminin temel zayıflıklarından biridir?",
+options:[
+"A) Düşük güvenlik",
+"B) Merkezi kontrol",
+"C) Yüksek enerji tüketimi",
+"D) Veri kaybı",
+"E) Şeffaflık eksikliği"
+],
+a:2
+},
 
-{q:"İkinci adım neyi içerir?",
-options:["Sonuç","Yeni eleman üretme kuralları","Grafik çizme","Deney"], a:1},
+{
+q:"Blockchain’de “double spending” problemi neyi ifade eder?",
+options:[
+"A) Aynı verinin iki kez silinmesi",
+"B) Aynı dijital varlığın birden fazla kez harcanmaya çalışılması",
+"C) Verinin iki farklı blokta saklanması",
+"D) İki farklı blockchain kullanılması",
+"E) İşlem ücretinin iki kez ödenmesi"
+],
+a:1
+},
 
-{q:"Basis (taban adımı) neyi ifade eder?",
-options:["Tüm sonuçlar","Başlangıçta doğru kabul edilen elemanlar","Son adım","Yanlış varsayım"], a:1},
+{
+q:"Proof of Stake (PoS) sisteminde blok üretme hakkı neye göre belirlenir?",
+options:[
+"A) İnternet hızına göre",
+"B) İşlem sayısına göre",
+"C) Kilitlenen (stake edilen) coin miktarına göre",
+"D) Donanım gücüne göre",
+"E) Kullanıcı sayısına göre"
+],
+a:2
+},
 
-{q:"İnductive (tümevarım) adımı ne yapar?",
-options:["Yeni eleman üretir","Tanımı siler","Sonucu değiştirir","Grafik oluşturur"], a:0},
+{
+q:"Blockchain Trilemma neyi ifade eder?",
+options:[
+"A) Üç farklı kripto para türünü",
+"B) Üç farklı saldırı türünü",
+"C) Güvenlik, ölçeklenebilirlik ve merkeziyetsizlik arasında denge kurma zorluğunu",
+"D) Üç farklı hash algoritmasını",
+"E) Üç farklı node tipini"
+],
+a:2
+},
 
-{q:"ÇİFT_SAYI kümesinde aşağıdakilerden hangisi doğrudur?",
-options:["2 başlangıç elemanıdır","1 başlangıçtır","3 başlangıçtır","Hiçbiri"], a:0},
+{
+q:"Needham-Schroeder protokolünün temel tasarım amacı aşağıdakilerden hangisidir?",
+options:[
+"A) Veri sıkıştırma oranını artırmak.",
+"B) İki taraf arasında karşılıklı kimlik doğrulama sağlamak.",
+"C) Şifreleme algoritmalarının matematiksel hızını ölçmek.",
+"D) Ağ üzerindeki trafik yoğunluğunu azaltmak.",
+"E) Sadece verinin bütünlüğünü kontrol etmek."
+],
+a:1
+},
 
-{q:"Eğer x çift ise x+2 için ne söylenir?",
-options:["Tek olur","Tanımsızdır","Yine çifttir","Sabit kalır"], a:2},
+{
+q:"Lowe Saldırısı’nın temel sebebi aşağıdakilerden hangisidir?",
+options:[
+"A) RSA algoritmasının matematiksel olarak kırılması.",
+"B) Kullanılan rastgele sayıların (nonce) tahmin edilebilir olması.",
+"C) Protokol tasarımındaki bağlamsal doğrulama eksikliği.",
+"D) İnternet hızının düşük olması nedeniyle paket kaybı yaşanması.",
+"E) Simetrik anahtar paylaşımı sırasında anahtarın çalınması."
+],
+a:2
+},
 
-{q:"Polinom için aşağıdakilerden hangisi doğrudur?",
-options:["Üsler negatif olabilir","Üsler kesirli olabilir","Üsler doğal sayı olmalıdır","Hiçbiri"], a:2},
+{
+q:"Dolev-Yao tehdit modeline göre, aşağıdakilerden hangisi bir saldırganın yapabileceği eylemlerden biri değildir?",
+options:[
+"A) Ağ üzerindeki mesajları yakalamak.",
+"B) Mesajları değiştirerek tekrar göndermek.",
+"C) Kendisini başka bir kullanıcı gibi tanıtmak.",
+"D) Şifreleme algoritmasını matematiksel olarak çözerek gizli anahtarı ele geçirmek.",
+"E) İletişim kanalı üzerindeki trafiği izlemek."
+],
+a:3
+},
 
-{q:"Aşağıdakilerden hangisi polinom DEĞİLDİR?",
-options:["x² + 3x","x² - 4/x","3x + 5","7"], a:1},
+{
+q:"Lowe saldırısı senaryosunda, Bob (B) neden güvenlik ihlalini fark edememektedir?",
+options:[
+"A) Çünkü Alice’in (A) gizli anahtarı çalınmıştır.",
+"B) Bob, kendisine gelen mesajın Alice tarafından doğrudan gönderildiğini varsayar ve mesajın bağlamını doğrulayamaz.",
+"C) Saldırgan (I), şifreleme algoritmasını kırmıştır.",
+"D) Bob’un kullandığı sistemde antivirüs yazılımı yoktur.",
+"E) Nonce değerleri (Na ve Nb) her zaman aynı üretilmektedir."
+],
+a:1
+},
 
-{q:"Palindrome recursive tanımında hangisi doğrudur?",
-options:["Sadece uzun kelimeler","Boş kelime dahil değildir","axa ve bxb kuralı vardır","Sadece sayılar"], a:2},
+{
+q:"Formel modellemede kullanılan A -> B : {Na , A}Kb desi neyi temsil eder?",
+options:[
+"A) A’nın B’ye, B’nin açık anahtarı (Kb) ile şifrelenmiş bir mesaj gönderdiğini.",
+"B) B’nin A’ya, A’nın gizli anahtarı ile şifrelenmiş bir dosya gönderdiğini.",
+"C) A ve B’nin aynı anahtarı kullanarak şifreleme yaptığını.",
+"D) Mesajın ağda herkes tarafından okunabilir olduğunu.",
+"E) Nonce değerinin (Na) herkese açık bir metin olduğunu."
+],
+a:0
+},
 
-{q:"Aritmetik ifadeler için aşağıdakilerden hangisi doğrudur?",
-options:["Sadece sayılar","Sadece harfler","Toplama, çıkarma, çarpma, bölme içerir","Hiçbiri"], a:2},
+{
+q:"Diffie-Hellman güvenliği hangi probleme dayanır?",
+options:[
+"A) NP-Complete Problemler",
+"B) Ayrık Logaritma Problemi",
+"C) RSA Faktörizasyon Problemi",
+"D) Lineer Denklem Sistemler"
+],
+a:1
+},
 
-{q:"(-E) ifadesi recursive tanımda neyi gösterir?",
-options:["Hata","Aritmetik ifade değildir","Aritmetik ifade olabilir","Boş"], a:2},
+{
+q:"Diffie-Hellman protokolü neden MITM saldırılarına açıktır?",
+options:[
+"A) Şifreleme algoritması zayıf olduğu için",
+"B) Açık anahtarlar gizli tutulmadığı için",
+"C) Kimlik doğrulama (authentication) mekanizması olmadığı için",
+"D) Ağ gecikmesi yüksek olduğu için"
+],
+a:2
+},
 
-{q:"gcd fonksiyonu recursive olarak nasıl çalışır?",
-options:["Sabit döner","Kalan varsa tekrar çağırır","Durur","Sadece toplama yapar"], a:1},
+{
+q:"MITM saldırısında saldırganın başarılı olmasının temel sebebi nedir?",
+options:[
+"A) Saldırganın iki tarafla ayrı ayrı anahtar oluşturabilmesi",
+"B) Anahtar uzunluğunun kısa olması",
+"C) Şifreleme algoritmasının deterministik olması",
+"D) Ağ paketlerinin şifrelenmemesi"
+],
+a:0
+},
 
-{q:"Palindrome için başlangıç kümesine hangisi dahildir?",
-options:["Sadece a","Sadece b","λ, a, b","Hiçbiri"], a:2},
+{
+q:"Anahtar boyutu arttıkça performans neden düşer?",
+options:[
+"A) Bellek kullanımı azalır",
+"B) Ağ trafiği tamamen durur",
+"C) Modüler üs alma işlemi daha maliyetli hale gelir",
+"D) Şifreleme işlemi lineer hale gelir"
+],
+a:2
+},
 
-{q:"Recursive tanımın son adımı neyi belirtir?",
-options:["Sadece başlangıç","Başka eleman yoktur","Yeni eleman üretir","Grafik çizer"], a:1}
+{
+q:"Diffie-Hellman algoritmasını MITM saldırılarına karşı güvenli hale getirmek için hangisi kullanılır?",
+options:[
+"A) Tek başına hash fonksiyonları",
+"B) Simetrik şifreleme algoritmaları",
+"C) Sadece daha uzun anahtar kullanımı",
+"D) Dijital imzalar ve sertifika altyapısı (PKI)"
+],
+a:3
+},
+
+{
+q:"Aynı şifreyi kullanan iki kullanıcı veritabanına kaydedildiğinde, plain hash (SHA-256, salt yok) ve salt+hash yöntemlerinde ne gözlemlenir?",
+options:[
+"A) Her iki yöntemde de hash değerleri farklı olur, SHA-256 rastgele çıktı üretir.",
+"B) Plain hash’te her iki kullanıcı için aynı hash oluşur; salt+hash’te farklı salt nedeniyle farklı hash oluşur.",
+"C) Salt+hash’te de hash değerleri aynı olur; salt yalnızca depolama boyutunu artırır.",
+"D) Plain hash’te farklı, salt+hash’te aynı hash oluşur; salt belirleyicidir."
+],
+a:1
+},
+
+{
+q:"Aşağıdakilerden hangisi plain hash (SHA-256) yönteminin en önemli güvenlik zafiyetidir?",
+options:[
+"A) Çok yavaş çalışması",
+"B) Aynı parolaların farklı hash üretmesi",
+"C) Aynı parolaların aynı hash üretmesi",
+"D) Salt kullanılması zorunluluğu"
+],
+a:2
+},
+
+{
+q:"Aşağıdaki senaryolardan hangisi bcrypt kullanımının en büyük avantajını en doğru şekilde açıklar?",
+options:[
+"A) Hash çıktısını daha kısa hale getirmesi",
+"B) Aynı parolaların aynı hash üretmesini sağlaması",
+"C) Salt kullanımını tamamen ortadan kaldırması",
+"D) Hesaplama süresini artırarak brute force saldırısını zorlaştırması"
+],
+a:3
+},
+
+{
+q:"Bir sistemde aşağıdaki özellikler bulunmaktadır: Salt kullanılıyor, bcrypt kullanılıyor, Parolalar kısa (örneğin 4 karakter). Bu sistem için aşağıdakilerden hangisi en doğru yorumdur?",
+options:[
+"A) Sistem güçlüdür ancak zayıf parolalar nedeniyle risklidir",
+"B) Salt kullanıldığı için parola uzunluğu önemli değildir",
+"C) Sistem tamamen güvenlidir",
+"D) Brute force saldırısı imkansızdır"
+],
+a:0
+},
+
+{
+q:"Aşağıdaki algoritmalardan hangisi brute force saldırılarına karşı en dayanıklı olarak kabul edilir?",
+options:[
+"A) SHA-256",
+"B) MD5",
+"C) bcrypt",
+"D) Base64"
+],
+a:2
+}
 
 ];
 
-let score = 0;
-const quizDiv = document.getElementById("quiz");
+const quiz = document.getElementById("quiz");
 
-quizDiv.innerHTML += "<h3>📕 4. Hafta - Recursive</h3>";
+questions.forEach((item,index)=>{
 
-questions.forEach((item, index) => {
-    let html = `<div class="question">
-    <p>${index+1}) ${item.q}</p>`;
-    
-    item.options.forEach((opt, i) => {
-        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
-    });
+let html = `
+<div class="question">
 
-    html += `<button onclick="check(${index})">Kontrol Et</button>
-    <p id="r${index}"></p>
-    </div>`;
+<h3>${index+1}) ${item.q}</h3>
+`;
 
-    quizDiv.innerHTML += html;
+item.options.forEach((opt,i)=>{
+
+html += `
+<label>
+<input type="radio" name="q${index}" value="${i}">
+${opt}
+</label><br><br>
+`;
+
 });
 
-function check(i){
-    let opts = document.getElementsByName("q"+i);
-    let selected = -1;
+html += `
+<button class="control-btn" onclick="checkAnswer(${index})">
+Kontrol Et
+</button>
 
-    for(let j=0;j<opts.length;j++){
-        if(opts[j].checked) selected = j;
-    }
+<p id="result${index}"></p>
 
-    let res = document.getElementById("r"+i);
+</div>
+`;
 
-    if(selected === -1){
-        res.innerHTML="⚠️ Seçim yap!";
-        return;
-    }
+quiz.innerHTML += html;
 
-    if(selected === questions[i].a){
-        res.innerHTML="✅ Doğru!";
-        res.className="correct";
-    } else {
-        res.innerHTML="❌ Yanlış!";
-        res.className="wrong";
-    }
+});
+
+function checkAnswer(index){
+
+const options = document.getElementsByName("q"+index);
+
+let selected = -1;
+
+for(let i=0;i<options.length;i++){
+
+if(options[i].checked){
+
+selected = i;
+
+}
+
+}
+
+const result = document.getElementById("result"+index);
+
+if(selected === -1){
+
+result.innerHTML = "⚠️ Bir seçenek seç!";
+return;
+
+}
+
+if(selected === questions[index].a){
+
+result.innerHTML = "✅ Doğru!";
+result.className = "correct";
+
+}else{
+
+result.innerHTML = "❌ Yanlış!";
+result.className = "wrong";
+
+}
+
 }
 
 function showScore(){
-    score = 0;
-    questions.forEach((q,i)=>{
-        let opts = document.getElementsByName("q"+i);
-        for(let j=0;j<opts.length;j++){
-            if(opts[j].checked && j===q.a){
-                score++;
-            }
-        }
-    });
 
-    document.getElementById("score").innerHTML = "Skor: " + score + " / 15";
+let score = 0;
+
+questions.forEach((q,index)=>{
+
+const options = document.getElementsByName("q"+index);
+
+for(let i=0;i<options.length;i++){
+
+if(options[i].checked && i===q.a){
+
+score++;
+
+}
+
+}
+
+});
+
+document.getElementById("score").innerHTML =
+"Skorunuz: " + score + " / " + questions.length;
+
 }
 
 </script>
