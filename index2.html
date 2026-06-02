@@ -1,254 +1,332 @@
+```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Otomata Quiz Pro - 3. Hafta</title>
-<style>
-body { font-family: Arial; padding: 20px; background:#f4f4f4; }
-.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
-button { margin-top:10px; padding:8px 12px; cursor:pointer; }
-.correct { color: green; font-weight:bold; }
-.wrong { color: red; font-weight:bold; }
-h3 { background:#ddd; padding:10px; border-radius:8px; }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kriptoloji Quiz</title>
 
-/* 🔥 HAFTA MENÜ */
-.week-btn{
-    padding:8px 12px;
-    margin:3px;
-    background:#333;
-    color:white;
+<style>
+body{
+    font-family: Arial;
+    background:#f4f4f4;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+}
+
+.question{
+    background:white;
+    padding:15px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+
+button{
+    margin-top:10px;
+    padding:8px 15px;
     border:none;
     border-radius:5px;
+    background:#3498db;
+    color:white;
+    cursor:pointer;
 }
-.week-btn:hover{
-    background:#555;
+
+button:hover{
+    background:#2980b9;
 }
-.active{
-    background:#e74c3c !important;
+
+.correct{
+    color:green;
+    font-weight:bold;
+}
+
+.wrong{
+    color:red;
+    font-weight:bold;
 }
 </style>
 </head>
 
 <body>
 
-<h2>🧠 Otomata Quiz - 3. Hafta (Temel Kavramlar)</h2>
-
-<!-- 🔥 HAFTA MENÜ -->
-<div>
-<button class="week-btn" onclick="goWeek(1)">1</button>
-<button class="week-btn active" onclick="goWeek(2)">2</button>
-<button class="week-btn" onclick="goWeek(3)">3</button>
-<button class="week-btn" onclick="goWeek(4)">4</button>
-<button class="week-btn" onclick="goWeek(5)">5</button>
-<button class="week-btn" onclick="goWeek(6)">6</button>
-<button class="week-btn" onclick="goWeek(7)">7</button>
-<button class="week-btn" onclick="goWeek(8)">8</button>
-<button class="week-btn" onclick="goWeek(9)">9</button>
-<button class="week-btn" onclick="goWeek(10)">10</button>
-</div>
+<h1>🛡️ Kriptoloji Quiz - İlk 20 Soru</h1>
 
 <div id="quiz"></div>
 
 <button onclick="showScore()">📊 Skoru Göster</button>
-<p id="score"></p>
+<h2 id="score"></h2>
 
 <script>
 
-// 🔁 HAFTA GEÇİŞ
-function goWeek(w){
-    if(w === 1){
-        window.location.href = "index.html"; // 2. hafta
-    } else {
-        window.location.href = "index" + w + ".html"; 
-        // 2 → index2 (3. hafta)
-        // 3 → index3 (4. hafta)
-    }
-}
-
 const questions = [
 
-{q:"Alfabe (Σ) nedir?",
-options:[
-"Sonsuz sembol kümesi",
-"Kelimeler kümesi",
-"Sınırlı (sonlu) semboller kümesi",
-"Sadece sayılar kümesi"
-], a:2},
+{
+q:"SHA-256'nın teorik çakışma direnci kaçtır?",
+options:["2^256","2^128","2^64","2^512"],
+a:1
+},
 
-{q:"Bir kelime (string) nedir?",
-options:[
-"Sadece tek sembol",
-"Sonsuz dizi",
-"Alfabeden seçilen sonlu sembol dizisi",
-"Sadece sayılar"
-], a:2},
+{
+q:"Merkle-Damgård mimarisini kullanmayan hangisidir?",
+options:["MD5","SHA-1","SHA-256","SHA-3"],
+a:3
+},
 
-{q:"Boş kelime (λ) için hangisi doğrudur?",
-options:[
-"Alfabenin elemanıdır",
-"Uzunluğu 1’dir",
-"Uzunluğu 0’dır ve alfabenin elemanı değildir",
-"Sadece sayılarda vardır"
-], a:2},
+{
+q:"SHA-1 için ilk pratik collision saldırısının adı nedir?",
+options:["Heartbleed","EternalBlue","SHAttered","Spectre"],
+a:2
+},
 
-{q:"Dil (language) nedir?",
-options:[
-"Sadece semboller",
-"Kelimelerin kümesi",
-"Sayılar kümesi",
-"Fonksiyonlar kümesi"
-], a:1},
+{
+q:"1 bit değiştiğinde hash çıktısının büyük ölçüde değişmesine ne denir?",
+options:["Determinizm","Avalanche Effect","Padding","Collision"],
+a:1
+},
 
-{q:"Bir dilin tanımlanması için ne gerekir?",
-options:[
-"Sadece alfabe",
-"Sadece kelimeler",
-"Alfabe ve kurallar",
-"Sadece semboller"
-], a:2},
+{
+q:"Kuantum bilgisayarlarda hash güvenliğini azaltan algoritma hangisidir?",
+options:["RSA","AES","Grover","Diffie-Hellman"],
+a:2
+},
 
-{q:"Σ* ifadesi neyi temsil eder?",
+{
+q:"Perfect secrecy hangi durumu ifade eder?",
 options:[
-"Sadece boş kelime",
-"Alfabenin alt kümesi",
-"Tüm mümkün kelimeler",
-"Sadece tek harfli kelimeler"
-], a:2},
+"Algoritmanın gizli tutulması",
+"Şifreli metnin değişmemesi",
+"Anahtarın mutlaka 128 bit olması",
+"Mesajın şifretextten öğrenilememesi"
+],
+a:3
+},
 
-{q:"|w| = 4 ifadesi neyi gösterir?",
+{
+q:"OTP'nin perfect secrecy sağlaması için hangisi gerekir?",
 options:[
-"Kelimenin değeri",
-"Kelimenin uzunluğu",
-"Kelimenin tipi",
-"Kelimenin dili"
-], a:1},
+"Mesajın uzun olması",
+"Anahtarın herkese açık olması",
+"Anahtarın bir kez kullanılması",
+"Anahtarın kısa olması"
+],
+a:2
+},
 
-{q:"Concatenation (birleştirme) nedir?",
+{
+q:"Shift Cipher neden perfect secrecy sağlayamaz?",
 options:[
-"Kelimeyi ters çevirme",
-"İki kelimeyi birleştirme",
-"Kelimeyi silme",
-"Kelimeyi bölme"
-], a:1},
+"XOR kullanılmadığı için",
+"Anahtar uzayı çok küçük olduğu için",
+"Her zaman çevrildiği için",
+"Çözme işlemi olmadığı için"
+],
+a:1
+},
 
-{q:"Prefix (önek) neyi ifade eder?",
+{
+q:"H(M|C)=H(M) ifadesi neyi gösterir?",
 options:[
-"Kelimenin ortası",
-"Kelimenin başı",
-"Kelimenin sonu",
-"Kelimenin tamamı"
-], a:1},
+"Ciphertext mesaj hakkında bilgi sızdırır",
+"Mesaj mutlaka tek harflidir",
+"Sistem çözülemez ama bilgi sızar",
+"Ciphertext mesaj hakkında bilgi sızdırmaz"
+],
+a:3
+},
 
-{q:"Suffix (sonek) neyi ifade eder?",
+{
+q:"OTP ile Shift Cipher arasındaki temel fark nedir?",
 options:[
-"Kelimenin başı",
-"Kelimenin ortası",
-"Kelimenin sonu",
-"Kelimenin uzunluğu"
-], a:2},
+"OTP frekans analizi bırakmaz",
+"OTP yalnızca İngilizce çalışır",
+"Shift Cipher anahtarsızdır",
+"Entropi sadece Shift'te hesaplanır"
+],
+a:0
+},
 
-{q:"Subword (alt kelime) nedir?",
-options:[
-"Sadece ilk harf",
-"Ardışık sembollerden oluşan parça",
-"Sadece son harf",
-"Kelimenin uzunluğu"
-], a:1},
+{
+q:"Kuantum bilgisayarların RSA’yı kırmasını sağlayan algoritma hangisidir?",
+options:["Kyber","ML-KEM","SHOR","AES"],
+a:2
+},
 
-{q:"Palindrome nedir?",
-options:[
-"Sadece sayılar",
-"Ters çevrildiğinde değişen kelime",
-"Baştan ve sondan aynı okunan kelime",
-"Sadece uzun kelimeler"
-], a:2},
+{
+q:"NIST tarafından standart kabul edilen anahtar kapsülleme mekanizması nedir?",
+options:["Kyber ML-KEM","AES-256","RSA-4096","SHOR"],
+a:0
+},
 
-{q:"Σ={0,1} için Σ² ne olabilir?",
+{
+q:"Kyber algoritmasının en büyük fiziksel dezavantajı nedir?",
 options:[
-"{0,1}",
-"{00,01,10,11}",
-"{000}",
-"{λ}"
-], a:1},
+"CPU sıcaklığını artırması",
+"Açık anahtar ve şifreli metin boyutlarının büyük olması",
+"Sadece kısa metin şifreleyebilmesi",
+"Anahtar üretiminin çok uzun sürmesi"
+],
+a:1
+},
 
-{q:"Σ* kümesi nasıldır?",
+{
+q:"RSA ve Kyber’ın birlikte kullanıldığı geçiş dönemi mimarisine ne denir?",
 options:[
-"Sonlu",
-"Sadece tek elemanlı",
-"Sonsuz",
-"Boş"
-], a:2},
+"Asimetrik Şifreleme",
+"Kuantum Dolanıklığı",
+"Blok Şifreleme Zinciri",
+"Hibrit Şifreleme"
+],
+a:3
+},
 
-{q:"wλ sonucu nedir?",
+{
+q:"Kyber’ın güvenliği hangi matematiksel probleme dayanır?",
 options:[
-"w",
-"λ",
-"0",
-"Tanımsız"
-], a:0}
+"Eliptik Eğri",
+"Kafes Tabanlı Problemler",
+"Ayrık Logaritma",
+"Hash Çarpışması"
+],
+a:1
+},
+
+{
+q:"TRNG için hangisi doğrudur?",
+options:[
+"Matematiksel formüllerle çalışır",
+"Aynı seed ile aynı sonucu üretir",
+"Fiziksel olaylardan rastgelelik elde eder",
+"Deterministiktir"
+],
+a:2
+},
+
+{
+q:"PRNG'nin dezavantajı nedir?",
+options:[
+"Çok yavaş çalışması",
+"Tahmin edilebilir olması",
+"Donanım gerektirmesi",
+"Rastgelelik üretmemesi"
+],
+a:1
+},
+
+{
+q:"0 ve 1'lerin dengeli dağılıp dağılmadığını hangi test kontrol eder?",
+options:[
+"Koşu Testi",
+"Otokorelasyon",
+"Blok Frekans",
+"Monobit Testi"
+],
+a:3
+},
+
+{
+q:"Uzun 0 veya 1 bloklarının bulunması hangi problemi gösterir?",
+options:[
+"Yüksek entropi",
+"İdeal rastgelelik",
+"Koşu testinde başarısızlık",
+"Güvenli çıktı"
+],
+a:2
+},
+
+{
+q:"Rastgele sayı üreticisinin zayıf olduğunu en iyi hangi durum gösterir?",
+options:[
+"Hızlı çalışması",
+"Aynı seed ile aynı çıktıyı vermesi",
+"İstatistiksel testlerden geçmesi",
+"Entropisinin yüksek olması"
+],
+a:1
+}
 
 ];
 
-let score = 0;
-const quizDiv = document.getElementById("quiz");
+const quiz = document.getElementById("quiz");
 
-quizDiv.innerHTML += "<h3>📗 3. Hafta - Temel Kavramlar</h3>";
+questions.forEach((item,index)=>{
 
-questions.forEach((item, index) => {
+    let html = `
+    <div class="question">
+        <h3>${index+1}) ${item.q}</h3>
+    `;
 
-    let html = `<div class="question">
-    <p>${index+1}) ${item.q}</p>`;
-    
-    item.options.forEach((opt, i) => {
-        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
+    item.options.forEach((opt,i)=>{
+        html += `
+        <label>
+        <input type="radio" name="q${index}" value="${i}">
+        ${opt}
+        </label><br>
+        `;
     });
 
-    html += `<button onclick="check(${index})">Kontrol Et</button>
-    <p id="r${index}"></p>
-    </div>`;
+    html += `
+    <button onclick="checkAnswer(${index})">Kontrol Et</button>
+    <p id="result${index}"></p>
+    </div>
+    `;
 
-    quizDiv.innerHTML += html;
+    quiz.innerHTML += html;
 });
 
-function check(i){
-    let opts = document.getElementsByName("q"+i);
+function checkAnswer(index){
+
+    const options = document.getElementsByName("q"+index);
     let selected = -1;
 
-    for(let j=0;j<opts.length;j++){
-        if(opts[j].checked) selected = j;
+    for(let i=0;i<options.length;i++){
+        if(options[i].checked){
+            selected = i;
+        }
     }
 
-    let res = document.getElementById("r"+i);
+    const result = document.getElementById("result"+index);
 
     if(selected === -1){
-        res.innerHTML="⚠️ Seçim yap!";
+        result.innerHTML = "⚠️ Bir seçenek seç!";
         return;
     }
 
-    if(selected === questions[i].a){
-        res.innerHTML="✅ Doğru!";
-        res.className="correct";
-    } else {
-        res.innerHTML="❌ Yanlış!";
-        res.className="wrong";
+    if(selected === questions[index].a){
+        result.innerHTML = "✅ Doğru!";
+        result.className = "correct";
+    }else{
+        result.innerHTML = "❌ Yanlış!";
+        result.className = "wrong";
     }
 }
 
 function showScore(){
-    score = 0;
-    questions.forEach((q,i)=>{
-        let opts = document.getElementsByName("q"+i);
-        for(let j=0;j<opts.length;j++){
-            if(opts[j].checked && j===q.a){
+
+    let score = 0;
+
+    questions.forEach((q,index)=>{
+
+        const options = document.getElementsByName("q"+index);
+
+        for(let i=0;i<options.length;i++){
+
+            if(options[i].checked && i===q.a){
                 score++;
             }
         }
     });
 
-    document.getElementById("score").innerHTML = "Skor: " + score + " / 15";
+    document.getElementById("score").innerHTML =
+    "Skorunuz: " + score + " / 20";
 }
 
 </script>
 
 </body>
 </html>
+```
