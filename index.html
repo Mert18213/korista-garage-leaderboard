@@ -1,12 +1,10 @@
-```html id="j9x2kp"
+```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Kriptoloji Quiz - Sayfa 1</title>
+<title>Kriptoloji Quiz - İlk 20 Soru</title>
 
 <style>
 
@@ -20,7 +18,7 @@ h1{
     text-align:center;
 }
 
-/* SAYFA MENÜ */
+/* SAYFA GEÇİŞ */
 
 .menu{
     text-align:center;
@@ -46,7 +44,7 @@ h1{
     background:#e74c3c !important;
 }
 
-/* SORU KARTLARI */
+/* SORULAR */
 
 .question{
     background:white;
@@ -87,8 +85,6 @@ h1{
 <body>
 
 <h1>🛡️ Kriptoloji Quiz - İlk 20 Soru</h1>
-
-<!-- SAYFA GEÇİŞ -->
 
 <div class="menu">
 
@@ -132,10 +128,10 @@ const questions = [
 {
 q:"SHA-256'nın teorik çakışma direnci (Birthday Paradox'a göre) kaçtır?",
 options:[
-"2²⁵⁶",
-"2¹²⁸",
-"2⁶⁴",
-"2⁵¹²"
+"A) 2²⁵⁶",
+"B) 2¹²⁸",
+"C) 2⁶⁴",
+"D) 2⁵¹²"
 ],
 a:1
 },
@@ -143,10 +139,10 @@ a:1
 {
 q:"Aşağıdakilerden hangisi Merkle-Damgård mimarisini kullanmaz?",
 options:[
-"MD5",
-"SHA-1",
-"SHA-256",
-"SHA-3"
+"A) MD5",
+"B) SHA-1",
+"C) SHA-256",
+"D) SHA-3"
 ],
 a:3
 },
@@ -154,10 +150,10 @@ a:3
 {
 q:"2017 yılında SHA-1 için gerçekleştirilen ilk pratik collision saldırısının adı nedir?",
 options:[
-"Heartbleed",
-"EternalBlue",
-"SHAttered",
-"Spectre"
+"A) Heartbleed",
+"B) EternalBlue",
+"C) SHAttered",
+"D) Spectre"
 ],
 a:2
 },
@@ -165,22 +161,21 @@ a:2
 {
 q:"Girdide 1 bit değiştiğinde çıktının büyük ölçüde değişmesi hangi kavramdır?",
 options:[
-"Determinizm",
-"Avalanche Effect",
-"Padding",
-"Collision"
+"A) Determinizm",
+"B) Avalanche Effect",
+"C) Padding",
+"D) Collision"
 ],
 a:1
 },
 
 {
-q:"Kuantum bilgisayarlarda hash güvenliğini karekök oranında azaltan 
-algoritma hangisidir?",
+q:"Kuantum bilgisayarlarda hash güvenliğini karekök oranında azaltan algoritma hangisidir?",
 options:[
-"RSA",
-"AES",
-"Grover",
-"Diffie-Hellman"
+"A) RSA",
+"B) AES",
+"C) Grover",
+"D) Diffie-Hellman"
 ],
 a:2
 },
@@ -188,10 +183,10 @@ a:2
 {
 q:"Perfect secrecy hangi durumu ifade eder?",
 options:[
-"Algoritmanın gizli tutulması",
-"Ciphertext gücüne bile mesaj bilgisinin değişmemesi",
-"Anahtarın mutlaka 128 bit olması",
-"Her mesaj için ciphertext üretilmesi"
+"A) Algoritmanın gizli tutulması",
+"B) Ciphertext görülse bile mesaj olasılığının değişmemesini",
+"C) Anahtarın mutlaka 128 bit olmasını",
+"D) Her mesajın aynı ciphertext üretmesini"
 ],
 a:1
 },
@@ -199,10 +194,10 @@ a:1
 {
 q:"OTP’nin perfect secrecy sağlaması için aşağıdakilerden hangisi şart değildir?",
 options:[
-"Anahtar mesaj kadar uzun olmalıdır",
-"Anahtar gerçekten rastgele olmalıdır",
-"Aynı anahtar birden fazla mesajda kullanılmalıdır",
-"Anahtar yalnızca bir kez kullanılmalıdır"
+"A) Anahtar mesaj kadar uzun olmalıdır",
+"B) Anahtar gerçekten rastgele olmalıdır",
+"C) Aynı anahtar birden fazla mesajda kullanılmalıdır",
+"D) Anahtar yalnızca bir kez kullanılmalıdır"
 ],
 a:2
 },
@@ -210,149 +205,152 @@ a:2
 {
 q:"Shift Cipher uzun mesajlarda neden perfect secrecy sağlayamaz?",
 options:[
-"XOR kullanmadığı için",
-"Anahtar uzayı çok küçük olduğu için",
-"Her zaman çevrildiği için",
-"Çözme işlemi olmadığı için"
+"A) XOR kullanmadığı için",
+"B) Anahtar uzayı 26 olduğu için",
+"C) Harfler sayıya çevrildiği için",
+"D) Çözme işlemi olmadığı için"
 ],
 a:1
 },
 
 {
-q:"H(M|C)=H(M) ifadesi neyi gösterir?",
+q:"H(M|C)=H(M) ve I(M;C)=0 ifadeleri neyi gösterir?",
 options:[
-"Ciphertext mesaj hakkında bilgi sızdırır",
-"Mesaj mutlaka tek harflidir",
-"Sistem çözülemez ama bilgi sızar",
-"Ciphertext mesaj hakkında bilgi sızdırmaz"
-],
-a:3
-},
-
-{
-q:"OTP ile Shift Cipher arasındaki temel fark nedir?",
-options:[
-"OTP frekans analizi bırakmaz",
-"OTP yalnızca İngilizce çalışır",
-"Shift Cipher anahtarsızdır",
-"Entropi sadece Shift'te hesaplanır"
+"A) Ciphertext mesaj hakkında bilgi sızdırmıştır",
+"B) Mesaj mutlaka tek harflidir",
+"C) Sistem çözülemez ama bilgi sızar",
+"D) Shift Cipher her zaman güvenlidir"
 ],
 a:0
 },
 
 {
-q:"Kuantum bilgisayarların RSA’yı kırmasını sağlayan algoritma hangisidir?",
+q:"Simülasyonda OTP uniforma yaklaşırken Shift neden düz metin frekansını taşır?",
 options:[
-"Kyber",
-"ML-KEM",
-"SHOR",
-"AES"
-],
-a:2
-},
-
-{
-q:"NIST tarafından standart kabul edilen anahtar kapsülleme mekanizması nedir?",
-options:[
-"Kyber ML-KEM",
-"AES-256",
-"RSA-4096",
-"SHOR"
+"A) OTP her karakteri bağımsız rastgele anahtarla maskeler, Shift tek anahtarla kaydırır",
+"B) OTP yalnızca İngilizce metinlerde çalışır",
+"C) Shift Cipher anahtarsız çalışır",
+"D) Entropi sadece Shift için hesaplanır"
 ],
 a:0
 },
 
 {
-q:"Kyber algoritmasının en büyük fiziksel dezavantajı nedir?",
+q:"Kuantum bilgisayarların geleneksel RSA şifrelemesini saniyeler içinde kırmasını sağlayan algoritmanın adı nedir ?",
 options:[
-"CPU sıcaklığını artırması",
-"Açık anahtar ve şifreli metin boyutlarının büyük olması",
-"Sadece kısa metin şifreleyebilmesi",
-"Anahtar üretiminin çok uzun sürmesi"
-],
-a:1
-},
-
-{
-q:"RSA ve Kyber’ın birlikte kullanıldığı geçiş dönemi mimarisine ne denir?",
-options:[
-"Asimetrik Şifreleme",
-"Kuantum Dolanıklığı",
-"Blok Şifreleme Zinciri",
-"Hibrit Şifreleme"
-],
-a:3
-},
-
-{
-q:"Kyber’ın güvenliği hangi matematiksel probleme dayanır?",
-options:[
-"Eliptik Eğri",
-"Kafes Tabanlı Problemler",
-"Ayrık Logaritma",
-"Hash Çarpışması"
-],
-a:1
-},
-
-{
-q:"TRNG için hangisi doğrudur?",
-options:[
-"Matematiksel formüllerle çalışır",
-"Aynı seed ile aynı sonucu üretir",
-"Fiziksel olaylardan rastgelelik elde eder",
-"Deterministiktir"
+"A-) Kyber",
+"B-) ML-KEM",
+"C-) SHOR",
+"D-) AES"
 ],
 a:2
 },
 
 {
-q:"PRNG'nin dezavantajı nedir?",
+q:"NIST tarafından Ağustos 2024'te (FIPS 203) standart olarak kabul edilen anahtar kapsülleme mekanizmasının adı nedir?",
 options:[
-"Çok yavaş çalışması",
-"Tahmin edilebilir olması",
-"Donanım gerektirmesi",
-"Rastgelelik üretmemesi"
+"A-) Kyber ML-KEM",
+"B-) AES-256",
+"C-) RSA-4096",
+"D-) SHOR"
+],
+a:0
+},
+
+{
+q:"Simülasyon testlerimizde de gördüğümüz üzere, Kyber algoritması RSA’e göre binlerce kat daha hızlı çalışmasına rağmen en büyük fiziksel dezavantajı nedir?",
+options:[
+"A-) CPU (İşlemci) sıcaklığını çok fazla arttırması",
+"B-) Açık anahtar ve şifreli metin boyutlarının RSA’e göre çok büyük olması",
+"C-) Yalnızca kısa metinleri şifreleyebilmesi",
+"D-) Anahtar üretimi (KeyGen) işleminin çok uzun sürmesi"
 ],
 a:1
 },
 
 {
-q:"0 ve 1'lerin dengeli dağılıp dağılmadığını hangi test kontrol eder?",
+q:"Yeni nesil algoritmalardaki olası zafiyet risklerine karşı, hem geleneksel RSA’in hem de post-kuantum Kyber’in aynı anda (çift katmanlı) kullanıldığı geçiş dönemi mimarisine ne ad verilir?",
 options:[
-"Koşu Testi",
-"Otokorelasyon",
-"Blok Frekans",
-"Monobit Testi"
+"A-) Asimetrik Şifreleme",
+"B-) Kuantum Dolanıklığı",
+"C-) Blok Şifreleme Zinciri",
+"D-) Hibrit Şifreleme (Hibrit Mimari)"
 ],
 a:3
 },
 
 {
-q:"Uzun 0 veya 1 bloklarının bulunması hangi problemi gösterir?",
+q:"RSA algoritmasının güvenliği “asal çarpanlara ayırma” problemine dayanır. Peki Kyber algoritmasının güvenliği hangi matematiksel temele dayanmaktadır?",
 options:[
-"Yüksek entropi",
-"İdeal rastgelelik",
-"Koşu testinde başarısızlık",
-"Güvenli çıktı"
+"A-) Eliptik Eğri (Eliptic Curve) Matematiği",
+"B-) Kafes Tabanlı (Lattice-Based) Kriptografi ve LWE Problemi",
+"C-) Ayrık Logaritma Problemi",
+"D-) Çarpışma Dirençli Hash Fonksiyonları"
+],
+a:1
+},
+
+{
+q:"Genelde Steganografi aracının tasarımında, geleneksel LSB (En Az Anlamlı Bit) yöntemi yerine PVD (Piksel Değer Farkı) algoritmasının tercih edilmesinin ve tasarım aşamasında piksel blokları arasındaki farkın hesaplanmasının temel mühendislik amacı aşağıdakilerden hangisidir?",
+options:[
+"A) Kapak görüntüsünün dosya boyutunu algoritmik olarak sıkıştırarak iletim hızını artırmak.",
+"B) Gizlenecek verinin şifrelenmesi için gerekli olan kriptografik anahtarın (AES) piksellerin renk uzayına dağıtılmasını sağlamak.",
+"C) İnsan görsel sisteminin karmaşık/kenar bölgelerdeki değişimlere karşı duyarsızlığından yararlanarak, görsel bütünlüğü bozmadan o bölgelere daha yüksek kapasitede veri gizlemek.",
+"D) Veri saklama işlemini sadece düz ve pürüzsüz alanlarla sınırlandırarak istatistiksel steganaliz saldırılarını tamamen engellemek.",
+"E) Veri başlıklarını (TXT/IMG) piksellerin en büyük anlamlı bitlerine (MSB) yerleştirerek sistemin otonom deşifre yapmasını kolaylaştırmak."
 ],
 a:2
 },
 
 {
-q:"Rastgele sayı üreticisinin zayıf olduğunu en iyi hangi durum gösterir?",
+q:"Geleneksel steganografi yöntemlerinde verinin sadece gizlenmesi, verinin varlığının tespit edilmesi durumunda içeriğin doğrudan açığa çıkmasına neden olmaktadır. Uygulanan AES-256 ve PVD (Pixel Value Differencing) hibrit yapısının, salt steganografiye göre sağladığı en kritik avantaj aşağıdakilerden hangisidir?",
 options:[
-"Hızlı çalışması",
-"Aynı seed ile aynı çıktıyı vermesi",
-"İstatistiksel testlerden geçmesi",
-"Entropisinin yüksek olması"
+"A) Görüntünün depolama boyutunu küçülterek veri transferini hızlandırmak.",
+"B) Verinin hem varlığını gizleyerek algılanamazlık sağlamak hem de tespit edilse bile erişilemezlik katmanı eklemek.",
+"C) Şifreleme sayesinde görüntünün PSNR (tepe sinyal-gürültü oranı) değerini yapay olarak yükseltmek.",
+"D) PVD algoritmasının işlem karmaşıklığını azaltarak mobil cihazlarda enerji tasarrufu sağlamak.",
+"E) AES şifreleme işleminin, PVD ile veri gömme sırasında oluşabilecek bit hatalarını otomatik olarak tespit edip onarması."
 ],
 a:1
+},
+
+{
+q:"PVD algoritmasında kullanılan Aralık Tablosu (Range Table), piksel çiftleri arasındaki fark değerlerini belirli alt aralıklara böler. Bu tablonun tasarımında, fark değerleri büyüdükçe gömülecek bit sayısının da artırılmasının temel nedeni aşağıdakilerden hangisidir?",
+options:[
+"A) Şifrelenmiş AES bloklarının görüntünün her bölgesine eşit miktarda dağıtılmasını zorunlu kılmak.",
+"B) Görüntünün histogramındaki boşlukları doldurmak amacıyla, her aralığa karşılık gelen piksel değerlerini AES-256 anahtarı ile senkronize etmek.",
+"C) Görüntüdeki toplam renk sayısını azaltarak, steganografik işlemin dosya boyutu üzerindeki etkisini tamamen ortadan kaldırmak.",
+"D) PVD tablosundaki aralıkları sabit tutarak, her piksel çiftine standart olarak sadece 1 bit veri gömülmesini garanti altına almak.",
+"E) Görüntünün pürüzsüz bölgelerindeki hassasiyeti korurken, yüksek fark içeren (kenar/doku) bölgelerin daha fazla gizli veri (bit) taşıma kapasitesinden yararlanmak."
+],
+a:4
+},
+
+{
+q:"Projede geliştirilen PVD ve AES-256 tabanlı steganografi aracının performans testlerinde, Bit Hata Oranının (BER) '0' ve Tepe Sinyal Gürültü Oranının (PSNR) 39.03 dB – 67.62 dB aralığında çıkması sırasıyla hangi durumu kesin olarak kanıtlar?",
+options:[
+"A) Sistemin JPEG formatında da kayıpsız çalıştığını / Kuantalama tablosunun şifrelendiğini",
+"B) Şifreli verinin hiçbir kayba uğramadan (%100 bütünlükle) geri kazanılabildiğini / Görüntüdeki değişimin insan gözüyle fark edilemeyecek kadar az (kusursuz kalite) olduğunu",
+"C) Teorik kapasite sınırının aşıldığını / LSB algoritmasına göre steganaliz testlerinde daha fazla istatistiksel iz bırakıldığını",
+"D) Taşıyıcı görselde sadece metin verilerinin gizlenebildiğini / Pürüzsüz alanlara veri gömülürken renk uzayı taşması yaşandığını",
+"E) Asimetrik anahtar değişiminin başarılı olduğunu / Stego-görselin boyutlandırma (resizing) saldırılarına karşı tam dirençli olduğunu"
+],
+a:1
+},
+
+{
+q:"PVD (Pixel Value Differencing) algoritmasının matematiksel modeline göre, bir piksel çiftine (pixel-pair) gömülecek bit sayısı (n) hesaplanırken aşağıdaki yöntemlerden hangisi izlenir ve bu durum algoritmanın kapasitesine etkisi nedir?",
+options:[
+"A) Gömülecek bit sayısı (n), iki komşu piksel arasındaki mutlak farkın (d) yer aldığı aralığın genişliğine (Wk = uk – lk +1) göre n = log2(Wk) formülüyle belirlenir; fark büyüdükçe kapasite artar.",
+"B) Her piksel çiftine, AES-256 şifreleme katmanından gelen sabit 8 bitlik veri blokları, fark değerine bakılmaksızın doğrudan yerleştirilir.",
+"C) Bit sayısı, piksellerin sadece en büyük anlamlı bitlerinin (MSB) toplamının aritmetik ortalaması alınarak hesaplanır ve bu sayı her zaman 3’e sabitlenir.",
+"D) Piksel değerleri arasındaki fark (d) azaldıkça (pürüzsüz alanlar), gömülebilecek bit sayısı logaritmik olarak artırılarak görsel keskinlik sağlanır.",
+"E) Matematiksel modelde n değeri, sadece piksellerin 0-255 renk uzayı sınırının dışına taşma (overflow) yapıp yapmadığına bakılarak 1 veya 0 olarak atanır."
+],
+a:0
 }
 
 ];
-
-/* QUIZ */
 
 const quiz = document.getElementById("quiz");
 
@@ -370,7 +368,7 @@ html += `
 <label>
 <input type="radio" name="q${index}" value="${i}">
 ${opt}
-</label><br>
+</label><br><br>
 `;
 
 });
@@ -388,8 +386,6 @@ Kontrol Et
 quiz.innerHTML += html;
 
 });
-
-/* CEVAP KONTROL */
 
 function checkAnswer(index){
 
@@ -429,8 +425,6 @@ result.className = "wrong";
 }
 
 }
-
-/* SKOR */
 
 function showScore(){
 
