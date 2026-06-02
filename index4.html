@@ -1,251 +1,360 @@
+```html id="u7n2qa"
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Otomata Quiz Pro - 5. Hafta</title>
-<style>
-body { font-family: Arial; padding: 20px; background:#f4f4f4; }
-.question { margin-bottom: 20px; padding:15px; background:white; border-radius:10px; }
-button { margin-top:10px; padding:8px 12px; cursor:pointer; }
-.correct { color: green; font-weight:bold; }
-.wrong { color: red; font-weight:bold; }
-h3 { background:#ddd; padding:10px; border-radius:8px; }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kriptoloji Quiz - Sayfa 4</title>
 
-/* 🔥 HAFTA MENÜ */
-.week-btn{
-    padding:8px 12px;
-    margin:3px;
-    background:#333;
-    color:white;
+<style>
+
+body{
+    font-family: Arial;
+    background:#f4f4f4;
+    padding:20px;
+}
+
+h1{
+    text-align:center;
+}
+
+.menu{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.page-btn{
+    padding:10px 15px;
+    margin:5px;
     border:none;
-    border-radius:5px;
+    border-radius:6px;
+    background:#2c3e50;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
 }
-.week-btn:hover{
-    background:#555;
+
+.page-btn:hover{
+    background:#34495e;
 }
+
 .active{
     background:#e74c3c !important;
 }
+
+.question{
+    background:white;
+    padding:15px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
+
+.control-btn{
+    margin-top:10px;
+    padding:8px 15px;
+    border:none;
+    border-radius:5px;
+    background:#3498db;
+    color:white;
+    cursor:pointer;
+}
+
+.control-btn:hover{
+    background:#2980b9;
+}
+
+.correct{
+    color:green;
+    font-weight:bold;
+}
+
+.wrong{
+    color:red;
+    font-weight:bold;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<h2>🧠 Otomata Quiz - 5. Hafta (Regular Expressions)</h2>
+<h1>🛡️ Kriptoloji Quiz - Sayfa 4</h1>
 
-<!-- 🔥 HAFTA MENÜ -->
-<div>
-<button class="week-btn" onclick="goWeek(1)">1</button>
-<button class="week-btn" onclick="goWeek(2)">2</button>
-<button class="week-btn" onclick="goWeek(3)">3</button>
-<button class="week-btn active" onclick="goWeek(4)">4</button> 
-<button class="week-btn" onclick="goWeek(5)">5</button>
-<button class="week-btn" onclick="goWeek(6)">6</button>
-<button class="week-btn" onclick="goWeek(7)">7</button>
-<button class="week-btn" onclick="goWeek(8)">8</button>
-<button class="week-btn" onclick="goWeek(9)">9</button>
-<button class="week-btn" onclick="goWeek(10)">10</button>
+<div class="menu">
+
+<button class="page-btn" onclick="goPage(1)">1</button>
+<button class="page-btn" onclick="goPage(2)">2</button>
+<button class="page-btn" onclick="goPage(3)">3</button>
+<button class="page-btn active" onclick="goPage(4)">4</button>
+
 </div>
 
 <div id="quiz"></div>
 
-<button onclick="showScore()">📊 Skoru Göster</button>
-<p id="score"></p>
+<button class="control-btn" onclick="showScore()">
+📊 Skoru Göster
+</button>
+
+<h2 id="score"></h2>
 
 <script>
 
-// 🔁 GEÇİŞ (AYNI KALIYOR)
-function goWeek(w){
-    if(w === 1){
+function goPage(page){
+
+    if(page === 1){
+
         window.location.href = "index.html";
-    } else {
-        window.location.href = "index" + w + ".html";
+
     }
+
+    if(page === 2){
+
+        window.location.href = "index2.html";
+
+    }
+
+    if(page === 3){
+
+        window.location.href = "index3.html";
+
+    }
+
+    if(page === 4){
+
+        window.location.href = "index4.html";
+
+    }
+
 }
 
 const questions = [
 
-{q:"Düzenli ifade (RE) nedir?",
+{
+q:"Bir saldırgan, daha önce veri ihlallerinden elde ettiği yaygın parolaları (“123456”, “password”, “qwerty” vb.) kullanarak sistematik şekilde giriş denemeleri yapmaktadır. Bu saldırganın kullandığı yöntem aşağıdakilerden hangisidir?",
 options:[
-"Programlama dili",
-"Dil tanımlayıcı ifade",
-"Sayı kümesi",
-"Fonksiyon"
-], a:1},
+"A) Brute-Force Saldırısı",
+"B) Sözlük Saldırısı",
+"C) Replay Saldırısı",
+"D) Side-Channel Saldırısı"
+],
+a:1
+},
 
-{q:"x* ifadesi neyi temsil eder?",
+{
+q:"Bir yazılım şirketi, geliştirdiği sistemin uzun vadeli güvenliğini değerlendirmektedir. NIST standartlarına göre minimum güvenlik seviyesi dikkate alınmaktadır. Aşağıdakilerden hangisi minimum güvenlik seviyesi olarak kabul edilir?",
 options:[
-"Sadece x",
-"En az bir x",
-"0 veya daha fazla x",
-"Sadece boş kelime"
-], a:2},
+"A) 64 Bit",
+"B) 80 Bit",
+"C) 112 Bit",
+"D) 256 Bit"
+],
+a:2
+},
 
-{q:"x+ ifadesi neyi temsil eder?",
+{
+q:"Bir güvenlik mühendisi, sistemin kuantum bilgisayarlara karşı da güvenli olmasını istemektedir. Grover algoritması göz önüne alındığında hangi anahtar uzunluğu daha güvenli kabul edilir?",
 options:[
-"0 veya daha fazla",
-"En az 1 x",
-"Sadece boş kelime",
-"Sonsuzluk"
-], a:1},
+"A) 64 bit",
+"B) 112 bit",
+"C) 128 bit",
+"D) 256 bit"
+],
+a:3
+},
 
-{q:"ab* ifadesi neyi üretir?",
+{
+q:"Aynı karakter seti kullanılarak parola uzunluğu 8 karakterden 12 karaktere çıkarılmıştır. Bu değişikliğin brute-force saldırısına etkisi nedir?",
 options:[
-"Sadece ab",
-"a, ab, abb, abbb...",
-"Sadece b",
-"a ve b karışık"
-], a:1},
+"A) Kırılma süresi doğrusal olarak artar",
+"B) Kırılma süresi üstel olarak artar",
+"C) Kırılma süresi değişmez",
+"D) Sadece donanım hızına bağlıdır"
+],
+a:1
+},
 
-{q:"(ab)* ifadesi neyi temsil eder?",
+{
+q:"Bir saldırganın deneme hızı 1 milyon deneme/sn’den 2 milyon deneme/sn’ye çıkarılmıştır. Bu durumda kırılma süresi nasıl değişir?",
 options:[
-"ab tekrarları",
-"Sadece ab",
-"Sadece a",
-"Sadece b"
-], a:0},
+"A) Süre yarıya düşer",
+"B) Süre iki katına çıkar",
+"C) Süre üstel olarak azalır",
+"D) Süre değişmez"
+],
+a:0
+},
 
-{q:"ab* ile (ab)* arasındaki fark nedir?",
+{
+q:"12 karakter uzunluğunda sadece rakamlardan oluşan bir parola ile aynı uzunlukta karmaşık bir parola karşılaştırılmaktadır. Güvenlik farkının temel nedeni nedir?",
 options:[
-"Aynıdır",
-"Biri tekrar yapar biri yapmaz",
-"ab* a ile başlar, (ab)* blok tekrar eder",
-"Hiçbiri"
-], a:2},
+"A) Parola uzunluğu farklıdır",
+"B) Kullanılan algoritma değişmiştir",
+"C) Karakter seti büyüklüğü (entropi) artmıştır",
+"D) Donanım hızı etkilenmiştir"
+],
+a:2
+},
 
-{q:"(a+b) neyi ifade eder?",
+{
+q:"Aşağıdakilerden hangisi bir “Sıfır Bilgi İspatı (ZKP)” protokolünün sağlaması gereken 3 temel özellikten biri değildir?",
 options:[
-"a ve b birlikte",
-"a veya b",
-"Sadece a",
-"Sadece b"
-], a:1},
+"A) Doğruluk (Completeness)",
+"B) Sağlamlık (Soundness)",
+"C) Şeffaflık (Transparency)",
+"D) Sıfır Bilgi (Zero-Knowledge)"
+],
+a:2
+},
 
-{q:"(a+b)* neyi ifade eder?",
+{
+q:"ZKP protokollerinde, sırrı bilmeyen bir saldırganın şans eseri sistemi kandırma ihtimalini (Soundness açığını) milyonda birlere düşürmek için hangi yöntem kullanılır?",
 options:[
-"Sadece a",
-"Sadece b",
-"a ve b’den oluşan tüm kelimeler",
-"Sadece boş"
-], a:2},
+"A) Şifreleme anahtarının boyutunu 256 bit’e çıkarmak.",
+"B) Meydan okuma - Cevap (Challenge-Response) işlemini defalarca tekrarlamak.",
+"C) İşlemleri sadece kapalı ağlarda (Intranet) gerçekleştirmek.",
+"D) Graf düğümlerinin sayısını azaltmak."
+],
+a:1
+},
 
-{q:"a*b* dili nasıldır?",
+{
+q:"Graf izomorfizmi tabanlı bir ZKP sisteminde, Kanıtlayıcının (Prover) tüm dünya ile paylaştığı “Açık (Public)” graflar A ve B iken; dış dünyadan kesinlikle sakladığı “Asıl Sır (Private)” aşağıdakilerden hangisidir?",
 options:[
-"a ve b karışık",
-"Önce a sonra b",
-"Sadece a",
-"Sadece b"
-], a:1},
+"A) Graf C’nin sahip olduğu düğüm sayısı.",
+"B) Graf A’dan Graf C’ye nasıl gidildiğini gösteren harita.",
+"C) Graf A ile Graf B’nin birbirine dönüşümünü sağlayan harita.",
+"D) Meydan okuma aşamasında üretilen rastgele sayılar."
+],
+a:2
+},
 
-{q:"a(a+b)*b neyi tanımlar?",
+{
+q:"Graf İzomorfizmi protokolünün 2. adımında, Doğrulayıcı meydan okuma olarak “Bana Graf C’nin, Graf B’ye eşit olduğunu kanıtla” derse, Kanıtlayıcının göndermesi gereken bilgi nedir?",
 options:[
-"a ile başlayıp b ile biten kelimeler",
-"Sadece ab",
-"Sadece a",
-"Sadece b"
-], a:0},
+"A) Graf C’den Graf B’ye dönüşüm sağlayan harita.",
+"B) Graf A’dan Graf B’ye dönüşüm sağlayan harita (Asıl sır).",
+"C) Graf C’yi baştan oluşturan algoritmanın kendisi.",
+"D) Graf B’nin hash edilmiş özeti."
+],
+a:0
+},
 
-{q:"(a+b)*a(a+b)* neyi ifade eder?",
+{
+q:"ZKP sistemleri mükemmel bir güvenlik sağlamasına rağmen günümüzde her sistemde standart şifrelerin yerini alamamasının en temel teknik nedeni nedir?",
 options:[
-"Hiç a olmayan",
-"En az bir a içeren",
-"Sadece b",
-"Sadece a"
-], a:1},
-
-{q:"b*ab*ab* neyi ifade eder?",
-options:[
-"En az iki a",
-"Sadece b",
-"Sadece a",
-"Hiç a yok"
-], a:0},
-
-{q:"(00+01+10+11)* neyi ifade eder?",
-options:[
-"Tek uzunluk",
-"Çift uzunluk",
-"Sadece 0",
-"Sadece 1"
-], a:1},
-
-{q:"(a+b)*(aa+bb)(a+b)* neyi ifade eder?",
-options:[
-"aa veya bb içeren",
-"Sadece aa",
-"Sadece bb",
-"Hiçbiri"
-], a:0},
-
-{q:"Bir düzenli ifade ne yapar?",
-options:[
-"Sayı üretir",
-"Dil tanımlar",
-"Program çalıştırır",
-"Grafik çizer"
-], a:1}
+"A) Yalnızca blokzincir üzerinde çalışabiliyor olması.",
+"B) Kuantum bilgisayarlara karşı çok zayıf olması.",
+"C) Çok yüksek işlemci (CPU) gücü ve iletişim maliyeti gerektirmesi.",
+"D) Üretilen kanıtların çok çabuk süresinin dolması."
+],
+a:2
+}
 
 ];
 
-let score = 0;
-const quizDiv = document.getElementById("quiz");
+const quiz = document.getElementById("quiz");
 
-quizDiv.innerHTML += "<h3>📙 5. Hafta - Regular Expressions</h3>";
+questions.forEach((item,index)=>{
 
-questions.forEach((item, index) => {
-    let html = `<div class="question">
-    <p>${index+1}) ${item.q}</p>`;
-    
-    item.options.forEach((opt, i) => {
-        html += `<label><input type="radio" name="q${index}" value="${i}"> ${opt}</label><br>`;
-    });
+let html = `
+<div class="question">
 
-    html += `<button onclick="check(${index})">Kontrol Et</button>
-    <p id="r${index}"></p>
-    </div>`;
+<h3>${index+1}) ${item.q}</h3>
+`;
 
-    quizDiv.innerHTML += html;
+item.options.forEach((opt,i)=>{
+
+html += `
+<label>
+<input type="radio" name="q${index}" value="${i}">
+${opt}
+</label><br><br>
+`;
+
 });
 
-function check(i){
-    let opts = document.getElementsByName("q"+i);
-    let selected = -1;
+html += `
+<button class="control-btn" onclick="checkAnswer(${index})">
+Kontrol Et
+</button>
 
-    for(let j=0;j<opts.length;j++){
-        if(opts[j].checked) selected = j;
-    }
+<p id="result${index}"></p>
 
-    let res = document.getElementById("r"+i);
+</div>
+`;
 
-    if(selected === -1){
-        res.innerHTML="⚠️ Seçim yap!";
-        return;
-    }
+quiz.innerHTML += html;
 
-    if(selected === questions[i].a){
-        res.innerHTML="✅ Doğru!";
-        res.className="correct";
-    } else {
-        res.innerHTML="❌ Yanlış!";
-        res.className="wrong";
-    }
+});
+
+function checkAnswer(index){
+
+const options = document.getElementsByName("q"+index);
+
+let selected = -1;
+
+for(let i=0;i<options.length;i++){
+
+if(options[i].checked){
+
+selected = i;
+
+}
+
+}
+
+const result = document.getElementById("result"+index);
+
+if(selected === -1){
+
+result.innerHTML = "⚠️ Bir seçenek seç!";
+return;
+
+}
+
+if(selected === questions[index].a){
+
+result.innerHTML = "✅ Doğru!";
+result.className = "correct";
+
+}else{
+
+result.innerHTML = "❌ Yanlış!";
+result.className = "wrong";
+
+}
+
 }
 
 function showScore(){
-    score = 0;
-    questions.forEach((q,i)=>{
-        let opts = document.getElementsByName("q"+i);
-        for(let j=0;j<opts.length;j++){
-            if(opts[j].checked && j===q.a){
-                score++;
-            }
-        }
-    });
 
-    document.getElementById("score").innerHTML = "Skor: " + score + " / 15";
+let score = 0;
+
+questions.forEach((q,index)=>{
+
+const options = document.getElementsByName("q"+index);
+
+for(let i=0;i<options.length;i++){
+
+if(options[i].checked && i===q.a){
+
+score++;
+
+}
+
+}
+
+});
+
+document.getElementById("score").innerHTML =
+"Skorunuz: " + score + " / " + questions.length;
+
 }
 
 </script>
 
 </body>
 </html>
+```
