@@ -1,448 +1,464 @@
+```html id="j9x2kp"
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Hash Lab - Necmettin Erbakan Üniversitesi</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
-    <style>
-        /* TEMA DEĞİŞKENLERİ */
-        :root {
-            --bg-color: #0f172a;
-            --box-bg: #1e293b;
-            --text-color: #ffffff;
-            --sub-text: #94a3b8;
-            --border-color: #334155;
-            --accent-color: #38bdf8;
-            --help-bg: #020617;
-            --input-bg: #0f172a;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        [data-theme="light"] {
-            --bg-color: #f1f5f9;
-            --box-bg: #ffffff;
-            --text-color: #0f172a;
-            --sub-text: #475569;
-            --border-color: #cbd5e1;
-            --accent-color: #0ea5e9;
-            --help-bg: #f8fafc;
-            --input-bg: #e2e8f0;
-        }
+<title>Kriptoloji Quiz - Sayfa 1</title>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-color);
-            color: var(--text-color);
-            text-align: center;
-            padding: 20px;
-            overflow: hidden;
-            margin: 0;
-            height: 100vh;
-            transition: background 0.3s, color 0.3s;
-        }
+<style>
 
-        /* TEMA DEĞİŞTİRME BUTONU */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--box-bg);
-            border: 2px solid var(--accent-color);
-            color: var(--accent-color);
-            padding: 10px;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-            z-index: 10001;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-        }
+body{
+    font-family: Arial;
+    background:#f4f4f4;
+    padding:20px;
+}
 
-        /* NAV BUTONLARI */
-        .nav-btn {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(56, 189, 248, 0.1);
-            color: var(--accent-color);
-            border: 2px solid var(--accent-color);
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            font-size: 35px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+h1{
+    text-align:center;
+}
 
-        .nav-btn:hover {
-            background: var(--accent-color);
-            color: black; /* Nav okları üzerine gelince siyah */
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.4);
-        }
+/* SAYFA MENÜ */
 
-        .prev-btn { left: 50px; }
-        .next-btn { right: 50px; }
+.menu{
+    text-align:center;
+    margin-bottom:25px;
+}
 
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 90vh;
-        }
+.page-btn{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:6px;
+    background:#2c3e50;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+}
 
-        .box {
-            display: none;
-            border: 2px solid var(--border-color);
-            padding: 40px;
-            border-radius: 20px;
-            background: var(--box-bg);
-            width: 550px;
-            min-height: 520px;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            transition: background 0.3s, border 0.3s;
-        }
+.page-btn:hover{
+    background:#34495e;
+}
 
-        .box.active {
-            display: block;
-            animation: slideIn 0.4s ease-out;
-        }
+.active{
+    background:#e74c3c !important;
+}
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
+/* SORU KARTLARI */
 
-        /* HELP TOOLTIP */
-        .help {
-            position: absolute; top: 20px; left: 20px;
-            background: var(--accent-color); color: black;
-            width: 30px; height: 30px; border-radius: 50%;
-            cursor: pointer; font-weight: bold; line-height: 30px;
-        }
+.question{
+    background:white;
+    padding:15px;
+    margin-bottom:20px;
+    border-radius:10px;
+    box-shadow:0 0 5px rgba(0,0,0,0.1);
+}
 
-        .helpText {
-            display: none; position: absolute; top: 60px; left: 20px;
-            background: var(--help-bg); color: var(--text-color); padding: 20px;
-            border-radius: 12px; font-size: 14px; width: 400px;
-            text-align: left; border: 1px solid var(--accent-color); z-index: 10000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            line-height: 1.5;
-        }
+.control-btn{
+    margin-top:10px;
+    padding:8px 15px;
+    border:none;
+    border-radius:5px;
+    background:#3498db;
+    color:white;
+    cursor:pointer;
+}
 
-        .help:hover + .helpText { display: block; }
+.control-btn:hover{
+    background:#2980b9;
+}
 
-        input, select, button { padding: 12px; margin: 10px; border-radius: 8px; border: none; font-size: 16px; outline: none; }
-        input { background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); width: 70%; }
-        select { background: var(--border-color); color: var(--text-color); cursor: pointer; }
-        
-        /* BUTON METİNLERİ SİYAH YAPILDI */
-        button { background: var(--accent-color); color: black; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #0ea5e9; transform: translateY(-2px); }
+.correct{
+    color:green;
+    font-weight:bold;
+}
 
-        pre { background: var(--input-bg); padding: 15px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; font-family: 'Courier New', monospace; border: 1px solid var(--border-color); color: var(--text-color); }
-        
-        .stats-panel {
-            background: rgba(120, 120, 120, 0.1);
-            border-radius: 10px;
-            padding: 10px;
-            margin-top: 15px;
-            font-size: 13px;
-            color: var(--sub-text);
-            border: 1px dashed var(--border-color);
-        }
+.wrong{
+    color:red;
+    font-weight:bold;
+}
 
-        /* GLOBAL GEÇMİŞ LİSTESİ STİLLERİ */
-        #historyList {
-            list-style: none; padding: 0; margin-top: 10px; max-height: 250px; overflow-y: auto; text-align: left;
-        }
-        .history-item {
-            background: var(--input-bg); padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 5px solid #4ade80; font-size: 12px;
-        }
-        .global-badge {
-            background: #4ade80; color: black; font-size: 10px; padding: 2px 6px; border-radius: 4px; float: right; font-weight: bold;
-        }
+</style>
 
-        .indicator { position: absolute; bottom: 20px; left: 0; right: 0; color: var(--sub-text); font-size: 11px; letter-spacing: 2px; }
-    </style>
 </head>
 
 <body>
 
-    <button class="theme-toggle" onclick="toggleTheme()" title="Temayı Değiştir">🌓</button>
+<h1>🛡️ Kriptoloji Quiz - İlk 20 Soru</h1>
 
-    <button class="nav-btn prev-btn" onclick="goPrev()">❮</button>
-    <button class="nav-btn next-btn" onclick="goNext()">❯</button>
+<!-- SAYFA GEÇİŞ -->
 
-    <h1>🔐 Hash Lab - Necmettin Erbakan Üniversitesi</h1>
+<div class="menu">
 
-    <div class="container">
-        <div id="section0" class="box active">
-            <div class="help">?</div>
-            <div class="helpText">
-                <b>Hash Algoritmaları ve Çıktı Uzunlukları:</b><br><br>
-                Girdiğiniz metnin boyutu ne olursa olsun, sonuç her zaman sabit bir uzunlukta olur:<br><br>
-                • <b>MD5:</b> 128-bit uzunluğundadır. Sonuç her zaman <b>32 karakter</b> (onaltılık) sürer.<br>
-                • <b>SHA-1:</b> 160-bit uzunluğundadır. Sonuç her zaman <b>40 karakter</b> (onaltılık) sürer.<br>
-                • <b>SHA-256:</b> 256-bit uzunluğundadır. Sonuç her zaman <b>64 karakter</b> (onaltılık) sürer.<br><br>
-                <i>Not: Karakter sayısı arttıkça şifreleme daha karmaşık ve güvenli hale gelir.</i>
-            </div>
-            <h2>1. Hash Hesapla</h2>
-            <input id="text" placeholder="Metni buraya yaz..." oninput="syncData()">
-            <select id="algo">
-                <option value="MD5">MD5</option>
-                <option value="SHA1">SHA-1</option>
-                <option value="SHA256" selected>SHA256</option>
-            </select>
-            <br>
-            <button onclick="calculateHash()">Şifrele</button>
-            <div id="hashResult" style="margin-top: 15px;"></div>
-            <div class="indicator">MODÜL 01: HASH İŞLEMLERİ</div>
-        </div>
+<button class="page-btn active" onclick="goPage(1)">1</button>
+<button class="page-btn" onclick="goPage(2)">2</button>
 
-        <div id="section1" class="box">
-            <div class="help">?</div>
-            <div class="helpText">
-                <b>Çığ Etkisi:</b><br>
-                Bir algoritmanın kalitesini ölçer. Girdi üzerindeki 1 bitlik farkın, çıktıda %50'lik bir değişime yol açması beklenir. <br><br>
-                Burada metnin son harfini otomatik değiştirerek iki hash arasındaki bit farkını hesaplıyoruz.
-            </div>
-            <h2>2. Avalanche Effect</h2>
-            <input id="avText" placeholder="Önce birinci sekmede metin gir!" readonly>
-            <select id="avAlgo">
-                <option value="MD5">MD5</option>
-                <option value="SHA1">SHA-1</option>
-                <option value="SHA256" selected>SHA-256</option>
-            </select>
-            <br>
-            <button onclick="runAvalanche()">Analiz Et</button>
-            <div id="avResult" style="text-align: left; font-size: 13px; margin-top: 10px;"></div>
-            <div class="indicator">MODÜL 02: AVALANCHE EFFECT İŞLEMİ</div>
-        </div>
+</div>
 
-        <div id="section2" class="box">
-            <div class="help">?</div>
-            <div class="helpText">
-                <b>Çakışma (Collision):</b><br>
-                Matematiksel olarak farklı iki verinin aynı hash sonucunu vermesidir. <br>
-                <b>Doğum Günü Paradoksu:</b> Bir odada 23 kişi varsa, iki kişinin doğum gününün aynı olma ihtimali %50'dir. Hash dünyasında da her hane (hex) 4 bit olduğu için, hane sayısı arttıkça gereken deneme sayısı katlanarak artar.<br>
-                <b>Ortalama Deneme Sayısı Nasıl Hesaplanır?</b><br>
-                Hesaplama, kriptografideki <b>Doğum Günü Paradoksu</b> (Birthday Attack) mantığına dayanır:<br>
-                1. <b>Hane Başına İhtimal:</b> Hash karakterleri 16'lık (hex) sistemde olduğu için her hane 16 farklı değer alabilir. $n$ hane için toplam ihtimal $16^n$ kadardır.<br>
-                2. <b>Karekök Kuralı:</b> İki farklı verinin aynı sonucu (çakışma) vermesi için tüm ihtimalleri denemenize gerek yoktur. İstatistiksel olarak toplam ihtimalin <b>karekökü</b> ($\sqrt{16^n}$) kadar deneme yapıldığında bir çakışma bulma ihtimali %50'ye ulaşır.<br>
-                3. <b>Örnek:</b> 4 hane için toplam ihtimal $16^4 = 65.536$'dır. Ancak karekök kuralı sayesinde sadece <b>256</b> denemede çakışma bulunabilir. 12 hanede ise 281 Trilyon ihtimal varken, yaklaşık <b>16-20 Milyon</b> denemede sonuca ulaşılır.
-            </div>
-            <h2>3. Collision (Çakışma)</h2>
-            <p style="font-size: 14px; color: var(--sub-text);">Hash başlangıcında kaç hane eşleşmeli?</p>
-            <select id="len">
-                <option value="4">4 Karakter (Çok Hızlı)</option>
-                <option value="6">6 Karakter (Hızlı)</option>
-                <option value="8">8 Karakter (Ortalama)</option>
-                <option value="10">10 Karakter (Yavaş)</option>
-                <option value="12">12 Karakter (Çok Yavaş)</option>
-            </select>
-            <br>
-            <button onclick="runCollision()">Aramayı Başlat</button>
-            <div id="statsArea" class="stats-panel" style="display: none;">
-                <div id="expectedVal"></div>
-                <div id="liveSpeed"></div>
-            </div>
-            <div id="colResult" style="margin-top: 20px; font-family: monospace;"></div>
-            <div class="indicator">MODÜL 03: COLLİSİON (ÇAKIŞMA) ANALİZ İŞLEMLERİ </div>
-        </div>
+<div id="quiz"></div>
 
-        <div id="section3" class="box">
-            <h2>🌍 Global Deney Kayıtları</h2>
-            <p style="font-size: 13px; color: var(--sub-text);">Diğer kullanıcıların bulduğu son çakışmalar:</p>
-            <ul id="historyList">
-                <p style="color:var(--sub-text)">Buluta bağlanılıyor...</p>
-            </ul>
-            <div class="indicator">MODÜL 04: BULUT SENKRONİZASYONU</div>
-        </div>
-    </div>
+<button class="control-btn" onclick="showScore()">
+📊 Skoru Göster
+</button>
 
-    <script>
-        // --- FIREBASE AYARLARI ---
-        const firebaseConfig = {
-          apiKey: "AIzaSyDLR3A2jNYvKInLlM9scIAItYpkccDIsFQ",
-          authDomain: "mert-c1351.firebaseapp.com",
-          databaseURL: "https://mert-c1351-default-rtdb.firebaseio.com",
-          projectId: "mert-c1351",
-          storageBucket: "mert-c1351.firebasestorage.app",
-          messagingSenderId: "749774245603",
-          appId: "1:749774245603:web:afb86b1e1fcb4cd8abffd6",
-          measurementId: "G-C08FC4CQVC"
-      };
+<h2 id="score"></h2>
 
-      let db = null;
-      try {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-    } catch(e) { console.warn("Firebase Config eksik."); }
+<script>
 
-    let currentIdx = 0;
-        const totalIdx = 4; // Sayfa sayısını 4 yaptık
-        let collisionActive = false;
+/* SAYFA GEÇİŞ */
 
-        function toggleTheme() {
-            const body = document.body;
-            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-        }
+function goPage(page){
 
-        function goNext() { change((currentIdx + 1) % totalIdx); }
-        function goPrev() { change((currentIdx - 1 + totalIdx) % totalIdx); }
+    if(page === 1){
 
-        window.addEventListener('keydown', (e) => {
-            if (e.key === "ArrowRight") goNext();
-            if (e.key === "ArrowLeft") goPrev();
-        });
+        window.location.href = "index.html";
 
-        function change(i) {
-            document.querySelectorAll('.box').forEach(b => b.classList.remove('active'));
-            document.getElementById('section' + i).classList.add('active');
-            currentIdx = i;
-            if(i === 3) fetchGlobalHistory();
-        }
+    }
 
-        function syncData() {
-            document.getElementById("avText").value = document.getElementById("text").value;
-        }
+    if(page === 2){
 
-        function getHash(t, a) {
-            if(a==="MD5") return CryptoJS.MD5(t).toString();
-            if(a==="SHA1") return CryptoJS.SHA1(t).toString();
-            return CryptoJS.SHA256(t).toString();
-        }
+        window.location.href = "index2.html";
 
-        function calculateHash() {
-            const t = document.getElementById("text").value;
-            const a = document.getElementById("algo").value;
-            const res = getHash(t, a);
-            document.getElementById("hashResult").innerHTML = `<pre>${res}</pre>`;
-            syncData();
-        }
+    }
 
-        function runAvalanche() {
-            const t = document.getElementById("avText").value;
-            const a = document.getElementById("avAlgo").value;
-            if(!t) return alert("Önce metin gir!");
+}
 
-            const changed = t.slice(0,-1) + String.fromCharCode(t.charCodeAt(t.length-1)+1);
-            const h1 = getHash(t, a);
-            const h2 = getHash(changed, a);
+/* SORULAR */
 
-            const b1 = h1.split('').map(h=>parseInt(h,16).toString(2).padStart(4,'0')).join('');
-            const b2 = h2.split('').map(h=>parseInt(h,16).toString(2).padStart(4,'0')).join('');
+const questions = [
 
-            let diff = 0;
-            for(let i=0; i<b1.length; i++) if(b1[i]!==b2[i]) diff++;
-                const pct = ((diff/b1.length)*100).toFixed(2);
+{
+q:"SHA-256'nın teorik çakışma direnci (Birthday Paradox'a göre) kaçtır?",
+options:[
+"2²⁵⁶",
+"2¹²⁸",
+"2⁶⁴",
+"2⁵¹²"
+],
+a:1
+},
 
-            document.getElementById("avResult").innerHTML = `
-            <p><b>Giriş 1:</b> ${t} <br><b>Giriş 2:</b> ${changed}</p>
-            <p>Hash 1: <small>${h1.substring(0,30)}...</small></p>
-            <p>Hash 2: <small>${h2.substring(0,30)}...</small></p>
-            <hr style="border:1px solid var(--border-color)">
-            <p>Farklı Bit: <b>${diff} / ${b1.length}</b> - Oran: <b style="color:var(--accent-color)">%${pct}</b></p>
-            `;
-        }
+{
+q:"Aşağıdakilerden hangisi Merkle-Damgård mimarisini kullanmaz?",
+options:[
+"MD5",
+"SHA-1",
+"SHA-256",
+"SHA-3"
+],
+a:3
+},
 
-        // GLOBAL KAYIT FONKSİYONU
-        function saveToGlobal(len, count, time) {
-            if(!db) return;
-            db.ref('history').push({
-                len: len,
-                count: count.toLocaleString(),
-                time: time,
-                timestamp: Date.now()
-            });
-        }
+{
+q:"2017 yılında SHA-1 için gerçekleştirilen ilk pratik collision saldırısının adı nedir?",
+options:[
+"Heartbleed",
+"EternalBlue",
+"SHAttered",
+"Spectre"
+],
+a:2
+},
 
-        // GLOBAL VERİ ÇEKME FONKSİYONU
-        function fetchGlobalHistory() {
-            if(!db) { document.getElementById('historyList').innerHTML = "Firebase ayarları yapılmamış."; return; }
-            db.ref('history').orderByChild('timestamp').limitToLast(20).on('value', (snapshot) => {
-                const list = document.getElementById('historyList');
-                list.innerHTML = "";
-                const data = snapshot.val();
-                if(!data) { list.innerHTML = "Henüz global kayıt yok."; return; }
-                Object.values(data).reverse().forEach(item => {
-                    list.innerHTML += `<li class="history-item"><span class="global-badge">SİSTEM</span><b>${item.len} Hane Eşleşmesi</b><br>${item.count} deneme | <b>${item.time} sn</b></li>`;
-                });
-            });
-        }
+{
+q:"Girdide 1 bit değiştiğinde çıktının büyük ölçüde değişmesi hangi kavramdır?",
+options:[
+"Determinizm",
+"Avalanche Effect",
+"Padding",
+"Collision"
+],
+a:1
+},
 
-        function runCollision() {
-            if(collisionActive) return; 
-            
-            const length = parseInt(document.getElementById("len").value);
-            const resBox = document.getElementById("colResult");
-            const statsArea = document.getElementById("statsArea");
-            const expectedBox = document.getElementById("expectedVal");
-            const speedBox = document.getElementById("liveSpeed");
-            
-            const seen = new Map();
-            let count = 0;
-            const start = performance.now();
-            collisionActive = true;
-            statsArea.style.display = "block";
+{
+q:"Kuantum bilgisayarlarda hash güvenliğini karekök oranında azaltan 
+algoritma hangisidir?",
+options:[
+"RSA",
+"AES",
+"Grover",
+"Diffie-Hellman"
+],
+a:2
+},
 
-            const bits = length * 4;
-            const expectedAttempts = Math.round(1.25 * Math.pow(2, bits / 2));
-            expectedBox.innerHTML = `🎯 Beklenen Ortalama Deneme: <b>${expectedAttempts.toLocaleString()}</b>`;
+{
+q:"Perfect secrecy hangi durumu ifade eder?",
+options:[
+"Algoritmanın gizli tutulması",
+"Ciphertext gücüne bile mesaj bilgisinin değişmemesi",
+"Anahtarın mutlaka 128 bit olması",
+"Her mesaj için ciphertext üretilmesi"
+],
+a:1
+},
 
-            function find() {
-                if(!collisionActive) return;
+{
+q:"OTP’nin perfect secrecy sağlaması için aşağıdakilerden hangisi şart değildir?",
+options:[
+"Anahtar mesaj kadar uzun olmalıdır",
+"Anahtar gerçekten rastgele olmalıdır",
+"Aynı anahtar birden fazla mesajda kullanılmalıdır",
+"Anahtar yalnızca bir kez kullanılmalıdır"
+],
+a:2
+},
 
-                for(let i=0; i<2500; i++) {
-                    const rand = Math.random().toString(36).substring(2,12);
-                    const hash = CryptoJS.SHA256(rand).toString().substring(0, length);
+{
+q:"Shift Cipher uzun mesajlarda neden perfect secrecy sağlayamaz?",
+options:[
+"XOR kullanmadığı için",
+"Anahtar uzayı çok küçük olduğu için",
+"Her zaman çevrildiği için",
+"Çözme işlemi olmadığı için"
+],
+a:1
+},
 
-                    if(seen.has(hash)) {
-                        const old = seen.get(hash);
-                        if(old !== rand) {
-                            const time = ((performance.now() - start)/1000).toFixed(2);
-                            collisionActive = false;
-                            resBox.innerHTML = `
-                            <b style="color:#4ade80">🎉 ÇAKIŞMA BULUNDU!</b><br>
-                            <div style="font-size:12px; margin:10px 0;">
-                            "${old}"<br>=<br>"${rand}"
-                            </div>
-                            <pre style="color:var(--accent-color)">Ortak Başlangıç: ${hash}</pre>
-                            <b>Toplam Deneme:</b> ${count.toLocaleString()}<br>
-                            <b>Harcanan Süre:</b> ${time} sn
-                            `;
-                            saveToGlobal(length, count, time); // Firebase'e gönder
-                            return;
-                        }
-                    }
-                    seen.set(hash, rand);
-                    count++;
-                }
+{
+q:"H(M|C)=H(M) ifadesi neyi gösterir?",
+options:[
+"Ciphertext mesaj hakkında bilgi sızdırır",
+"Mesaj mutlaka tek harflidir",
+"Sistem çözülemez ama bilgi sızar",
+"Ciphertext mesaj hakkında bilgi sızdırmaz"
+],
+a:3
+},
 
-                const elapsed = (performance.now() - start) / 1000;
-                const hps = Math.round(count / elapsed);
-                const estTotalTime = expectedAttempts / hps;
-                const remaining = Math.max(0, estTotalTime - elapsed).toFixed(1);
+{
+q:"OTP ile Shift Cipher arasındaki temel fark nedir?",
+options:[
+"OTP frekans analizi bırakmaz",
+"OTP yalnızca İngilizce çalışır",
+"Shift Cipher anahtarsızdır",
+"Entropi sadece Shift'te hesaplanır"
+],
+a:0
+},
 
-                resBox.innerText = `🔍 Deneniyor: ${count.toLocaleString()}`;
-                speedBox.innerHTML = `⚡ Hız: ${hps.toLocaleString()} hash/sn | ⏳ Tahmini Kalan: ~${remaining} sn`;
-                
-                requestAnimationFrame(find);
-            }
-            find();
-        }
-    </script>
+{
+q:"Kuantum bilgisayarların RSA’yı kırmasını sağlayan algoritma hangisidir?",
+options:[
+"Kyber",
+"ML-KEM",
+"SHOR",
+"AES"
+],
+a:2
+},
+
+{
+q:"NIST tarafından standart kabul edilen anahtar kapsülleme mekanizması nedir?",
+options:[
+"Kyber ML-KEM",
+"AES-256",
+"RSA-4096",
+"SHOR"
+],
+a:0
+},
+
+{
+q:"Kyber algoritmasının en büyük fiziksel dezavantajı nedir?",
+options:[
+"CPU sıcaklığını artırması",
+"Açık anahtar ve şifreli metin boyutlarının büyük olması",
+"Sadece kısa metin şifreleyebilmesi",
+"Anahtar üretiminin çok uzun sürmesi"
+],
+a:1
+},
+
+{
+q:"RSA ve Kyber’ın birlikte kullanıldığı geçiş dönemi mimarisine ne denir?",
+options:[
+"Asimetrik Şifreleme",
+"Kuantum Dolanıklığı",
+"Blok Şifreleme Zinciri",
+"Hibrit Şifreleme"
+],
+a:3
+},
+
+{
+q:"Kyber’ın güvenliği hangi matematiksel probleme dayanır?",
+options:[
+"Eliptik Eğri",
+"Kafes Tabanlı Problemler",
+"Ayrık Logaritma",
+"Hash Çarpışması"
+],
+a:1
+},
+
+{
+q:"TRNG için hangisi doğrudur?",
+options:[
+"Matematiksel formüllerle çalışır",
+"Aynı seed ile aynı sonucu üretir",
+"Fiziksel olaylardan rastgelelik elde eder",
+"Deterministiktir"
+],
+a:2
+},
+
+{
+q:"PRNG'nin dezavantajı nedir?",
+options:[
+"Çok yavaş çalışması",
+"Tahmin edilebilir olması",
+"Donanım gerektirmesi",
+"Rastgelelik üretmemesi"
+],
+a:1
+},
+
+{
+q:"0 ve 1'lerin dengeli dağılıp dağılmadığını hangi test kontrol eder?",
+options:[
+"Koşu Testi",
+"Otokorelasyon",
+"Blok Frekans",
+"Monobit Testi"
+],
+a:3
+},
+
+{
+q:"Uzun 0 veya 1 bloklarının bulunması hangi problemi gösterir?",
+options:[
+"Yüksek entropi",
+"İdeal rastgelelik",
+"Koşu testinde başarısızlık",
+"Güvenli çıktı"
+],
+a:2
+},
+
+{
+q:"Rastgele sayı üreticisinin zayıf olduğunu en iyi hangi durum gösterir?",
+options:[
+"Hızlı çalışması",
+"Aynı seed ile aynı çıktıyı vermesi",
+"İstatistiksel testlerden geçmesi",
+"Entropisinin yüksek olması"
+],
+a:1
+}
+
+];
+
+/* QUIZ */
+
+const quiz = document.getElementById("quiz");
+
+questions.forEach((item,index)=>{
+
+let html = `
+<div class="question">
+
+<h3>${index+1}) ${item.q}</h3>
+`;
+
+item.options.forEach((opt,i)=>{
+
+html += `
+<label>
+<input type="radio" name="q${index}" value="${i}">
+${opt}
+</label><br>
+`;
+
+});
+
+html += `
+<button class="control-btn" onclick="checkAnswer(${index})">
+Kontrol Et
+</button>
+
+<p id="result${index}"></p>
+
+</div>
+`;
+
+quiz.innerHTML += html;
+
+});
+
+/* CEVAP KONTROL */
+
+function checkAnswer(index){
+
+const options = document.getElementsByName("q"+index);
+
+let selected = -1;
+
+for(let i=0;i<options.length;i++){
+
+if(options[i].checked){
+
+selected = i;
+
+}
+
+}
+
+const result = document.getElementById("result"+index);
+
+if(selected === -1){
+
+result.innerHTML = "⚠️ Bir seçenek seç!";
+return;
+
+}
+
+if(selected === questions[index].a){
+
+result.innerHTML = "✅ Doğru!";
+result.className = "correct";
+
+}else{
+
+result.innerHTML = "❌ Yanlış!";
+result.className = "wrong";
+
+}
+
+}
+
+/* SKOR */
+
+function showScore(){
+
+let score = 0;
+
+questions.forEach((q,index)=>{
+
+const options = document.getElementsByName("q"+index);
+
+for(let i=0;i<options.length;i++){
+
+if(options[i].checked && i===q.a){
+
+score++;
+
+}
+
+}
+
+});
+
+document.getElementById("score").innerHTML =
+"Skorunuz: " + score + " / " + questions.length;
+
+}
+
+</script>
+
 </body>
 </html>
+```
