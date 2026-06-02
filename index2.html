@@ -1,12 +1,12 @@
-```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kriptoloji Quiz</title>
+<title>Kriptoloji Quiz - Sayfa 2</title>
 
 <style>
+
 body{
     font-family: Arial;
     background:#f4f4f4;
@@ -17,6 +17,30 @@ h1{
     text-align:center;
 }
 
+.menu{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.page-btn{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:6px;
+    background:#2c3e50;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.page-btn:hover{
+    background:#34495e;
+}
+
+.active{
+    background:#e74c3c !important;
+}
+
 .question{
     background:white;
     padding:15px;
@@ -25,7 +49,7 @@ h1{
     box-shadow:0 0 5px rgba(0,0,0,0.1);
 }
 
-button{
+.control-btn{
     margin-top:10px;
     padding:8px 15px;
     border:none;
@@ -35,7 +59,7 @@ button{
     cursor:pointer;
 }
 
-button:hover{
+.control-btn:hover{
     background:#2980b9;
 }
 
@@ -48,203 +72,234 @@ button:hover{
     color:red;
     font-weight:bold;
 }
+
 </style>
+
 </head>
 
 <body>
 
-<h1>🛡️ Kriptoloji Quiz - İlk 20 Soru</h1>
+<h1>🛡️ Kriptoloji Quiz - Sayfa 2</h1>
+
+<div class="menu">
+
+<button class="page-btn" onclick="goPage(1)">1</button>
+<button class="page-btn active" onclick="goPage(2)">2</button>
+<button class="page-btn" onclick="goPage(3)">3</button>
+
+</div>
 
 <div id="quiz"></div>
 
-<button onclick="showScore()">📊 Skoru Göster</button>
+<button class="control-btn" onclick="showScore()">
+📊 Skoru Göster
+</button>
+
 <h2 id="score"></h2>
 
 <script>
 
+function goPage(page){
+
+    if(page === 1){
+
+        window.location.href = "index.html";
+
+    }
+
+    if(page === 2){
+
+        window.location.href = "index2.html";
+
+    }
+
+    if(page === 3){
+
+        window.location.href = "index3.html";
+
+    }
+
+}
+
 const questions = [
 
 {
-q:"SHA-256'nın teorik çakışma direnci kaçtır?",
-options:["2^256","2^128","2^64","2^512"],
-a:1
-},
-
-{
-q:"Merkle-Damgård mimarisini kullanmayan hangisidir?",
-options:["MD5","SHA-1","SHA-256","SHA-3"],
-a:3
-},
-
-{
-q:"SHA-1 için ilk pratik collision saldırısının adı nedir?",
-options:["Heartbleed","EternalBlue","SHAttered","Spectre"],
-a:2
-},
-
-{
-q:"1 bit değiştiğinde hash çıktısının büyük ölçüde değişmesine ne denir?",
-options:["Determinizm","Avalanche Effect","Padding","Collision"],
-a:1
-},
-
-{
-q:"Kuantum bilgisayarlarda hash güvenliğini azaltan algoritma hangisidir?",
-options:["RSA","AES","Grover","Diffie-Hellman"],
-a:2
-},
-
-{
-q:"Perfect secrecy hangi durumu ifade eder?",
+q:"Aşağıdakilerden hangisi gerçek rastgele sayı üreteci (TRNG) için doğrudur?",
 options:[
-"Algoritmanın gizli tutulması",
-"Şifreli metnin değişmemesi",
-"Anahtarın mutlaka 128 bit olması",
-"Mesajın şifretextten öğrenilememesi"
-],
-a:3
-},
-
-{
-q:"OTP'nin perfect secrecy sağlaması için hangisi gerekir?",
-options:[
-"Mesajın uzun olması",
-"Anahtarın herkese açık olması",
-"Anahtarın bir kez kullanılması",
-"Anahtarın kısa olması"
+"A) Matematiksel formüllerle çalışır.",
+"B) Aynı seed ile aynı sonucu üretir.",
+"C) Fiziksel olaylardan rastgelelik elde eder.",
+"D) Her zaman hızlı çalışır.",
+"E) Deterministik yapıdadır."
 ],
 a:2
 },
 
 {
-q:"Shift Cipher neden perfect secrecy sağlayamaz?",
+q:"Aşağıdakilerden hangisi PRNG’nin dezavantajlarından biridir?",
 options:[
-"XOR kullanılmadığı için",
-"Anahtar uzayı çok küçük olduğu için",
-"Her zaman çevrildiği için",
-"Çözme işlemi olmadığı için"
+"A) Çok yavaş çalışması",
+"B) Tahmin edilebilir olması",
+"C) Donanım gerektirmesi",
+"D) Rastgelelik üretmemesi",
+"E) Hiç tekrar etmemesi"
 ],
 a:1
 },
 
 {
-q:"H(M|C)=H(M) ifadesi neyi gösterir?",
+q:"Aşağıdaki testlerden hangisi, bit dizisinde 0 ve 1’lerin dengeli dağılıp dağılmadığını kontrol eder?",
 options:[
-"Ciphertext mesaj hakkında bilgi sızdırır",
-"Mesaj mutlaka tek harflidir",
-"Sistem çözülemez ama bilgi sızar",
-"Ciphertext mesaj hakkında bilgi sızdırmaz"
+"A) Koşu (Runs) Testi",
+"B) Otokorelasyon Testi",
+"C) Blok Frekans Testi",
+"D) Yaklaşık Entropi Testi",
+"E) Frekans (Monobit) Testi"
 ],
-a:3
+a:4
 },
 
 {
-q:"OTP ile Shift Cipher arasındaki temel fark nedir?",
+q:"Bir bit dizisinde çok uzun 0 veya 1 bloklarının bulunması hangi durumu gösterir?",
 options:[
-"OTP frekans analizi bırakmaz",
-"OTP yalnızca İngilizce çalışır",
-"Shift Cipher anahtarsızdır",
-"Entropi sadece Shift'te hesaplanır"
+"A) Yüksek entropi",
+"B) İdeal rastgelelik",
+"C) Koşu testinde başarısızlık",
+"D) Monobit testinin başarılı olması",
+"E) Güvenli CSPRNG çıktısı"
+],
+a:2
+},
+
+{
+q:"Aşağıdaki durumlardan hangisi bir rastgele sayı üreticinin zayıf olduğunu en iyi gösterir?",
+options:[
+"A) Üretilen sayıların hızlı olması",
+"B) Aynı başlangıç değeri ile aynı dizinin elde edilmesi",
+"C) Sayıların belirli aralıkta üretilmesi",
+"D) İstatistiksel testlerden geçmesi",
+"E) Entropisinin yüksek olması"
+],
+a:1
+},
+
+{
+q:"RSA algoritmasının güvenliğinin dayandığı temel matematiksel zorluk nedir?",
+options:[
+"A. İki büyük asal sayıyı çarpmanın zorluğu.",
+"B. Büyük sayıların asal çarpanlara ayrılmasının zorluğu.",
+"C. Açık anahtarla şifrelenmiş veriyi çözmenin zorluğu.",
+"D. Dijital imzaların doğrulanmasının zorluğu."
+],
+a:1
+},
+
+{
+q:"Dijital imza sisteminde ‘Açık Anahtar’ (Public Key) neden tehlike arz etmeden herkesle rahatlıkla paylaşılabilir?",
+options:[
+"A) Çünkü açık anahtar sadece veri şifrelemek için kullanılır.",
+"B) Açık anahtar kullanılarak gizli anahtarın hesaplanması matematiksel olarak pratik değildir.",
+"C) Açık anahtar, gizli anahtarla aynı matematiksel yapıya sahiptir.",
+"D) Açık anahtarın paylaşılması yasal bir zorunluluktur."
+],
+a:1
+},
+
+{
+q:"İşlevsel bir dijital imza oluşturma ve ardından doğrulama sürecinin teknik olarak doğru adım sıralaması nedir?",
+options:[
+"A. Mesajın özeti alınır -> Gizli anahtarla özet şifrelenir -> İletilir -> Açık anahtarla özet çözülür ve karşılaştırılır.",
+"B. Mesaj şifrelenir -> Gizli anahtarla özet şifrelenir -> İletilir -> Açık anahtarla çözülür.",
+"C. Mesajın özeti alınır -> Açık anahtarla özet şifrelenir -> İletilir -> Gizli anahtarla çözülür ve karşılaştırılır.",
+"D. Gizli anahtarla mesaj şifrelenir -> İletilir -> Açık anahtarla mesaj çözülür."
 ],
 a:0
 },
 
 {
-q:"Kuantum bilgisayarların RSA’yı kırmasını sağlayan algoritma hangisidir?",
-options:["Kyber","ML-KEM","SHOR","AES"],
-a:2
-},
-
-{
-q:"NIST tarafından standart kabul edilen anahtar kapsülleme mekanizması nedir?",
-options:["Kyber ML-KEM","AES-256","RSA-4096","SHOR"],
+q:"Bir yazılım güncellemesi indirildiğinde, orijinal özet ile indirilen dosyanın mevcut özeti eşleşmezse sistemin varması gereken sonuç nedir?",
+options:[
+"A) Dosya bütünlüğünün bozulduğu ve işlemin iptal edilmesi gerektiği.",
+"B) Güncellemenin başarılı bir şekilde tamamlandığı ve kuruluma hazır olduğu.",
+"C) Dosyanın şifrelenmiş olduğu ve açılması için gizli anahtarın beklendiği.",
+"D) Ağ bağlantısında geçici bir sorun olduğu ve indirme işleminin tekrar denenmesi gerektiği."
+],
 a:0
 },
 
 {
-q:"Kyber algoritmasının en büyük fiziksel dezavantajı nedir?",
+q:"ECB modunun deterministik yapısı nedeniyle görsel verilerde ortaya çıkan ve orijinal silüetin şifreli metinde gizlenememesine yol açan güvenlik zafiyeti aşağıdakilerden hangisidir?",
 options:[
-"CPU sıcaklığını artırması",
-"Açık anahtar ve şifreli metin boyutlarının büyük olması",
-"Sadece kısa metin şifreleyebilmesi",
-"Anahtar üretiminin çok uzun sürmesi"
+"A) Örüntü Sızıntısı (Pattern Leakage)",
+"B) Dolgu Hatası (Padding Oracle)",
+"C) Anahtar Tekrarı (Key Reuse)",
+"D) Çığ Etkisi (Avalanche Effect)"
 ],
-a:1
+a:0
 },
 
 {
-q:"RSA ve Kyber’ın birlikte kullanıldığı geçiş dönemi mimarisine ne denir?",
+q:"CBC modunda iletim sırasında şifreli metin bloğunda oluşan tek bir bitlik hata, deşifreleme aşamasında veriyi nasıl etkiler?",
 options:[
-"Asimetrik Şifreleme",
-"Kuantum Dolanıklığı",
-"Blok Şifreleme Zinciri",
-"Hibrit Şifreleme"
-],
-a:3
-},
-
-{
-q:"Kyber’ın güvenliği hangi matematiksel probleme dayanır?",
-options:[
-"Eliptik Eğri",
-"Kafes Tabanlı Problemler",
-"Ayrık Logaritma",
-"Hash Çarpışması"
-],
-a:1
-},
-
-{
-q:"TRNG için hangisi doğrudur?",
-options:[
-"Matematiksel formüllerle çalışır",
-"Aynı seed ile aynı sonucu üretir",
-"Fiziksel olaylardan rastgelelik elde eder",
-"Deterministiktir"
+"A) Sadece hatanın olduğu spesifik bit bozar, diğer bloklara yayılmaz.",
+"B) Tüm mesaj tamamen okunamaz ve anlamsız hale gelir.",
+"C) Kendi bloğunu tamamen bozar, bir sonraki bloğun ise sadece ilgili bitini etkiler.",
+"D) Hata izolasyonu sayesinde mesaj hiçbir bozulma yaşamaz."
 ],
 a:2
 },
 
 {
-q:"PRNG'nin dezavantajı nedir?",
+q:"CBC ve CTR modlarında, açık metin veya şifreli metnin diğer bloklar veya anahtar akışıyla (keystream) birleştirilmesinde kullanılan temel mantıksal işlem aşağıdakilerden hangisidir?",
 options:[
-"Çok yavaş çalışması",
-"Tahmin edilebilir olması",
-"Donanım gerektirmesi",
-"Rastgelelik üretmemesi"
-],
-a:1
-},
-
-{
-q:"0 ve 1'lerin dengeli dağılıp dağılmadığını hangi test kontrol eder?",
-options:[
-"Koşu Testi",
-"Otokorelasyon",
-"Blok Frekans",
-"Monobit Testi"
-],
-a:3
-},
-
-{
-q:"Uzun 0 veya 1 bloklarının bulunması hangi problemi gösterir?",
-options:[
-"Yüksek entropi",
-"İdeal rastgelelik",
-"Koşu testinde başarısızlık",
-"Güvenli çıktı"
+"A) AND",
+"B) OR",
+"C) XOR",
+"D) MOD"
 ],
 a:2
 },
 
 {
-q:"Rastgele sayı üreticisinin zayıf olduğunu en iyi hangi durum gösterir?",
+q:"CTR (Counter) modunda, şifreleme sürecinde mesajın içeriği (açık metin) yerine öncelikli olarak ne şifrelenir?",
 options:[
-"Hızlı çalışması",
-"Aynı seed ile aynı çıktıyı vermesi",
-"İstatistiksel testlerden geçmesi",
-"Entropisinin yüksek olması"
+"A) Başlangıç Vektörü (IV)",
+"B) Verinin uzunluk bilgisi",
+"C) Her blok için farklı değer alan bir “sayaç” (counter)",
+"D) Hedef bilgisayarın IP adresi"
+],
+a:2
+},
+
+{
+q:"Hız (performans) analizlerine göre, CTR modunun hem şifreleme hem de deşifreleme aşamalarında en düşük işlem süresine (en yüksek hıza) sahip olmasının yapısal nedeni nedir?",
+options:[
+"A) Çok düşük boyutlu anahtarlar kullanması",
+"B) Görselleri kalitesini düşürerek işlem yapması",
+"C) Bloklar arası zincirleme bağımlılık olmadan paralel işlemeye izin vermesi",
+"D) Tarayıcı belleğini (RAM) kullanmadan doğrudan işlemde çalışması"
+],
+a:2
+},
+
+{
+q:"Eksik blokları tamamlama mekanizmasına dayanan ve milyonlarca deneme yanılma sonucunda AES anahtarı bilinmeden dahi CBC modundaki şifreli metnin çözülmesine olanak tanıyan ünlü saldırı türü hangisidir?",
+options:[
+"A) Kusursuz Bit-Flipping Saldırısı",
+"B) Örüntü Sızıntısı Analizi",
+"C) Padding Oracle Saldırısı",
+"D) Steganografi Manipülasyonu"
+],
+a:2
+},
+
+{
+q:"ECB modunda örüntü sızıntısının (pattern leakage) engellenemesinin yapısal temel aşağıdakilerden hangisidir?",
+options:[
+"A) Dolgu (padding) kullanmaması",
+"B) Deterministik yapıda çalışması",
+"C) Akış şifresi (stream) üretmemesi",
+"D) Şifrelemede XOR işlemini atlaması"
 ],
 a:1
 }
@@ -255,78 +310,102 @@ const quiz = document.getElementById("quiz");
 
 questions.forEach((item,index)=>{
 
-    let html = `
-    <div class="question">
-        <h3>${index+1}) ${item.q}</h3>
-    `;
+let html = `
+<div class="question">
+<h3>${index+1}) ${item.q}</h3>
+`;
 
-    item.options.forEach((opt,i)=>{
-        html += `
-        <label>
-        <input type="radio" name="q${index}" value="${i}">
-        ${opt}
-        </label><br>
-        `;
-    });
+item.options.forEach((opt,i)=>{
 
-    html += `
-    <button onclick="checkAnswer(${index})">Kontrol Et</button>
-    <p id="result${index}"></p>
-    </div>
-    `;
+html += `
+<label>
+<input type="radio" name="q${index}" value="${i}">
+${opt}
+</label><br><br>
+`;
 
-    quiz.innerHTML += html;
+});
+
+html += `
+<button class="control-btn" onclick="checkAnswer(${index})">
+Kontrol Et
+</button>
+
+<p id="result${index}"></p>
+
+</div>
+`;
+
+quiz.innerHTML += html;
+
 });
 
 function checkAnswer(index){
 
-    const options = document.getElementsByName("q"+index);
-    let selected = -1;
+const options = document.getElementsByName("q"+index);
 
-    for(let i=0;i<options.length;i++){
-        if(options[i].checked){
-            selected = i;
-        }
-    }
+let selected = -1;
 
-    const result = document.getElementById("result"+index);
+for(let i=0;i<options.length;i++){
 
-    if(selected === -1){
-        result.innerHTML = "⚠️ Bir seçenek seç!";
-        return;
-    }
+if(options[i].checked){
 
-    if(selected === questions[index].a){
-        result.innerHTML = "✅ Doğru!";
-        result.className = "correct";
-    }else{
-        result.innerHTML = "❌ Yanlış!";
-        result.className = "wrong";
-    }
+selected = i;
+
+}
+
+}
+
+const result = document.getElementById("result"+index);
+
+if(selected === -1){
+
+result.innerHTML = "⚠️ Bir seçenek seç!";
+return;
+
+}
+
+if(selected === questions[index].a){
+
+result.innerHTML = "✅ Doğru!";
+result.className = "correct";
+
+}else{
+
+result.innerHTML = "❌ Yanlış!";
+result.className = "wrong";
+
+}
+
 }
 
 function showScore(){
 
-    let score = 0;
+let score = 0;
 
-    questions.forEach((q,index)=>{
+questions.forEach((q,index)=>{
 
-        const options = document.getElementsByName("q"+index);
+const options = document.getElementsByName("q"+index);
 
-        for(let i=0;i<options.length;i++){
+for(let i=0;i<options.length;i++){
 
-            if(options[i].checked && i===q.a){
-                score++;
-            }
-        }
-    });
+if(options[i].checked && i===q.a){
 
-    document.getElementById("score").innerHTML =
-    "Skorunuz: " + score + " / 20";
+score++;
+
+}
+
+}
+
+});
+
+document.getElementById("score").innerHTML =
+"Skorunuz: " + score + " / " + questions.length;
+
 }
 
 </script>
 
 </body>
 </html>
-```
+
