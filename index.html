@@ -141,232 +141,246 @@ function goPage(page){
 const questions = [
 
 {
-q:"SHA-256'nın teorik çakışma direnci (Birthday Paradox'a göre) kaçtır?",
+q:"Morfolojik işlemler en yaygın olarak hangi tür görüntüler üzerinde uygulanır?",
 options:[
-"A) 2²⁵⁶",
-"B) 2¹²⁸",
-"C) 2⁶⁴",
-"D) 2⁵¹²"
-],
-a:1
-},
-
-{
-q:"Aşağıdakilerden hangisi Merkle-Damgård mimarisini kullanmaz?",
-options:[
-"A) MD5",
-"B) SHA-1",
-"C) SHA-256",
-"D) SHA-3"
-],
-a:3
-},
-
-{
-q:"2017 yılında SHA-1 için gerçekleştirilen ilk pratik collision saldırısının adı nedir?",
-options:[
-"A) Heartbleed",
-"B) EternalBlue",
-"C) SHAttered",
-"D) Spectre"
+"A) RGB görüntüler",
+"B) Termal görüntüler",
+"C) İkili (binary) görüntüler",
+"D) Çok spektrumlu görüntüler",
+"E) Holografik görüntüler"
 ],
 a:2
 },
 
 {
-q:"Girdide 1 bit değiştiğinde çıktının büyük ölçüde değişmesi hangi kavramdır?",
+q:"Morfolojik genişleme (dilation) işleminin temel amacı aşağıdakilerden hangisidir?",
 options:[
-"A) Determinizm",
-"B) Avalanche Effect",
-"C) Padding",
-"D) Collision"
+"A) Nesneleri küçültmek",
+"B) Nesne sınırlarını genişletmek",
+"C) Gürültü eklemek",
+"D) Görüntüyü döndürmek",
+"E) Histogramı eşitlemek"
 ],
 a:1
 },
 
 {
-q:"Kuantum bilgisayarlarda hash güvenliğini karekök oranında azaltan algoritma hangisidir?",
+q:"Morfolojik aşınma (erosion) işlemi için aşağıdakilerden hangisi doğrudur?",
 options:[
-"A) RSA",
-"B) AES",
-"C) Grover",
-"D) Diffie-Hellman"
-],
-a:2
-},
-
-{
-q:"Perfect secrecy hangi durumu ifade eder?",
-options:[
-"A) Algoritmanın gizli tutulması",
-"B) Ciphertext görülse bile mesaj olasılığının değişmemesini",
-"C) Anahtarın mutlaka 128 bit olmasını",
-"D) Her mesajın aynı ciphertext üretmesini"
+"A) Nesnelerin boyutunu artırır.",
+"B) Arka planı büyütür.",
+"C) Renk uzayı dönüşümü sağlar.",
+"D) Gürültü üretir.",
+"E) Frekans analizi yapar."
 ],
 a:1
 },
 
 {
-q:"OTP’nin perfect secrecy sağlaması için aşağıdakilerden hangisi şart değildir?",
+q:"Açma (opening) işlemi hangi iki işlemin sırasıyla uygulanmasıyla elde edilir?",
 options:[
-"A) Anahtar mesaj kadar uzun olmalıdır",
-"B) Anahtar gerçekten rastgele olmalıdır",
-"C) Aynı anahtar birden fazla mesajda kullanılmalıdır",
-"D) Anahtar yalnızca bir kez kullanılmalıdır"
-],
-a:2
-},
-
-{
-q:"Shift Cipher uzun mesajlarda neden perfect secrecy sağlayamaz?",
-options:[
-"A) XOR kullanmadığı için",
-"B) Anahtar uzayı 26 olduğu için",
-"C) Harfler sayıya çevrildiği için",
-"D) Çözme işlemi olmadığı için"
+"A) Genişleme → Aşınma",
+"B) Aşınma → Genişleme",
+"C) Aşınma → Açma",
+"D) Kapama → Genişleme",
+"E) Genişleme → Kapama"
 ],
 a:1
 },
 
 {
-q:"H(M|C)=H(M) ve I(M;C)=0 ifadeleri neyi gösterir?",
+q:"Kapama (closing) işlemi aşağıdakilerden hangisidir?",
 options:[
-"A) Ciphertext mesaj hakkında bilgi sızdırmıştır",
-"B) Mesaj mutlaka tek harflidir",
-"C) Sistem çözülemez ama bilgi sızar",
-"D) Shift Cipher her zaman güvenlidir"
+"A) Genişleme ardından aşınma",
+"B) Aşınma ardından genişleme",
+"C) İki kez genişleme",
+"D) İki kez aşınma",
+"E) Histogram eşitleme"
 ],
 a:0
 },
 
 {
-q:"Simülasyonda OTP uniforma yaklaşırken Shift neden düz metin frekansını taşır?",
+q:"Yapı elemanı (structuring element) nedir?",
 options:[
-"A) OTP her karakteri bağımsız rastgele anahtarla maskeler, Shift tek anahtarla kaydırır",
-"B) OTP yalnızca İngilizce metinlerde çalışır",
-"C) Shift Cipher anahtarsız çalışır",
-"D) Entropi sadece Shift için hesaplanır"
-],
-a:0
-},
-
-{
-q:"Kuantum bilgisayarların geleneksel RSA şifrelemesini saniyeler içinde kırmasını sağlayan algoritmanın adı nedir ?",
-options:[
-"A-) Kyber",
-"B-) ML-KEM",
-"C-) SHOR",
-"D-) AES"
+"A) Renk uzayı dönüşüm matrisi",
+"B) Gürültü modeli",
+"C) Morfolojik işlemlerde kullanılan şekil maskesi",
+"D) FFT matrisi",
+"E) Histogram grafiği"
 ],
 a:2
 },
 
 {
-q:"NIST tarafından Ağustos 2024'te (FIPS 203) standart olarak kabul edilen anahtar kapsülleme mekanizmasının adı nedir?",
+q:"Renk uzayları neden üç boyutlu olarak tasarlanır?",
 options:[
-"A-) Kyber ML-KEM",
-"B-) AES-256",
-"C-) RSA-4096",
-"D-) SHOR"
-],
-a:0
-},
-
-{
-q:"Simülasyon testlerimizde de gördüğümüz üzere, Kyber algoritması RSA’e göre binlerce kat daha hızlı çalışmasına rağmen en büyük fiziksel dezavantajı nedir?",
-options:[
-"A-) CPU (İşlemci) sıcaklığını çok fazla arttırması",
-"B-) Açık anahtar ve şifreli metin boyutlarının RSA’e göre çok büyük olması",
-"C-) Yalnızca kısa metinleri şifreleyebilmesi",
-"D-) Anahtar üretimi (KeyGen) işleminin çok uzun sürmesi"
-],
-a:1
-},
-
-{
-q:"Yeni nesil algoritmalardaki olası zafiyet risklerine karşı, hem geleneksel RSA’in hem de post-kuantum Kyber’in aynı anda (çift katmanlı) kullanıldığı geçiş dönemi mimarisine ne ad verilir?",
-options:[
-"A-) Asimetrik Şifreleme",
-"B-) Kuantum Dolanıklığı",
-"C-) Blok Şifreleme Zinciri",
-"D-) Hibrit Şifreleme (Hibrit Mimari)"
-],
-a:3
-},
-
-{
-q:"RSA algoritmasının güvenliği “asal çarpanlara ayırma” problemine dayanır. Peki Kyber algoritmasının güvenliği hangi matematiksel temele dayanmaktadır?",
-options:[
-"A-) Eliptik Eğri (Eliptic Curve) Matematiği",
-"B-) Kafes Tabanlı (Lattice-Based) Kriptografi ve LWE Problemi",
-"C-) Ayrık Logaritma Problemi",
-"D-) Çarpışma Dirençli Hash Fonksiyonları"
-],
-a:1
-},
-
-{
-q:"Genelde Steganografi aracının tasarımında, geleneksel LSB (En Az Anlamlı Bit) yöntemi yerine PVD (Piksel Değer Farkı) algoritmasının tercih edilmesinin ve tasarım aşamasında piksel blokları arasındaki farkın hesaplanmasının temel mühendislik amacı aşağıdakilerden hangisidir?",
-options:[
-"A) Kapak görüntüsünün dosya boyutunu algoritmik olarak sıkıştırarak iletim hızını artırmak.",
-"B) Gizlenecek verinin şifrelenmesi için gerekli olan kriptografik anahtarın (AES) piksellerin renk uzayına dağıtılmasını sağlamak.",
-"C) İnsan görsel sisteminin karmaşık/kenar bölgelerdeki değişimlere karşı duyarsızlığından yararlanarak, görsel bütünlüğü bozmadan o bölgelere daha yüksek kapasitede veri gizlemek.",
-"D) Veri saklama işlemini sadece düz ve pürüzsüz alanlarla sınırlandırarak istatistiksel steganaliz saldırılarını tamamen engellemek.",
-"E) Veri başlıklarını (TXT/IMG) piksellerin en büyük anlamlı bitlerine (MSB) yerleştirerek sistemin otonom deşifre yapmasını kolaylaştırmak."
+"A) Üç temel filtre olduğu için",
+"B) RGB kameralar nedeniyle",
+"C) Bir rengi tanımlamak için üç bağımsız değişken gerektiğinden",
+"D) Hesaplamaları kolaylaştırdığı için",
+"E) Piksel sayısını azalttığı için"
 ],
 a:2
 },
 
 {
-q:"Geleneksel steganografi yöntemlerinde verinin sadece gizlenmesi, verinin varlığının tespit edilmesi durumunda içeriğin doğrudan açığa çıkmasına neden olmaktadır. Uygulanan AES-256 ve PVD (Pixel Value Differencing) hibrit yapısının, salt steganografiye göre sağladığı en kritik avantaj aşağıdakilerden hangisidir?",
+q:"Munsell renk sisteminde H harfi neyi ifade eder?",
 options:[
-"A) Görüntünün depolama boyutunu küçülterek veri transferini hızlandırmak.",
-"B) Verinin hem varlığını gizleyerek algılanamazlık sağlamak hem de tespit edilse bile erişilemezlik katmanı eklemek.",
-"C) Şifreleme sayesinde görüntünün PSNR (tepe sinyal-gürültü oranı) değerini yapay olarak yükseltmek.",
-"D) PVD algoritmasının işlem karmaşıklığını azaltarak mobil cihazlarda enerji tasarrufu sağlamak.",
-"E) AES şifreleme işleminin, PVD ile veri gömme sırasında oluşabilecek bit hatalarını otomatik olarak tespit edip onarması."
-],
-a:1
-},
-
-{
-q:"PVD algoritmasında kullanılan Aralık Tablosu (Range Table), piksel çiftleri arasındaki fark değerlerini belirli alt aralıklara böler. Bu tablonun tasarımında, fark değerleri büyüdükçe gömülecek bit sayısının da artırılmasının temel nedeni aşağıdakilerden hangisidir?",
-options:[
-"A) Şifrelenmiş AES bloklarının görüntünün her bölgesine eşit miktarda dağıtılmasını zorunlu kılmak.",
-"B) Görüntünün histogramındaki boşlukları doldurmak amacıyla, her aralığa karşılık gelen piksel değerlerini AES-256 anahtarı ile senkronize etmek.",
-"C) Görüntüdeki toplam renk sayısını azaltarak, steganografik işlemin dosya boyutu üzerindeki etkisini tamamen ortadan kaldırmak.",
-"D) PVD tablosundaki aralıkları sabit tutarak, her piksel çiftine standart olarak sadece 1 bit veri gömülmesini garanti altına almak.",
-"E) Görüntünün pürüzsüz bölgelerindeki hassasiyeti korurken, yüksek fark içeren (kenar/doku) bölgelerin daha fazla gizli veri (bit) taşıma kapasitesinden yararlanmak."
-],
-a:4
-},
-
-{
-q:"Projede geliştirilen PVD ve AES-256 tabanlı steganografi aracının performans testlerinde, Bit Hata Oranının (BER) '0' ve Tepe Sinyal Gürültü Oranının (PSNR) 39.03 dB – 67.62 dB aralığında çıkması sırasıyla hangi durumu kesin olarak kanıtlar?",
-options:[
-"A) Sistemin JPEG formatında da kayıpsız çalıştığını / Kuantalama tablosunun şifrelendiğini",
-"B) Şifreli verinin hiçbir kayba uğramadan (%100 bütünlükle) geri kazanılabildiğini / Görüntüdeki değişimin insan gözüyle fark edilemeyecek kadar az (kusursuz kalite) olduğunu",
-"C) Teorik kapasite sınırının aşıldığını / LSB algoritmasına göre steganaliz testlerinde daha fazla istatistiksel iz bırakıldığını",
-"D) Taşıyıcı görselde sadece metin verilerinin gizlenebildiğini / Pürüzsüz alanlara veri gömülürken renk uzayı taşması yaşandığını",
-"E) Asimetrik anahtar değişiminin başarılı olduğunu / Stego-görselin boyutlandırma (resizing) saldırılarına karşı tam dirençli olduğunu"
-],
-a:1
-},
-
-{
-q:"PVD (Pixel Value Differencing) algoritmasının matematiksel modeline göre, bir piksel çiftine (pixel-pair) gömülecek bit sayısı (n) hesaplanırken aşağıdaki yöntemlerden hangisi izlenir ve bu durum algoritmanın kapasitesine etkisi nedir?",
-options:[
-"A) Gömülecek bit sayısı (n), iki komşu piksel arasındaki mutlak farkın (d) yer aldığı aralığın genişliğine (Wk = uk – lk +1) göre n = log2(Wk) formülüyle belirlenir; fark büyüdükçe kapasite artar.",
-"B) Her piksel çiftine, AES-256 şifreleme katmanından gelen sabit 8 bitlik veri blokları, fark değerine bakılmaksızın doğrudan yerleştirilir.",
-"C) Bit sayısı, piksellerin sadece en büyük anlamlı bitlerinin (MSB) toplamının aritmetik ortalaması alınarak hesaplanır ve bu sayı her zaman 3’e sabitlenir.",
-"D) Piksel değerleri arasındaki fark (d) azaldıkça (pürüzsüz alanlar), gömülebilecek bit sayısı logaritmik olarak artırılarak görsel keskinlik sağlanır.",
-"E) Matematiksel modelde n değeri, sadece piksellerin 0-255 renk uzayı sınırının dışına taşma (overflow) yapıp yapmadığına bakılarak 1 veya 0 olarak atanır."
+"A) Hue (renk adı)",
+"B) Heat (ısı)",
+"C) Height (yükseklik)",
+"D) Histogram",
+"E) Hardness (sertlik)"
 ],
 a:0
+},
+
+{
+q:"Munsell renk sisteminde V harfi neyi temsil eder?",
+options:[
+"A) Velocity",
+"B) Value (değer)",
+"C) Vector",
+"D) Variance",
+"E) Vision"
+],
+a:1
+},
+
+{
+q:"Bir rengin griden uzaklaşma derecesini ifade eden bileşen aşağıdakilerden hangisidir?",
+options:[
+"A) Hue",
+"B) Value",
+"C) Chroma",
+"D) Intensity",
+"E) Gamma"
+],
+a:2
+},
+
+{
+q:"Enterpolasyonun temel amacı nedir?",
+options:[
+"A) Gürültü eklemek",
+"B) Yeni piksel koordinatlarının değerlerini tahmin etmek",
+"C) Görüntüyü sıkıştırmak",
+"D) Histogram oluşturmak",
+"E) Kenar bulmak"
+],
+a:1
+},
+
+{
+q:"Bilinear enterpolasyonda kaç komşu piksel kullanılır?",
+options:[
+"A) 2",
+"B) 3",
+"C) 4",
+"D) 6",
+"E) 8"
+],
+a:2
+},
+
+{
+q:"MATLAB'da görüntüyü döndürmek için kullanılan fonksiyon aşağıdakilerden hangisidir?",
+options:[
+"A) imshow()",
+"B) imresize()",
+"C) imrotate()",
+"D) imnoise()",
+"E) medfilt2()"
+],
+a:2
+},
+
+{
+q:"Aşağıdakilerden hangisi görüntü bozulmalarının bir türüdür?",
+options:[
+"A) Sobel",
+"B) Laplace",
+"C) Barrel bozulması",
+"D) Histogram eşitleme",
+"E) Fourier dönüşümü"
+],
+a:2
+},
+
+{
+q:"Radyal bozulmalar çoğunlukla hangi bileşenden kaynaklanır?",
+options:[
+"A) İşletim sistemi",
+"B) Sensör sıcaklığı",
+"C) Lens (objektif)",
+"D) Bellek kartı",
+"E) Monitör"
+],
+a:2
+},
+
+{
+q:"Piksel komşuluk işlemlerinin temel fikri aşağıdakilerden hangisidir?",
+options:[
+"A) Görüntüyü sıkıştırmak",
+"B) Histogram oluşturmak",
+"C) Görüntü üzerinde bir maskeyi dolaştırmak",
+"D) Renk uzayı değiştirmek",
+"E) Dosya boyutunu azaltmak"
+],
+a:2
+},
+
+{
+q:"Lineer filtreleme sırasında ilk adım aşağıdakilerden hangisidir?",
+options:[
+"A) Sonuçların toplanması",
+"B) Piksel değerinin sıfırlanması",
+"C) Maske yerleştirilmesi",
+"D) Histogram eşitleme",
+"E) Gürültü eklenmesi"
+],
+a:2
+},
+
+{
+q:"Aşağıdakilerden hangisi lineer filtre oluşturma aşamalarından biridir?",
+options:[
+"A) Yapı elemanı seçimi",
+"B) Sonuçların toplanması",
+"C) Renk dönüşümü",
+"D) Piksel silme",
+"E) Segmentasyon"
+],
+a:1
+},
+
+{
+q:"Görüntüdeki sorunlu piksellerden kaynaklanan bozulmalar genel olarak ne olarak adlandırılır?",
+options:[
+"A) Radyal bozulma",
+"B) Dönüşüm hatası",
+"C) Gürültü",
+"D) Histogram hatası",
+"E) Piksel eşleme"
+],
+a:2
+},
+
+{
+q:"Genişleme işleminin çoklu uygulanması sonucunda ne elde edilebilir?",
+options:[
+"A) Nesneler incelir.",
+"B) Görüntü renklendirilir.",
+"C) Kırık nesneler birleşebilir.",
+"D) Histogram düzleşir.",
+"E) Renk uzayı dönüşür."
+],
+a:2
 }
 
 ];
-
 const quiz = document.getElementById("quiz");
 
 questions.forEach((item,index)=>{
