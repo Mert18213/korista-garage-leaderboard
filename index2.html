@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kriptoloji Quiz - Sayfa 2</title>
+<title>🖼️ Görüntü İşleme Quiz - 2. 20 Soru</title>
 
 <style>
 
@@ -128,184 +128,243 @@ function goPage(page){
 const questions = [
 
 {
-q:"Aşağıdakilerden hangisi gerçek rastgele sayı üreteci (TRNG) için doğrudur?",
+q:"Sayısal görüntü nedir?",
 options:[
-"A) Matematiksel formüllerle çalışır.",
-"B) Aynı seed ile aynı sonucu üretir.",
-"C) Fiziksel olaylardan rastgelelik elde eder.",
-"D) Her zaman hızlı çalışır.",
-"E) Deterministik yapıdadır."
+"A) Analog kameradan alınan görüntü",
+"B) Sadece renkli görüntü",
+"C) Sayısal değerlerden oluşan ve bilgisayarda görüntülenebilen görüntü",
+"D) Üç boyutlu görüntü",
+"E) Film üzerine kaydedilen görüntü"
 ],
 a:2
 },
 
 {
-q:"Aşağıdakilerden hangisi PRNG’nin dezavantajlarından biridir?",
+q:"RGB renk modelinde aşağıdaki renklerden hangisi temel renklerden biri değildir?",
 options:[
-"A) Çok yavaş çalışması",
-"B) Tahmin edilebilir olması",
-"C) Donanım gerektirmesi",
-"D) Rastgelelik üretmemesi",
-"E) Hiç tekrar etmemesi"
+"A) Kırmızı",
+"B) Yeşil",
+"C) Mavi",
+"D) Sarı",
+"E) Hiçbiri"
+],
+a:3
+},
+
+{
+q:"Histogram eşitlemenin temel amacı nedir?",
+options:[
+"A) Dosya boyutunu küçültmek",
+"B) Kontrastı artırmak",
+"C) Gürültü eklemek",
+"D) Görüntüyü döndürmek",
+"E) Kenar bulmak"
 ],
 a:1
 },
 
 {
-q:"Aşağıdaki testlerden hangisi, bit dizisinde 0 ve 1’lerin dengeli dağılıp dağılmadığını kontrol eder?",
+q:"Logaritmik dönüşüm koyu bölgelerde nasıl bir etki oluşturur?",
 options:[
-"A) Koşu (Runs) Testi",
-"B) Otokorelasyon Testi",
-"C) Blok Frekans Testi",
-"D) Yaklaşık Entropi Testi",
-"E) Frekans (Monobit) Testi"
-],
-a:4
-},
-
-{
-q:"Bir bit dizisinde çok uzun 0 veya 1 bloklarının bulunması hangi durumu gösterir?",
-options:[
-"A) Yüksek entropi",
-"B) İdeal rastgelelik",
-"C) Koşu testinde başarısızlık",
-"D) Monobit testinin başarılı olması",
-"E) Güvenli CSPRNG çıktısı"
+"A) Kontrastı azaltır",
+"B) Koyu bölgeleri daha koyu yapar",
+"C) Koyu bölgelerin kontrastını artırır",
+"D) Görüntüyü bulanıklaştırır",
+"E) Renkleri yok eder"
 ],
 a:2
 },
 
 {
-q:"Aşağıdaki durumlardan hangisi bir rastgele sayı üreticinin zayıf olduğunu en iyi gösterir?",
+q:"Bir görüntüde ani gri seviye değişimlerinin bulunduğu bölgeler ne olarak adlandırılır?",
 options:[
-"A) Üretilen sayıların hızlı olması",
-"B) Aynı başlangıç değeri ile aynı dizinin elde edilmesi",
-"C) Sayıların belirli aralıkta üretilmesi",
-"D) İstatistiksel testlerden geçmesi",
-"E) Entropisinin yüksek olması"
+"A) Histogram",
+"B) Gürültü",
+"C) Kenar",
+"D) Doku",
+"E) Segment"
+],
+a:2
+},
+
+{
+q:"Aşağıdakilerden hangisi birinci türeve dayalı kenar belirleme yöntemidir?",
+options:[
+"A) Laplace",
+"B) LoG",
+"C) Sobel",
+"D) Zero Crossing",
+"E) Gaussian"
+],
+a:2
+},
+
+{
+q:"Prewitt operatörü temel olarak ne için kullanılır?",
+options:[
+"A) Histogram eşitleme",
+"B) Kenar belirleme",
+"C) Gürültü ekleme",
+"D) Segmentasyon",
+"E) Döndürme"
 ],
 a:1
 },
 
 {
-q:"RSA algoritmasının güvenliğinin dayandığı temel matematiksel zorluk nedir?",
+q:"İkinci türeve dayalı kenar belirleme yöntemi hangisidir?",
 options:[
-"A. İki büyük asal sayıyı çarpmanın zorluğu.",
-"B. Büyük sayıların asal çarpanlara ayrılmasının zorluğu.",
-"C. Açık anahtarla şifrelenmiş veriyi çözmenin zorluğu.",
-"D. Dijital imzaların doğrulanmasının zorluğu."
+"A) Sobel",
+"B) Prewitt",
+"C) Roberts",
+"D) Laplace",
+"E) Canny"
+],
+a:3
+},
+
+{
+q:"LoG yöntemindeki 'G' harfi neyi ifade eder?",
+options:[
+"A) Gradient",
+"B) Gray",
+"C) Gaussian",
+"D) Gamma",
+"E) Geometry"
+],
+a:2
+},
+
+{
+q:"Segmentasyonun temel amacı nedir?",
+options:[
+"A) Dosya boyutunu küçültmek",
+"B) Nesneleri arka plandan ayırmak",
+"C) Gürültü eklemek",
+"D) Görüntüyü büyütmek",
+"E) Görüntüyü döndürmek"
 ],
 a:1
 },
 
 {
-q:"Dijital imza sisteminde ‘Açık Anahtar’ (Public Key) neden tehlike arz etmeden herkesle rahatlıkla paylaşılabilir?",
+q:"Eşikleme (thresholding) işlemi genellikle hangi özelliğe dayanır?",
 options:[
-"A) Çünkü açık anahtar sadece veri şifrelemek için kullanılır.",
-"B) Açık anahtar kullanılarak gizli anahtarın hesaplanması matematiksel olarak pratik değildir.",
-"C) Açık anahtar, gizli anahtarla aynı matematiksel yapıya sahiptir.",
-"D) Açık anahtarın paylaşılması yasal bir zorunluluktur."
+"A) Şekil",
+"B) Doku",
+"C) Parlaklık",
+"D) Boyut",
+"E) Gürültü"
+],
+a:2
+},
+
+{
+q:"Salt-Pepper gürültüsünü gidermede en etkili filtre hangisidir?",
+options:[
+"A) Gaussian filtre",
+"B) Mean filtre",
+"C) Median filtre",
+"D) Motion filtre",
+"E) Unsharp filtre"
+],
+a:2
+},
+
+{
+q:"Gaussian gürültüsü genellikle hangi sebeple oluşur?",
+options:[
+"A) Lens bozulması",
+"B) Elektriksel etkiler",
+"C) Düşük çözünürlük",
+"D) JPEG sıkıştırması",
+"E) Histogram eşitleme"
 ],
 a:1
 },
 
 {
-q:"İşlevsel bir dijital imza oluşturma ve ardından doğrulama sürecinin teknik olarak doğru adım sıralaması nedir?",
+q:"Unsharp filtre hangi amaçla kullanılır?",
 options:[
-"A. Mesajın özeti alınır -> Gizli anahtarla özet şifrelenir -> İletilir -> Açık anahtarla özet çözülür ve karşılaştırılır.",
-"B. Mesaj şifrelenir -> Gizli anahtarla özet şifrelenir -> İletilir -> Açık anahtarla çözülür.",
-"C. Mesajın özeti alınır -> Açık anahtarla özet şifrelenir -> İletilir -> Gizli anahtarla çözülür ve karşılaştırılır.",
-"D. Gizli anahtarla mesaj şifrelenir -> İletilir -> Açık anahtarla mesaj çözülür."
-],
-a:0
-},
-
-{
-q:"Bir yazılım güncellemesi indirildiğinde, orijinal özet ile indirilen dosyanın mevcut özeti eşleşmezse sistemin varması gereken sonuç nedir?",
-options:[
-"A) Dosya bütünlüğünün bozulduğu ve işlemin iptal edilmesi gerektiği.",
-"B) Güncellemenin başarılı bir şekilde tamamlandığı ve kuruluma hazır olduğu.",
-"C) Dosyanın şifrelenmiş olduğu ve açılması için gizli anahtarın beklendiği.",
-"D) Ağ bağlantısında geçici bir sorun olduğu ve indirme işleminin tekrar denenmesi gerektiği."
-],
-a:0
-},
-
-{
-q:"ECB modunun deterministik yapısı nedeniyle görsel verilerde ortaya çıkan ve orijinal silüetin şifreli metinde gizlenememesine yol açan güvenlik zafiyeti aşağıdakilerden hangisidir?",
-options:[
-"A) Örüntü Sızıntısı (Pattern Leakage)",
-"B) Dolgu Hatası (Padding Oracle)",
-"C) Anahtar Tekrarı (Key Reuse)",
-"D) Çığ Etkisi (Avalanche Effect)"
-],
-a:0
-},
-
-{
-q:"CBC modunda iletim sırasında şifreli metin bloğunda oluşan tek bir bitlik hata, deşifreleme aşamasında veriyi nasıl etkiler?",
-options:[
-"A) Sadece hatanın olduğu spesifik bit bozar, diğer bloklara yayılmaz.",
-"B) Tüm mesaj tamamen okunamaz ve anlamsız hale gelir.",
-"C) Kendi bloğunu tamamen bozar, bir sonraki bloğun ise sadece ilgili bitini etkiler.",
-"D) Hata izolasyonu sayesinde mesaj hiçbir bozulma yaşamaz."
-],
-a:2
-},
-
-{
-q:"CBC ve CTR modlarında, açık metin veya şifreli metnin diğer bloklar veya anahtar akışıyla (keystream) birleştirilmesinde kullanılan temel mantıksal işlem aşağıdakilerden hangisidir?",
-options:[
-"A) AND",
-"B) OR",
-"C) XOR",
-"D) MOD"
-],
-a:2
-},
-
-{
-q:"CTR (Counter) modunda, şifreleme sürecinde mesajın içeriği (açık metin) yerine öncelikli olarak ne şifrelenir?",
-options:[
-"A) Başlangıç Vektörü (IV)",
-"B) Verinin uzunluk bilgisi",
-"C) Her blok için farklı değer alan bir “sayaç” (counter)",
-"D) Hedef bilgisayarın IP adresi"
-],
-a:2
-},
-
-{
-q:"Hız (performans) analizlerine göre, CTR modunun hem şifreleme hem de deşifreleme aşamalarında en düşük işlem süresine (en yüksek hıza) sahip olmasının yapısal nedeni nedir?",
-options:[
-"A) Çok düşük boyutlu anahtarlar kullanması",
-"B) Görselleri kalitesini düşürerek işlem yapması",
-"C) Bloklar arası zincirleme bağımlılık olmadan paralel işlemeye izin vermesi",
-"D) Tarayıcı belleğini (RAM) kullanmadan doğrudan işlemde çalışması"
-],
-a:2
-},
-
-{
-q:"Eksik blokları tamamlama mekanizmasına dayanan ve milyonlarca deneme yanılma sonucunda AES anahtarı bilinmeden dahi CBC modundaki şifreli metnin çözülmesine olanak tanıyan ünlü saldırı türü hangisidir?",
-options:[
-"A) Kusursuz Bit-Flipping Saldırısı",
-"B) Örüntü Sızıntısı Analizi",
-"C) Padding Oracle Saldırısı",
-"D) Steganografi Manipülasyonu"
-],
-a:2
-},
-
-{
-q:"ECB modunda örüntü sızıntısının (pattern leakage) engellenemesinin yapısal temel aşağıdakilerden hangisidir?",
-options:[
-"A) Dolgu (padding) kullanmaması",
-"B) Deterministik yapıda çalışması",
-"C) Akış şifresi (stream) üretmemesi",
-"D) Şifrelemede XOR işlemini atlaması"
+"A) Gürültü gidermek",
+"B) Görüntüyü keskinleştirmek",
+"C) Renk dönüşümü yapmak",
+"D) Segmentasyon yapmak",
+"E) Histogram eşitlemek"
 ],
 a:1
+},
+
+{
+q:"Motion filtresi görüntü üzerinde nasıl bir etki oluşturur?",
+options:[
+"A) Negatif görüntü",
+"B) Gürültü azaltma",
+"C) Hareket bulanıklığı",
+"D) Kontrast artırma",
+"E) Renk dönüşümü"
+],
+a:2
+},
+
+{
+q:"FFT kısaltmasının açılımı nedir?",
+options:[
+"A) Fast Filter Tool",
+"B) Frequency Fourier Test",
+"C) Fast Fourier Transform",
+"D) Fourier Filter Theory",
+"E) Fast Frequency Technique"
+],
+a:2
+},
+
+{
+q:"Periyodik gürültülerin giderilmesinde hangi filtreleme yöntemi tercih edilir?",
+options:[
+"A) Median filtre",
+"B) Sobel operatörü",
+"C) Frekans domeni filtreleri",
+"D) Histogram eşitleme",
+"E) Log dönüşümü"
+],
+a:2
+},
+
+{
+q:"Morfolojik genişleme (dilation) işlemi ne yapar?",
+options:[
+"A) Nesneleri küçültür",
+"B) Nesnelerin sınırlarını genişletir",
+"C) Gürültü ekler",
+"D) Histogramı düzleştirir",
+"E) Kenar bulur"
+],
+a:1
+},
+
+{
+q:"Renk uzayları neden üç boyutlu tasarlanır?",
+options:[
+"A) Dosya boyutunu küçültmek için",
+"B) Üç temel filtre olduğu için",
+"C) Bir rengi tanımlamak için üç bağımsız değişken gerektiği için",
+"D) Bilgisayarlar üç boyutlu çalıştığı için",
+"E) Histogram oluşturmak için"
+],
+a:2
+},
+
+{
+q:"MATLAB'da görüntüyü döndürmek için kullanılan fonksiyon hangisidir?",
+options:[
+"A) imnoise()",
+"B) medfilt2()",
+"C) imrotate()",
+"D) histeq()",
+"E) edge()"
+],
+a:2
 }
 
 ];
