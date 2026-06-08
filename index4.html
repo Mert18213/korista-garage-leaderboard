@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kriptoloji Quiz - Sayfa 4</title>
+<title>🖼️ Görüntü İşleme - Sayfa 4</title>
 
 <style>
 
@@ -79,7 +79,7 @@ h1{
 
 <body>
 
-<h1>🛡️ Kriptoloji Quiz - Sayfa 4</h1>
+<h1>🖼️ Görüntü İşleme - Sayfa 4</h1>
 
 <div class="menu">
 
@@ -131,124 +131,307 @@ function goPage(page){
 const questions = [
 
 {
-q:"Bir saldırgan, daha önce veri ihlallerinden elde ettiği yaygın parolaları (“123456”, “password”, “qwerty” vb.) kullanarak sistematik şekilde giriş denemeleri yapmaktadır. Bu saldırganın kullandığı yöntem aşağıdakilerden hangisidir?",
+q:`Aşağıdaki MATLAB kodu ne yapar?
+
+I=imread('coins.png');
+J=histeq(I);
+imshow(J);`,
 options:[
-"A) Brute-Force Saldırısı",
-"B) Sözlük Saldırısı",
-"C) Replay Saldırısı",
-"D) Side-Channel Saldırısı"
+"A) Görüntüyü döndürür",
+"B) Histogram eşitleme uygular",
+"C) Gürültü ekler",
+"D) Kenar çıkarır",
+"E) Resmi büyütür"
 ],
 a:1
 },
 
 {
-q:"Bir yazılım şirketi, geliştirdiği sistemin uzun vadeli güvenliğini değerlendirmektedir. NIST standartlarına göre minimum güvenlik seviyesi dikkate alınmaktadır. Aşağıdakilerden hangisi minimum güvenlik seviyesi olarak kabul edilir?",
+q:`Aşağıdaki kodun amacı nedir?
+
+I=imread('coins.png');
+I2=im2double(I);
+J=1.75*log(1+I2);
+imshow(J);`,
 options:[
-"A) 64 Bit",
-"B) 80 Bit",
-"C) 112 Bit",
-"D) 256 Bit"
+"A) Görüntüyü negatif yapar",
+"B) Kenar belirler",
+"C) Logaritmik dönüşüm uygular",
+"D) Histogram oluşturur",
+"E) Segmentasyon yapar"
 ],
 a:2
 },
 
 {
-q:"Bir güvenlik mühendisi, sistemin kuantum bilgisayarlara karşı da güvenli olmasını istemektedir. Grover algoritması göz önüne alındığında hangi anahtar uzunluğu daha güvenli kabul edilir?",
+q:`Bu MATLAB kodu ne yapmaktadır?
+
+A=imread('Lena.tiff');
+B=rgb2gray(A);
+imshow(B);`,
 options:[
-"A) 64 bit",
-"B) 112 bit",
-"C) 128 bit",
-"D) 256 bit"
+"A) RGB görüntüyü negatif yapar",
+"B) Görüntüyü ikili yapar",
+"C) Renkli görüntüyü gri seviyeye dönüştürür",
+"D) Histogram eşitler",
+"E) Gürültü ekler"
 ],
-a:3
+a:2
 },
 
 {
-q:"Aynı karakter seti kullanılarak parola uzunluğu 8 karakterden 12 karaktere çıkarılmıştır. Bu değişikliğin brute-force saldırısına etkisi nedir?",
+q:`Bu kodun çıktısı nedir?
+
+A=rgb2gray(imread('Lena.tiff'));
+B=im2bw(A);
+imshow(B);`,
 options:[
-"A) Kırılma süresi doğrusal olarak artar",
-"B) Kırılma süresi üstel olarak artar",
-"C) Kırılma süresi değişmez",
-"D) Sadece donanım hızına bağlıdır"
+"A) Negatif görüntü",
+"B) Kenar görüntüsü",
+"C) Siyah-beyaz görüntü",
+"D) Renkli görüntü",
+"E) Gürültülü görüntü"
+],
+a:2
+},
+
+{
+q:`Bu kod ne yapar?
+
+I=imread('cameraman.tif');
+I2=imrotate(I,30,'nearest');
+imshow(I2);`,
+options:[
+"A) Histogram eşitler",
+"B) 30 derece döndürür",
+"C) Gürültü ekler",
+"D) Kenar çıkarır",
+"E) Keskinleştirir"
 ],
 a:1
 },
 
 {
-q:"Bir saldırganın deneme hızı 1 milyon deneme/sn’den 2 milyon deneme/sn’ye çıkarılmıştır. Bu durumda kırılma süresi nasıl değişir?",
+q:`Bu kodun amacı nedir?
+
+I=imread('cameraman.tif');
+J=edge(I,'sobel');
+imshow(J);`,
 options:[
-"A) Süre yarıya düşer",
-"B) Süre iki katına çıkar",
-"C) Süre üstel olarak azalır",
-"D) Süre değişmez"
+"A) Segmentasyon",
+"B) Gürültü giderme",
+"C) Sobel ile kenar belirleme",
+"D) Histogram eşitleme",
+"E) Renk dönüşümü"
+],
+a:2
+},
+
+{
+q:`Aşağıdaki kod ne yapar?
+
+I=edge(g,'prewitt');
+imshow(I);`,
+options:[
+"A) Prewitt operatörü ile kenar belirler",
+"B) Histogram oluşturur",
+"C) Tuz-biber gürültüsü ekler",
+"D) Resmi küçültür",
+"E) Segmentasyon yapar"
 ],
 a:0
 },
 
 {
-q:"12 karakter uzunluğunda sadece rakamlardan oluşan bir parola ile aynı uzunlukta karmaşık bir parola karşılaştırılmaktadır. Güvenlik farkının temel nedeni nedir?",
-options:[
-"A) Parola uzunluğu farklıdır",
-"B) Kullanılan algoritma değişmiştir",
-"C) Karakter seti büyüklüğü (entropi) artmıştır",
-"D) Donanım hızı etkilenmiştir"
-],
-a:2
-},
+q:`Bu kodun amacı nedir?
 
-{
-q:"Aşağıdakilerden hangisi bir “Sıfır Bilgi İspatı (ZKP)” protokolünün sağlaması gereken 3 temel özellikten biri değildir?",
+l=fspecial('laplacian',1);
+icz=edge(a,'zerocross',l);`,
 options:[
-"A) Doğruluk (Completeness)",
-"B) Sağlamlık (Soundness)",
-"C) Şeffaflık (Transparency)",
-"D) Sıfır Bilgi (Zero-Knowledge)"
-],
-a:2
-},
-
-{
-q:"ZKP protokollerinde, sırrı bilmeyen bir saldırganın şans eseri sistemi kandırma ihtimalini (Soundness açığını) milyonda birlere düşürmek için hangi yöntem kullanılır?",
-options:[
-"A) Şifreleme anahtarının boyutunu 256 bit’e çıkarmak.",
-"B) Meydan okuma - Cevap (Challenge-Response) işlemini defalarca tekrarlamak.",
-"C) İşlemleri sadece kapalı ağlarda (Intranet) gerçekleştirmek.",
-"D) Graf düğümlerinin sayısını azaltmak."
+"A) Histogram eşitleme",
+"B) Laplace tabanlı kenar belirleme",
+"C) Segmentasyon",
+"D) Renk dönüşümü",
+"E) Median filtreleme"
 ],
 a:1
 },
 
 {
-q:"Graf izomorfizmi tabanlı bir ZKP sisteminde, Kanıtlayıcının (Prover) tüm dünya ile paylaştığı “Açık (Public)” graflar A ve B iken; dış dünyadan kesinlikle sakladığı “Asıl Sır (Private)” aşağıdakilerden hangisidir?",
+q:`Bu kod ne işe yarar?
+
+log=fspecial('log',13,2);
+icz1=edge(a,'zerocross',log);`,
 options:[
-"A) Graf C’nin sahip olduğu düğüm sayısı.",
-"B) Graf A’dan Graf C’ye nasıl gidildiğini gösteren harita.",
-"C) Graf A ile Graf B’nin birbirine dönüşümünü sağlayan harita.",
-"D) Meydan okuma aşamasında üretilen rastgele sayılar."
+"A) Sobel uygular",
+"B) Median filtre uygular",
+"C) LoG ile kenar belirler",
+"D) Histogram oluşturur",
+"E) Görüntüyü keskinleştirir"
 ],
 a:2
 },
 
 {
-q:"Graf İzomorfizmi protokolünün 2. adımında, Doğrulayıcı meydan okuma olarak “Bana Graf C’nin, Graf B’ye eşit olduğunu kanıtla” derse, Kanıtlayıcının göndermesi gereken bilgi nedir?",
+q:`Bu kodun amacı nedir?
+
+d=imnoise(I,'salt & pepper');
+imshow(d);`,
 options:[
-"A) Graf C’den Graf B’ye dönüşüm sağlayan harita.",
-"B) Graf A’dan Graf B’ye dönüşüm sağlayan harita (Asıl sır).",
-"C) Graf C’yi baştan oluşturan algoritmanın kendisi.",
-"D) Graf B’nin hash edilmiş özeti."
+"A) Gaussian gürültü eklemek",
+"B) Tuz-biber gürültüsü eklemek",
+"C) Histogram oluşturmak",
+"D) Görüntüyü büyütmek",
+"E) Segmentasyon yapmak"
+],
+a:1
+},
+
+{
+q:`Aşağıdaki kod ne yapar?
+
+K=medfilt2(JJ);
+imshow(K);`,
+options:[
+"A) Median filtre uygular",
+"B) Sobel uygular",
+"C) Histogram eşitler",
+"D) Renk değiştirir",
+"E) Segmentasyon yapar"
 ],
 a:0
 },
 
 {
-q:"ZKP sistemleri mükemmel bir güvenlik sağlamasına rağmen günümüzde her sistemde standart şifrelerin yerini alamamasının en temel teknik nedeni nedir?",
+q:`Bu kodun amacı nedir?
+
+filt2=wiener2(no);
+imshow(filt2);`,
 options:[
-"A) Yalnızca blokzincir üzerinde çalışabiliyor olması.",
-"B) Kuantum bilgisayarlara karşı çok zayıf olması.",
-"C) Çok yüksek işlemci (CPU) gücü ve iletişim maliyeti gerektirmesi.",
-"D) Üretilen kanıtların çok çabuk süresinin dolması."
+"A) Wiener filtresi uygular",
+"B) Sobel uygular",
+"C) Renk dönüşümü yapar",
+"D) Histogram eşitler",
+"E) Motion filtresi uygular"
 ],
-a:2
+a:0
+},
+
+{
+q:`Bu kod ne yapmaktadır?
+
+h=fspecial('motion',50,45);
+J=imfilter(I,h);`,
+options:[
+"A) Keskinleştirme",
+"B) Motion blur oluşturma",
+"C) Histogram eşitleme",
+"D) Kenar bulma",
+"E) Segmentasyon"
+],
+a:1
+},
+
+{
+q:`Aşağıdaki kodun amacı nedir?
+
+h=fspecial('unsharp');
+J=imfilter(I,h);`,
+options:[
+"A) Bulanıklaştırma",
+"B) Keskinleştirme",
+"C) Segmentasyon",
+"D) Histogram oluşturma",
+"E) Gürültü ekleme"
+],
+a:1
+},
+
+{
+q:`Bu kod ne yapar?
+
+SE=strel('disk',5);`,
+options:[
+"A) Histogram oluşturur",
+"B) Yapı elemanı oluşturur",
+"C) Sobel filtresi uygular",
+"D) Median filtre uygular",
+"E) Segmentasyon yapar"
+],
+a:1
+},
+
+{
+q:`Bu kodun amacı nedir?
+
+J=imdilate(I,SE);`,
+options:[
+"A) Aşınma uygular",
+"B) Genişleme uygular",
+"C) Histogram eşitler",
+"D) Gürültü ekler",
+"E) Kenar belirler"
+],
+a:1
+},
+
+{
+q:`Bu MATLAB kodu ne yapar?
+
+J=imerode(I,SE);`,
+options:[
+"A) Genişleme",
+"B) Aşınma",
+"C) Segmentasyon",
+"D) Döndürme",
+"E) Histogram eşitleme"
+],
+a:1
+},
+
+{
+q:`Bu kodun amacı nedir?
+
+background=imopen(I,strel('disk',15));
+C=imsubtract(I,background);`,
+options:[
+"A) Arka plan çıkarma",
+"B) Sobel uygulama",
+"C) Histogram eşitleme",
+"D) Renk dönüşümü",
+"E) Motion filtreleme"
+],
+a:0
+},
+
+{
+q:`Bu MATLAB kodu ne yapar?
+
+I=imread('cameraman.tif');
+imhist(I);`,
+options:[
+"A) Kenar belirler",
+"B) Histogram oluşturur",
+"C) Segmentasyon yapar",
+"D) Gürültü ekler",
+"E) Döndürme yapar"
+],
+a:1
+},
+
+{
+q:`Aşağıdaki kodun amacı nedir?
+
+tt=filter2(a,t);
+imshow(tt);`,
+options:[
+"A) Ortalama filtre uygulamak",
+"B) Kenar belirlemek",
+"C) Histogram eşitlemek",
+"D) Segmentasyon yapmak",
+"E) Renk dönüşümü yapmak"
+],
+a:0
 }
 
 ];
